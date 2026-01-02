@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -12,12 +13,45 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 class RadiationWorldHandler {
+    private static final IBlockState AIR_DEFAULT_STATE = Blocks.AIR.getDefaultState();
 
     static void handleWorldDestruction(WorldServer world) {
         if (!RadiationConfig.worldRadEffects || !GeneralConfig.enableRads) return;
         RadiationSystemNT.handleWorldDestruction(world);
     }
 
+    static void decayBlock(World world, BlockPos pos, IBlockState state) {
+        Block block = state.getBlock();
+        if (block.getRegistryName() == null) return;
+        if (block instanceof BlockDoublePlant) {
+            BlockDoublePlant.EnumBlockHalf half;
+            try {
+                half = state.getValue(BlockDoublePlant.HALF);
+            } catch (Exception _) { return; }
+            BlockPos lowerPos = (half == BlockDoublePlant.EnumBlockHalf.LOWER) ? pos : pos.down();
+            BlockPos upperPos = (half == BlockDoublePlant.EnumBlockHalf.LOWER) ? pos.up() : pos;
+            world.setBlockState(upperPos, AIR_DEFAULT_STATE, 2);
+            world.setBlockState(lowerPos, AIR_DEFAULT_STATE, 2);
+            return;
+        }
+        if (block == Blocks.GRASS) {
+            world.setBlockState(pos, ModBlocks.waste_earth.getDefaultState(), 2);
+            return;
+        }
+        if (block == Blocks.TALLGRASS) {
+            world.setBlockState(pos, AIR_DEFAULT_STATE, 2);
+            return;
+        }
+        if (state.getMaterial() == Material.LEAVES && block != ModBlocks.waste_leaves) {
+            if (world.rand.nextInt(7) <= 5) {
+                world.setBlockState(pos, ModBlocks.waste_leaves.getDefaultState(), 2);
+            } else {
+                world.setBlockState(pos, AIR_DEFAULT_STATE, 2);
+            }
+        }
+    }
+
+    @Deprecated
     static void decayBlock(World world, BlockPos pos, IBlockState state, boolean isLegacy) {
         Block block = state.getBlock();
         if (block.getRegistryName() == null) return;

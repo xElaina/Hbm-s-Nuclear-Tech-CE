@@ -481,7 +481,8 @@ public final class RadiationSystemNT {
         int baseY = cy << 4;
         int baseZ = cz << 4;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        ExtendedBlockStorage storage = cr.mcChunk.getBlockStorageArray()[cy];
+        Chunk mcChunk = cr.mcChunk;
+        ExtendedBlockStorage storage = mcChunk.getBlockStorageArray()[cy];
         if (storage == null || storage.isEmpty()) return;
         BlockStateContainer container = storage.data;
 
@@ -490,9 +491,15 @@ public final class RadiationSystemNT {
             for (int i = 0; i < SECTION_BLOCK_COUNT; i++) {
                 if (world.rand.nextInt(3) != 0) continue;
                 IBlockState state = container.get(i);
-                pos.setPos(baseX + Library.getLocalX(i), baseY + Library.getLocalY(i), baseZ + Library.getLocalZ(i));
                 if (state.getMaterial() == Material.AIR) continue;
-                RadiationWorldHandler.decayBlock(world, pos, state, false);
+                int lx = Library.getLocalX(i);
+                int lz = Library.getLocalZ(i);
+                int ly = Library.getLocalY(i);
+                int topY = mcChunk.getHeightValue(lx, lz) - 1;
+                int myY = baseY + ly;
+                if (myY < topY - 1 || myY > topY) continue;
+                pos.setPos(baseX + lx, myY, baseZ + lz);
+                RadiationWorldHandler.decayBlock(world, pos, state);
             }
             return;
         }
@@ -506,8 +513,14 @@ public final class RadiationSystemNT {
             if (actualPocketIndex != targetPocketIndex) continue;
             IBlockState state = container.get(i);
             if (state.getMaterial() == Material.AIR) continue;
-            pos.setPos(baseX + Library.getLocalX(i), baseY + Library.getLocalY(i), baseZ + Library.getLocalZ(i));
-            RadiationWorldHandler.decayBlock(world, pos, state, false);
+            int lx = Library.getLocalX(i);
+            int lz = Library.getLocalZ(i);
+            int ly = Library.getLocalY(i);
+            int topY = mcChunk.getHeightValue(lx, lz) - 1;
+            int myY = baseY + ly;
+            if (myY < topY - 1 || myY > topY) continue;
+            pos.setPos(baseX + lx, myY, baseZ + lz);
+            RadiationWorldHandler.decayBlock(world, pos, state);
         }
     }
 

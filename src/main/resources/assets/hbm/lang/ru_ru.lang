@@ -7697,6 +7697,7 @@ tile.sellafield_1.name=Горячий селлафит
 tile.sellafield_2.name=Кипящий селлафит
 tile.sellafield_3.name=Пылающий селлафит
 tile.sellafield_4.name=Адский селлафит
+tile.sellafield_5.name=Селлафит-кориум
 tile.sellafield_bedrock.name=Бедроковый селлафит
 tile.sellafield_core.name=Селлафит-кориум
 tile.sellafield_slaked.name=Погашенный селлафит
