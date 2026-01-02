@@ -101,7 +101,7 @@ public class TileEntityFurnaceIron extends TileEntityMachineBase implements IGUI
 					ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(0));
 					ItemStack copy = outputs;
 		
-					if(outputs == ItemStack.EMPTY) {
+					if(outputs.isEmpty()) {
 						 copy  = result.copy();
 						 inventory.setStackInSlot(3, copy);
 					} else {
@@ -160,7 +160,7 @@ public class TileEntityFurnaceIron extends TileEntityMachineBase implements IGUI
 		
 		ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(0));
 		
-		if(result == ItemStack.EMPTY || result.isEmpty()) return false;
+		if(result.isEmpty()) return false;
 		if(inventory.getStackInSlot(3).isEmpty()) return true;
 		
 		if(!result.isItemEqual(inventory.getStackInSlot(3))) return false;

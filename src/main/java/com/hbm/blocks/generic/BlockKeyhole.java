@@ -54,7 +54,7 @@ public class BlockKeyhole extends Block {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(player.getHeldItem(hand) != ItemStack.EMPTY) {
+        if(!player.getHeldItem(hand).isEmpty()) {
             boolean cracked = player.getHeldItem(hand).getItem() == ModItems.key_red_cracked;
             if((player.getHeldItem(hand).getItem() == ModItems.key_red || cracked) && facing != EnumFacing.UP && facing != EnumFacing.DOWN) {
                 if(cracked) player.getHeldItem(hand).shrink(1);

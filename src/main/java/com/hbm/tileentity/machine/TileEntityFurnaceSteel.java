@@ -67,7 +67,7 @@ public class TileEntityFurnaceSteel extends TileEntityMachineBase implements IGU
 			for(int i = 0; i < 3; i++) {
 				ItemStack input = inventory.getStackInSlot(i);
 				
-				if(input == ItemStack.EMPTY || lastItems[i] == ItemStack.EMPTY || !input.isItemEqual(lastItems[i])) {
+				if(input.isEmpty() || lastItems[i].isEmpty() || !input.isItemEqual(lastItems[i])) {
 					progress[i] = 0;
 					bonus[i] = 0;
 				}
@@ -86,7 +86,7 @@ public class TileEntityFurnaceSteel extends TileEntityMachineBase implements IGU
 					ItemStack result = FurnaceRecipes.instance().getSmeltingResult(inventory.getStackInSlot(i));
 					ItemStack copy = outputs;
 		
-					if(outputs == ItemStack.EMPTY) {
+					if(outputs.isEmpty()) {
 						 copy  = result.copy();
 						 inventory.setStackInSlot(i + 3, copy);
 					} else {

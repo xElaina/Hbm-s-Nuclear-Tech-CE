@@ -76,7 +76,7 @@ public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 	public boolean isReady() {
 		if(this.exp1() && this.exp2() && this.exp3() && this.exp4())
 		{
-			if(this.inventory.getStackInSlot(0) != ItemStack.EMPTY && this.inventory.getStackInSlot(5) != ItemStack.EMPTY && this.inventory.getStackInSlot(0).getItem() == ModItems.man_igniter && this.inventory.getStackInSlot(5).getItem() == ModItems.man_core)
+			if(!this.inventory.getStackInSlot(0).isEmpty() && !this.inventory.getStackInSlot(5).isEmpty() && this.inventory.getStackInSlot(0).getItem() == ModItems.man_igniter && this.inventory.getStackInSlot(5).getItem() == ModItems.man_core)
 			{
 				return true;
 			}
@@ -86,7 +86,7 @@ public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp1() {
-		if(this.inventory.getStackInSlot(1) != ItemStack.EMPTY && this.inventory.getStackInSlot(1).getItem() == ModItems.early_explosive_lenses)
+		if(!this.inventory.getStackInSlot(1).isEmpty() && this.inventory.getStackInSlot(1).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}
@@ -95,7 +95,7 @@ public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp2() {
-		if(this.inventory.getStackInSlot(2) != ItemStack.EMPTY && this.inventory.getStackInSlot(2).getItem() == ModItems.early_explosive_lenses)
+		if(!this.inventory.getStackInSlot(2).isEmpty() && this.inventory.getStackInSlot(2).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}
@@ -104,7 +104,7 @@ public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp3() {
-		if(this.inventory.getStackInSlot(3) != ItemStack.EMPTY && this.inventory.getStackInSlot(3).getItem() == ModItems.early_explosive_lenses)
+		if(!this.inventory.getStackInSlot(3).isEmpty() && this.inventory.getStackInSlot(3).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}
@@ -113,7 +113,7 @@ public class TileEntityNukeMan extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp4() {
-		if(this.inventory.getStackInSlot(4) != ItemStack.EMPTY && this.inventory.getStackInSlot(4).getItem() == ModItems.early_explosive_lenses)
+		if(!this.inventory.getStackInSlot(4).isEmpty() && this.inventory.getStackInSlot(4).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}
