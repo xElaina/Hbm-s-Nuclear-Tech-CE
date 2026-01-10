@@ -15,6 +15,7 @@ public final class HBMSoundHandler {
 
     public static SoundEvent assemblerOperate;
     public static SoundEvent fel;
+    public static SoundEvent fensuHum;
     public static SoundEvent hephaestusRunning;
     public static SoundEvent siloopen;
     public static SoundEvent siloclose;
@@ -414,6 +415,7 @@ public final class HBMSoundHandler {
         explosionLargeFar  = register("weapon.explosion_large_far");
         assemblerOperate = register("block.assembleroperate");
         fel = register("block.fel");
+        fel = register("block.fensuHum");
         hephaestusRunning = register("block.hephaestusRunning");
         meteoriteFallingLoop = register("entity.meteoriteFallingLoop");
         pressOperate = register("block.pressoperate");

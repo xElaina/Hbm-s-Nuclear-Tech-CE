@@ -1185,7 +1185,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	public static boolean isDischargeableBattery(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			return battery.getCharge(stack) > 0 && battery.getDischargeRate() > 0;
+			return battery.getCharge(stack) > 0 && battery.getDischargeRate(stack) > 0;
 		}
 		IEnergyStorage cap = getFE(stack);
 		return cap != null && cap.getEnergyStored() > 0 && cap.canExtract();
@@ -1194,7 +1194,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	public static boolean isChargeableBattery(@NotNull ItemStack stack) {
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
-			return battery.getMaxCharge(stack) > battery.getCharge(stack) && battery.getChargeRate() > 0;
+			return battery.getMaxCharge(stack) > battery.getCharge(stack) && battery.getChargeRate(stack) > 0;
 		}
 		IEnergyStorage cap = getFE(stack);
 		return cap != null && cap.getMaxEnergyStored() > cap.getEnergyStored() && cap.canReceive();
@@ -1271,7 +1271,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 			long max = Math.max(0L, battery.getMaxCharge(stack));
 			long cur = Math.max(0L, Math.min(max, battery.getCharge(stack)));
 			long room = Math.max(0L, max - cur);
-			long rate = Math.max(0L, battery.getChargeRate());
+			long rate = Math.max(0L, battery.getChargeRate(stack));
 			long req = instant ? chargeAmountHE : Math.min(chargeAmountHE, rate);
 			long added = Math.min(req, room);
 			if (added > 0) battery.chargeBattery(stack, added);
@@ -1300,7 +1300,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		if (dischargeAmountHE <= 0) throw new IllegalArgumentException("dischargeAmountHE must be > 0");
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			long cur = Math.max(0L, battery.getCharge(stack));
-			long rate = Math.max(0L, battery.getDischargeRate());
+			long rate = Math.max(0L, battery.getDischargeRate(stack));
 			long req = instant ? dischargeAmountHE : Math.min(dischargeAmountHE, rate);
 			long take = Math.min(req, cur);
 			if (take > 0) battery.dischargeBattery(stack, take);

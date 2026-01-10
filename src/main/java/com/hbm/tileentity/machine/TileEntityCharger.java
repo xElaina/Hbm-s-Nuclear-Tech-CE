@@ -31,7 +31,7 @@ import java.util.Random;
 @AutoRegister
 public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IEnergyReceiverMK2 {
 
-	private List<EntityPlayer> players = new ArrayList();
+	private List<EntityPlayer> players = new ArrayList<>();
 	private long charge = 0;
 	private int lastOp = 0;
 
@@ -64,7 +64,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 
 					if(Library.isBattery(stack)) {
 						if (stack.getItem() instanceof IBatteryItem battery) {
-							charge += Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate());
+							charge += Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate(stack));
 						} else {
 							IEnergyStorage cap = stack.getCapability(CapabilityEnergy.ENERGY, null);
 							if (cap != null && GeneralConfig.conversionRateHeToRF > 0) {

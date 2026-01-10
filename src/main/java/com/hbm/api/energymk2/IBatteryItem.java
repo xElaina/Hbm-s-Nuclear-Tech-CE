@@ -62,7 +62,7 @@ public interface IBatteryItem {
 	 *
 	 * @return The maximum charge rate in HE per tick.
 	 */
-	long getChargeRate();
+	long getChargeRate(ItemStack stack);
 
 	/**
 	 * Gets the maximum rate at which this item can provide energy.
@@ -72,7 +72,7 @@ public interface IBatteryItem {
 	 *
 	 * @return The maximum discharge rate in HE per tick.
 	 */
-	long getDischargeRate();
+	long getDischargeRate(ItemStack stack);
 
 	/**
 	 * Returns the NBT tag key used for storing the charge value.

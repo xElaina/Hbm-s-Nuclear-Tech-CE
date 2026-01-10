@@ -5,7 +5,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemBattery;
+import com.hbm.items.machine.ItemBatteryPack;
 import com.hbm.items.tool.ItemBlowtorch;
 import com.hbm.items.tool.ItemToolAbilityFueled;
 import com.hbm.main.CraftingManager;
@@ -56,19 +56,14 @@ public class ToolRecipes {
         addShovel(	DESH.ingot(), ModItems.desh_shovel);
         addHoe(		DESH.ingot(), ModItems.desh_hoe);
 
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_sword, 1), "RPR", "RPR", " B ", 'P', ANY_PLASTIC.ingot(), 'R', DURA.bolt(), 'B', ModItems.battery_lithium );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_pickaxe, 1), "RDM", " PB", " P ", 'P', ANY_PLASTIC.ingot(), 'D', DURA.ingot(), 'R', DURA.bolt(), 'M', ModItems.motor, 'B', ModItems.battery_lithium );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_axe, 1), " DP", "RRM", " PB", 'P', ANY_PLASTIC.ingot(), 'D', DURA.ingot(), 'R', DURA.bolt(), 'M', ModItems.motor, 'B', ModItems.battery_lithium );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_shovel, 1), "  P", "RRM", "  B", 'P', ANY_PLASTIC.ingot(), 'R', DURA.bolt(), 'M', ModItems.motor, 'B', ModItems.battery_lithium );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_sword, 1), "RPR", "RPR", " B ", 'P', ANY_PLASTIC.ingot(), 'R', DURA.bolt(), 'B', ItemBatteryPack.EnumBatteryPack.BATTERY_LEAD.stack() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_pickaxe, 1), "RDM", " PB", " P ", 'P', ANY_PLASTIC.ingot(), 'D', DURA.ingot(), 'R', DURA.bolt(), 'M', ModItems.motor, 'B', ItemBatteryPack.EnumBatteryPack.BATTERY_LEAD.stack() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_axe, 1), " DP", "RRM", " PB", 'P', ANY_PLASTIC.ingot(), 'D', DURA.ingot(), 'R', DURA.bolt(), 'M', ModItems.motor, 'B', ItemBatteryPack.EnumBatteryPack.BATTERY_LEAD.stack() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.elec_shovel, 1), "  P", "RRM", "  B", 'P', ANY_PLASTIC.ingot(), 'R', DURA.bolt(), 'M', ModItems.motor, 'B', ItemBatteryPack.EnumBatteryPack.BATTERY_LEAD.stack() );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.centri_stick, 1), ModItems.centrifuge_element, ModItems.energy_core, KEY_STICK );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.smashing_hammer, 1), "STS", "SPS", " P ", 'S', STEEL.block(), 'T', W.block(), 'P', ANY_PLASTIC.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.meteorite_sword, 1), "  B", "GB ", "SG ", 'B', ModItems.blade_meteorite, 'G', GOLD.plate(), 'S', KEY_STICK );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.dwarven_pickaxe, 1), "CIC", " S ", " S ", 'C', CU.ingot(), 'I', IRON.ingot(), 'S', KEY_STICK );
-
-        //Drax
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.drax, 1), "BDS", "CDC", "FMF", 'B', ModItems.starmetal_pickaxe, 'S', ModItems.starmetal_shovel, 'C', CO.ingot(), 'F', ModItems.fusion_core, 'D', DESH.ingot(), 'M', ModItems.motor_desh );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.drax_mk2, 1), "SCS", "IDI", "FEF", 'S', STAR.ingot(), 'C', ModItems.crystal_trixite, 'I', BIGMT.ingot(), 'D', ModItems.drax, 'F', ModItems.fusion_core, 'E', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED) );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.drax_mk3, 1), "ECE", "CDC", "SBS", 'E', ModBlocks.block_euphemium_cluster, 'C', ModItems.crystal_schrabidium, 'D', ModItems.drax_mk2, 'S', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BISMOID), 'B', ItemBattery.getFullBattery(ModItems.battery_spark) );
 
         //Super pickaxes
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.bismuth_pickaxe, 1), " BM", "BPB", "TB ", 'B', ModItems.ingot_bismuth, 'M', ModItems.ingot_meteorite, 'P', ModItems.starmetal_pickaxe, 'T', W.bolt() );
@@ -136,7 +131,7 @@ public class ToolRecipes {
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.mirror_tool), " A ", " IA", "I  ", 'A', AL.ingot(), 'I', IRON.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.rbmk_tool), " A ", " IA", "I  ", 'A', PB.ingot(), 'I', IRON.ingot() );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.power_net_tool), "WRW", " I ", " B ", 'W', MINGRADE.wireFine(), 'R', REDSTONE.dust(), 'I', IRON.ingot(), 'B', ModItems.battery_generic );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.power_net_tool), "WRW", " I ", " B ", 'W', MINGRADE.wireFine(), 'R', REDSTONE.dust(), 'I', IRON.ingot(), 'B', ItemBatteryPack.EnumBatteryPack.BATTERY_LEAD.stack() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.analysis_tool), "  G", " S ", "S  ", 'G', KEY_ANYPANE, 'S', STEEL.ingot() );
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.toolbox), "CCC", "CIC", 'C', CU.plate(), 'I', IRON.ingot() );

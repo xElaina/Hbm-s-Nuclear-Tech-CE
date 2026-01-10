@@ -528,6 +528,7 @@ public class NTMClientRegistry {
         swapModels(ModItems.ammo_himars, reg);
         swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
+        swapModels(ModItems.battery_pack, reg);
 
         swapModels(Item.getItemFromBlock(ModBlocks.boat), reg);
 
