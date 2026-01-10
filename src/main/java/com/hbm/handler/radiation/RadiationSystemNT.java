@@ -3625,7 +3625,6 @@ public final class RadiationSystemNT {
     }
 
     private static final class LongBag {
-        // setting to 14 would BREAK Java 25 compatibility, I have NO IDEA how
         static final int CHUNK_SHIFT = 10;
         static final int CHUNK_SIZE = 1 << CHUNK_SHIFT;
         static final int CHUNK_MASK = CHUNK_SIZE - 1;
@@ -3636,7 +3635,7 @@ public final class RadiationSystemNT {
         volatile int size;
 
         LongBag(int cap) {
-            int chunkCount = (cap + CHUNK_SIZE - 1) >>> CHUNK_SHIFT;
+            int chunkCount = (int) (((long) cap + CHUNK_SIZE - 1L) >>> CHUNK_SHIFT);
             chunks = new long[chunkCount][];
             capacity = chunkCount * CHUNK_SIZE;
         }
@@ -3659,7 +3658,7 @@ public final class RadiationSystemNT {
             int o = i & CHUNK_MASK;
             long[] chunk = chunks[c];
             if (chunk == null) {
-                long chunkAddr = offLong(c);
+                long chunkAddr = offReference(c);
                 chunk = (long[]) U.getReferenceVolatile(chunks, chunkAddr);
                 if (chunk == null) {
                     long[] newChunk = new long[CHUNK_SIZE];
@@ -3680,8 +3679,6 @@ public final class RadiationSystemNT {
         static final int CHUNK_SHIFT = 10;
         static final int CHUNK_SIZE = 1 << CHUNK_SHIFT;
         static final int CHUNK_MASK = CHUNK_SIZE - 1;
-        static final long SRAA_BASE = U.arrayBaseOffset(SectionRef[][].class);
-        static final int SRAA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(SectionRef[][].class));
         static final long SIZE_OFF = fieldOffset(SectionRetireBag.class, "size");
 
         final SectionRef[][] chunks;
@@ -3689,7 +3686,7 @@ public final class RadiationSystemNT {
         volatile int size;
 
         SectionRetireBag(int cap) {
-            int chunkCount = (cap + CHUNK_SIZE - 1) >>> CHUNK_SHIFT;
+            int chunkCount = (int) (((long) cap + CHUNK_SIZE - 1L) >>> CHUNK_SHIFT);
             this.chunks = new SectionRef[chunkCount][];
             this.capacity = chunkCount * CHUNK_SIZE;
         }
@@ -3710,7 +3707,7 @@ public final class RadiationSystemNT {
 
             SectionRef[] chunk = chunks[c];
             if (chunk == null) {
-                long addr = SRAA_BASE + ((long) c << SRAA_SHIFT);
+                long addr = offReference(c);
                 chunk = (SectionRef[]) U.getReferenceVolatile(chunks, addr);
                 if (chunk == null) {
                     SectionRef[] newChunk = new SectionRef[CHUNK_SIZE];

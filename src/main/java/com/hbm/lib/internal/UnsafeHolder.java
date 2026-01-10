@@ -11,23 +11,23 @@ public final class UnsafeHolder {
     public static final AbstractUnsafe U = AbstractUnsafe.getUnsafe();
 
     public static final long IA_BASE = U.arrayBaseOffset(int[].class);
-    public static final long IA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(int[].class));
+    public static final int IA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(int[].class));
     public static final long JA_BASE = U.arrayBaseOffset(long[].class);
-    public static final long JA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(long[].class));
+    public static final int JA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(long[].class));
     public static final long BA_BASE = U.arrayBaseOffset(byte[].class);
-    public static final long BA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(byte[].class));
+    public static final int BA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(byte[].class));
     public static final long ZA_BASE = U.arrayBaseOffset(boolean[].class);
-    public static final long ZA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(boolean[].class));
+    public static final int ZA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(boolean[].class));
     public static final long SA_BASE = U.arrayBaseOffset(short[].class);
-    public static final long SA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(short[].class));
+    public static final int SA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(short[].class));
     public static final long CA_BASE = U.arrayBaseOffset(char[].class);
-    public static final long CA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(char[].class));
+    public static final int CA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(char[].class));
     public static final long FA_BASE = U.arrayBaseOffset(float[].class);
-    public static final long FA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(float[].class));
+    public static final int FA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(float[].class));
     public static final long DA_BASE = U.arrayBaseOffset(double[].class);
-    public static final long DA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(double[].class));
+    public static final int DA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(double[].class));
     public static final long RA_BASE = U.arrayBaseOffset(Object[].class);
-    public static final long RA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(Object[].class));
+    public static final int RA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(Object[].class));
 
     private UnsafeHolder() {
     }
