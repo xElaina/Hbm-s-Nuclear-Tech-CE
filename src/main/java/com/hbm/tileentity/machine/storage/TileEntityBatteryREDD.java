@@ -82,9 +82,11 @@ public class TileEntityBatteryREDD extends TileEntityBatteryBase {
             float pitch = 0.5F + this.getSpeed() / 15F * 1.5F;
 
             if (this.prevRotation != this.rotation && MainRegistry.proxy.me().getDistanceSq(pos.getX() + 0.5, pos.getY() + 5.5, pos.getZ() + 0.5) < 30 * 30) {
-                if (this.audio == null || !this.audio.isPlaying()) {
-                    this.audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.fensuHum, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(1.5F), 25F, pitch, 5);
+                if (this.audio == null) {
+                    this.audio = createAudioLoop();
                     this.audio.startSound();
+                } else if(!audio.isPlaying()) {
+                    audio = rebootAudio(audio);
                 }
 
                 this.audio.updateVolume(this.getVolume(1.5F));
@@ -98,6 +100,12 @@ public class TileEntityBatteryREDD extends TileEntityBatteryBase {
                 }
             }
         }
+    }
+
+    @Override
+    public AudioWrapper createAudioLoop() {
+        float pitch = 0.5F + this.getSpeed() / 15F * 1.5F;
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.fensuHum, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(1.5F), 25F, pitch, 5);
     }
 
     public float getSpeed() {

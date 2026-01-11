@@ -415,7 +415,7 @@ public final class HBMSoundHandler {
         explosionLargeFar  = register("weapon.explosion_large_far");
         assemblerOperate = register("block.assembleroperate");
         fel = register("block.fel");
-        fel = register("block.fensuHum");
+        fensuHum = register("block.fensuHum");
         hephaestusRunning = register("block.hephaestusRunning");
         meteoriteFallingLoop = register("entity.meteoriteFallingLoop");
         pressOperate = register("block.pressoperate");

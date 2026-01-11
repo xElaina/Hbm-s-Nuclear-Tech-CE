@@ -9,6 +9,7 @@ import com.hbm.render.util.BeamPronter;
 import com.hbm.tileentity.machine.storage.TileEntityBatteryREDD;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.Clock;
+import com.hbm.util.RenderUtil;
 import com.hbm.util.Vec3NT;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,6 +21,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Random;
 @AutoRegister
 public class RenderBatteryREDD extends TileEntitySpecialRenderer<TileEntityBatteryREDD> implements IItemRendererProvider {
@@ -32,7 +35,7 @@ public class RenderBatteryREDD extends TileEntitySpecialRenderer<TileEntityBatte
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
 
-        switch(tile.getBlockMetadata() - 10) {
+        switch (tile.getBlockMetadata() - 10) {
             case 2: GlStateManager.rotate(270, 0F, 1F, 0F); break;
             case 4: GlStateManager.rotate(0, 0F, 1F, 0F); break;
             case 3: GlStateManager.rotate(90, 0F, 1F, 0F); break;
@@ -61,6 +64,7 @@ public class RenderBatteryREDD extends TileEntitySpecialRenderer<TileEntityBatte
         GlStateManager.pushMatrix();
         GlStateManager.translate(0D, 5.5D, 0D);
 
+        //batteryAttribPushForAdditiveNoTex();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
         GlStateManager.disableCull();
@@ -117,6 +121,9 @@ public class RenderBatteryREDD extends TileEntitySpecialRenderer<TileEntityBatte
         }
 
         tess.draw();
+
+        /*batteryAttribPop();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 0F, 0F);*/
 
         GlStateManager.enableLighting();
         GlStateManager.enableAlpha();
@@ -240,6 +247,109 @@ public class RenderBatteryREDD extends TileEntitySpecialRenderer<TileEntityBatte
                     (int) (System.currentTimeMillis() % 1000L) / 50, 1, 0F, 3, 0.0625F);
             GlStateManager.popMatrix();
         }
+    }
+    // TODO
+    // note: I did that based on ItemRenderWeaponBase, don't know if that's correct
+    // for now I'll comment usages as it doesn't fix the issue - would love some advice here, mov
+    private static final ThreadLocal<Deque<BatteryAttribState>> BATTERY_ATTRIB_STACK =
+            ThreadLocal.withInitial(ArrayDeque::new);
+
+    private static final class BatteryAttribState {
+        boolean alpha;
+        boolean blend;
+        boolean cull;
+        boolean lighting;
+        boolean texture2d;
+        boolean depthMask;
+
+        int srcRGB, dstRGB, srcA, dstA;
+
+        float r, g, b, a;
+        int shadeModel;
+        int matrixMode;
+
+        int alphaFunc;
+        float alphaRef;
+        float lightX, lightY;
+    }
+
+    private static void batteryAttribPushForAdditiveNoTex() {
+        final BatteryAttribState s = new BatteryAttribState();
+
+        s.alpha    = RenderUtil.isAlphaEnabled();
+        s.blend    = RenderUtil.isBlendEnabled();
+        s.cull     = RenderUtil.isCullEnabled();
+        s.lighting = RenderUtil.isLightingEnabled();
+        s.texture2d = RenderUtil.isTexture2DEnabled();
+        s.depthMask = RenderUtil.isDepthMaskEnabled();
+
+        s.srcRGB = RenderUtil.getBlendSrcFactor();
+        s.dstRGB = RenderUtil.getBlendDstFactor();
+        s.srcA   = RenderUtil.getBlendSrcAlphaFactor();
+        s.dstA   = RenderUtil.getBlendDstAlphaFactor();
+
+        s.r = RenderUtil.getCurrentColorRed();
+        s.g = RenderUtil.getCurrentColorGreen();
+        s.b = RenderUtil.getCurrentColorBlue();
+        s.a = RenderUtil.getCurrentColorAlpha();
+
+        s.shadeModel = RenderUtil.getShadeModel();
+        s.matrixMode = GL11.glGetInteger(GL11.GL_MATRIX_MODE);
+
+        s.alphaFunc = RenderUtil.getAlphaFunc();
+        s.alphaRef  = RenderUtil.getAlphaRef();
+        s.lightX    = OpenGlHelper.lastBrightnessX;
+        s.lightY    = OpenGlHelper.lastBrightnessY;
+
+        BATTERY_ATTRIB_STACK.get().push(s);
+
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+
+        if (s.cull) GlStateManager.disableCull();
+        if (s.texture2d) GlStateManager.disableTexture2D();
+        if (s.lighting) GlStateManager.disableLighting();
+
+        if (s.alpha) GlStateManager.disableAlpha();
+
+        if (!s.blend) GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA.factor, GlStateManager.DestFactor.ONE.factor,
+                GlStateManager.SourceFactor.ONE.factor, GlStateManager.DestFactor.ZERO.factor
+        );
+
+        GlStateManager.depthMask(false);
+    }
+
+    private static void batteryAttribPop() {
+        final BatteryAttribState s = BATTERY_ATTRIB_STACK.get().poll();
+        if (s == null) return;
+
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, s.lightX, s.lightY);
+        GlStateManager.alphaFunc(s.alphaFunc, s.alphaRef);
+
+        GlStateManager.matrixMode(s.matrixMode);
+        GlStateManager.shadeModel(s.shadeModel);
+
+        GlStateManager.color(s.r, s.g, s.b, s.a);
+
+        GlStateManager.tryBlendFuncSeparate(s.srcRGB, s.dstRGB, s.srcA, s.dstA);
+        if (s.blend) GlStateManager.enableBlend();
+        else GlStateManager.disableBlend();
+
+        if (s.alpha) GlStateManager.enableAlpha();
+        else GlStateManager.disableAlpha();
+
+        GlStateManager.depthMask(s.depthMask);
+
+        if (s.lighting) GlStateManager.enableLighting();
+        else GlStateManager.disableLighting();
+
+        if (s.texture2d) GlStateManager.enableTexture2D();
+        else GlStateManager.disableTexture2D();
+
+        if (s.cull) GlStateManager.enableCull();
+        else GlStateManager.disableCull();
     }
 
     @Override
