@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemBatterySC extends ItemEnumMulti implements IBatteryItem {
+public class ItemBatterySC extends ItemEnumMulti<ItemBatterySC.EnumBatterySC> implements IBatteryItem {
 
     public ItemBatterySC(String s) {
         super(s, EnumBatterySC.class, true, true);

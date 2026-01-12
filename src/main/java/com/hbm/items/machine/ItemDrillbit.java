@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemDrillbit extends ItemEnumMulti {
+public class ItemDrillbit extends ItemEnumMulti<ItemEnums.EnumDrillType> {
 
 	public ItemDrillbit(String s) {
 		super(s, ItemEnums.EnumDrillType.class, true, true);

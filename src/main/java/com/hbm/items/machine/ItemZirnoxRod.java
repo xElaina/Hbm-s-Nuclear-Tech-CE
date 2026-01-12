@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemZirnoxRod extends ItemEnumMulti {
+public class ItemZirnoxRod extends ItemEnumMulti<ItemZirnoxRod.EnumZirnoxType> {
 
     public ItemZirnoxRod(String registryName) {
         super(registryName, EnumZirnoxType.class, true, true);

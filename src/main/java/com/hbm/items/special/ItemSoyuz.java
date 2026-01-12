@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemSoyuz extends ItemEnumMulti {
+public class ItemSoyuz extends ItemEnumMulti<ItemEnums.SoyuzSkinType> {
 
     public ItemSoyuz(String s) {
         super(s, ItemEnums.SoyuzSkinType.class, false, true);

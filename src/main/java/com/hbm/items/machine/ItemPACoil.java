@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemPACoil extends ItemEnumMulti {
+public class ItemPACoil extends ItemEnumMulti<ItemPACoil.EnumCoilType> {
 
     public ItemPACoil(String s) {
         super(s, EnumCoilType.class, true, true);

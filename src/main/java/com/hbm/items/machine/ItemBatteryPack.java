@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemBatteryPack extends ItemEnumMulti implements IBatteryItem, IMetaItemTesr {
+public class ItemBatteryPack extends ItemEnumMulti<ItemBatteryPack.EnumBatteryPack> implements IBatteryItem, IMetaItemTesr {
 
     public ItemBatteryPack(String s) {
         super(s, EnumBatteryPack.class, true, false);

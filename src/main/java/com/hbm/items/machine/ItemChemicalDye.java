@@ -22,7 +22,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemChemicalDye extends ItemEnumMulti {
+public class ItemChemicalDye extends ItemEnumMulti<ItemChemicalDye.EnumChemDye> {
     protected String baseName;
     public ItemChemicalDye(String s) {
         super(s, EnumChemDye.class, true, false);

@@ -5,7 +5,7 @@ import com.hbm.util.EnumUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ItemArcElectrode extends ItemEnumMulti {
+public class ItemArcElectrode extends ItemEnumMulti<ItemArcElectrode.EnumElectrodeType> {
 
     public ItemArcElectrode(String s) {
         super(s, EnumElectrodeType.class, true, true);

@@ -39,7 +39,7 @@ import java.util.Locale;
 /*
  * Watz Isotropic Fuel, Oxidized
  */
-public class ItemWatzPellet extends ItemEnumMulti implements IDynamicModels {
+public class ItemWatzPellet extends ItemEnumMulti<ItemWatzPellet.EnumWatzType> implements IDynamicModels {
 
     final boolean isDepleted;
 

@@ -381,7 +381,7 @@ public class ModItems {
     public static final Item upgrade_stack_2 = new ItemMachineUpgrade("upgrade_stack_2", UpgradeType.SPEED, 1).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item upgrade_stack_3 = new ItemMachineUpgrade("upgrade_stack_3", UpgradeType.SPEED, 1).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     //Fluid handling items
-    public static final Item fuel_additive = new ItemEnumMulti("fuel_additive", ItemEnums.EnumFuelAdditive.class, true, true).setCreativeTab(MainRegistry.controlTab);
+    public static final Item fuel_additive = new ItemEnumMulti<>("fuel_additive", ItemEnums.EnumFuelAdditive.class, true, true).setCreativeTab(MainRegistry.controlTab);
 
     public static final Item canister_empty = new ItemBakedBase("canister_empty").setCreativeTab(MainRegistry.controlTab);
     public static final Item canister_full = new ItemCanister("canister_fuel", 1000).setCreativeTab(MainRegistry.controlTab);
@@ -1104,7 +1104,7 @@ public class ModItems {
     public static final Item nuclear_waste_tiny = new ItemCustomLore("nuclear_waste_tiny").setCreativeTab(MainRegistry.partsTab);
     public static final Item nuclear_waste_vitrified = new ItemCustomLore("nuclear_waste_vitrified").setCreativeTab(MainRegistry.partsTab);
     public static final Item nuclear_waste_vitrified_tiny = new ItemCustomLore("nuclear_waste_vitrified_tiny").setCreativeTab(MainRegistry.partsTab);
-    public static final Item scrap_plastic = new ItemEnumMulti("scrap_plastic", ScrapType.class, false, "scrap_plastic").setCreativeTab(null);
+    public static final Item scrap_plastic = new ItemEnumMulti<>("scrap_plastic", ScrapType.class, false, "scrap_plastic").setCreativeTab(null);
     public static final Item scrap = new ItemBase("scrap").setCreativeTab(MainRegistry.partsTab);
     public static final Item scrap_oil = new ItemBase("scrap_oil").setCreativeTab(MainRegistry.partsTab);
     public static final Item scrap_nuclear = new ItemBakedBase("scrap_nuclear").setCreativeTab(MainRegistry.partsTab);
@@ -1158,13 +1158,13 @@ public class ModItems {
     public static final Item plate_fuel_ra226be = new ItemPlateFuel(1300000, "plate_fuel_ra226be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 30).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item plate_fuel_pu238be = new ItemPlateFuel(1000000, "plate_fuel_pu238be").setFunction(ItemPlateFuel.FunctionEnum.PASSIVE, 50).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item pwr_fuel = new ItemPWRFuel().setCreativeTab(MainRegistry.controlTab);
-    public static final Item pwr_fuel_hot = new ItemEnumMulti("pwr_fuel_hot", ItemPWRFuel.EnumPWRFuel.class, true, "pwr_fuel_hot").setCreativeTab(MainRegistry.controlTab);
-    public static final Item pwr_fuel_depleted = new ItemEnumMulti("pwr_fuel_depleted", ItemPWRFuel.EnumPWRFuel.class, true, "pwr_fuel_depleted").setCreativeTab(MainRegistry.controlTab);
+    public static final Item pwr_fuel_hot = new ItemEnumMulti<>("pwr_fuel_hot", ItemPWRFuel.EnumPWRFuel.class, true, "pwr_fuel_hot").setCreativeTab(MainRegistry.controlTab);
+    public static final Item pwr_fuel_depleted = new ItemEnumMulti<>("pwr_fuel_depleted", ItemPWRFuel.EnumPWRFuel.class, true, "pwr_fuel_depleted").setCreativeTab(MainRegistry.controlTab);
     public static final Item rod = new ItemBreedingRod("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
     public static final Item rod_dual = new ItemBreedingRod("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
     public static final Item rod_quad = new ItemBreedingRod("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
     //RTG
-    public static final Item pellet_rtg_depleted = new ItemEnumMulti("pellet_rtg_depleted", EnumDepletedRTGMaterial.class, true, true).setContainerItem(ModItems.plate_iron).setCreativeTab(MainRegistry.controlTab);
+    public static final Item pellet_rtg_depleted = new ItemEnumMulti<>("pellet_rtg_depleted", EnumDepletedRTGMaterial.class, true, true).setContainerItem(ModItems.plate_iron).setCreativeTab(MainRegistry.controlTab);
 
     public static final Item pellet_rtg_radium = new ItemRTGPellet(3, "pellet_rtg_radium").setDecays(EnumDepletedRTGMaterial.LEAD, 14016000000L, 1).setCreativeTab(MainRegistry.controlTab);
     public static final Item pellet_rtg_weak = new ItemRTGPellet(5, "pellet_rtg_weak").setDecays(EnumDepletedRTGMaterial.LEAD, 876000000L, 2).setCreativeTab(MainRegistry.controlTab);
@@ -1191,7 +1191,7 @@ public class ModItems {
     public static final Item ball_tnt = new ItemBase("ball_tnt").setCreativeTab(MainRegistry.partsTab);
     public static final Item ball_tatb = new ItemBase("ball_tatb").setCreativeTab(MainRegistry.partsTab);
     public static final Item ball_fireclay = new ItemBase("ball_fireclay").setCreativeTab(MainRegistry.partsTab);
-    public static final Item plant_item = new ItemEnumMulti("plant_item", EnumPlantType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item plant_item = new ItemEnumMulti<>("plant_item", EnumPlantType.class, true, true).setCreativeTab(MainRegistry.partsTab);
 
     //Autogen
     public static final Item mold_base = new ItemBase("mold_base").setCreativeTab(MainRegistry.controlTab);
@@ -1219,12 +1219,12 @@ public class ModItems {
     public static final Item part_mechanism = new ItemAutogen(MaterialShapes.MECHANISM, "part_mechanism").setCreativeTab(MainRegistry.partsTab);
     public static final Item part_stock = new ItemAutogen(MaterialShapes.STOCK, "part_stock").setCreativeTab(MainRegistry.partsTab);
     public static final Item part_grip = new ItemAutogen(MaterialShapes.GRIP, "part_grip").setCreativeTab(MainRegistry.partsTab);
-    public static final Item casing = new ItemEnumMulti("casing", ItemEnums.EnumCasingType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item casing = new ItemEnumMulti<>("casing", ItemEnums.EnumCasingType.class, true, true).setCreativeTab(MainRegistry.partsTab);
     //Bedrock Ores (new, gottverdammt)
     public static final Item bedrock_ore = new ItemBedrockOreNew("bedrock_ore_new").setCreativeTab(MainRegistry.partsTab);
     public static final Item bedrock_ore_base = new ItemBedrockOreBase("bedrock_ore_base").setCreativeTab(MainRegistry.partsTab);
     public static final Item bedrock_ore_fragment = new ItemAutogen(MaterialShapes.FRAGMENT, "bedrock_ore_fragment").aot(Mats.MAT_BISMUTH, "bedrock_ore_fragment_bismuth").setCreativeTab(MainRegistry.partsTab);
-    public static final Item chunk_ore = new ItemEnumMulti("chunk_ore", EnumChunkType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item chunk_ore = new ItemEnumMulti<>("chunk_ore", EnumChunkType.class, true, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item neutron_reflector = new ItemBase("neutron_reflector").setCreativeTab(MainRegistry.partsTab);
     public static final Item rtg_unit = new ItemBase("rtg_unit").setCreativeTab(MainRegistry.partsTab);
     public static final Item thermo_unit_empty = new ItemBase("thermo_unit_empty").setCreativeTab(MainRegistry.partsTab);
@@ -1244,7 +1244,7 @@ public class ModItems {
     public static final Item pellet_gas = new ItemCustomLore("pellet_gas").setCreativeTab(MainRegistry.partsTab);
     public static final Item coal_infernal = new ItemFuel("coal_infernal", 4800).setCreativeTab(MainRegistry.partsTab);
     public static final Item cinnabar = new ItemBase("cinnabar").setCreativeTab(MainRegistry.partsTab);
-    public static final Item powder_ash = new ItemEnumMulti("powder_ash", EnumAshType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item powder_ash = new ItemEnumMulti<>("powder_ash", EnumAshType.class, true, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item powder_cement = new ItemLemon(2, 0.5F, false, "powder_cement").setCreativeTab(MainRegistry.partsTab);
     //Misc/crafting items
     public static final Item toothpicks = new ItemBase("toothpicks").setCreativeTab(MainRegistry.partsTab);
@@ -1277,7 +1277,7 @@ public class ModItems {
     public static final Item centrifuge_element = new ItemBase("centrifuge_element").setCreativeTab(MainRegistry.partsTab);
     public static final Item reactor_core = new ItemBase("reactor_core").setCreativeTab(MainRegistry.partsTab);
     //Fuels
-    public static final Item oil_tar = new ItemEnumMulti("oil_tar", EnumTarType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item oil_tar = new ItemEnumMulti<>("oil_tar", EnumTarType.class, true, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item solid_fuel = new ItemFuel("solid_fuel", 3200).setCreativeTab(MainRegistry.partsTab);
     public static final Item solid_fuel_presto = new ItemFuel("solid_fuel_presto", 6400).setCreativeTab(MainRegistry.partsTab);
     public static final Item solid_fuel_presto_triplet = new ItemFuel("solid_fuel_presto_triplet", 19200).setCreativeTab(MainRegistry.partsTab);
@@ -1285,11 +1285,11 @@ public class ModItems {
     public static final Item solid_fuel_presto_bf = new ItemBakedBase("solid_fuel_presto_bf").setCreativeTab(MainRegistry.partsTab);
     public static final Item solid_fuel_presto_triplet_bf = new ItemBakedBase("solid_fuel_presto_triplet_bf").setCreativeTab(MainRegistry.partsTab);
     public static final Item rocket_fuel = new ItemFuel("rocket_fuel", 6400).setCreativeTab(MainRegistry.partsTab);
-    public static final Item briquette = new ItemEnumMulti("briquette", EnumBriquetteType.class, true, true).setCreativeTab(MainRegistry.partsTab);
-    public static final Item coke = new ItemEnumMulti("coke", EnumCokeType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item briquette = new ItemEnumMulti<>("briquette", EnumBriquetteType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item coke = new ItemEnumMulti<>("coke", EnumCokeType.class, true, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item lignite = new ItemFuel("lignite", 1200).setCreativeTab(MainRegistry.partsTab);
     //Circuit
-    public static final Item circuit = new ItemEnumMulti("circuit", EnumCircuitType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item circuit = new ItemEnumMulti<>("circuit", EnumCircuitType.class, true, true).setCreativeTab(MainRegistry.partsTab);
     //Fragments
     public static final Item fragment_neodymium = new ItemBase("fragment_neodymium").setCreativeTab(MainRegistry.partsTab);
     public static final Item fragment_cobalt = new ItemBase("fragment_cobalt").setCreativeTab(MainRegistry.partsTab);
@@ -1791,12 +1791,12 @@ public class ModItems {
     public static final Item upgrade_muffler = new ItemMuffler("upgrade_muffler").setCreativeTab(MainRegistry.partsTab);
     public static final Item upgrade_template = new ItemCustomLore("upgrade_template").setMaxStackSize(1).setCreativeTab(MainRegistry.partsTab);
     public static final Item deuterium_filter = new ItemBase("deuterium_filter").setCreativeTab(MainRegistry.partsTab);
-    public static final Item parts_legendary = new ItemEnumMulti("parts_legendary", EnumLegendaryType.class, false, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item parts_legendary = new ItemEnumMulti<>("parts_legendary", EnumLegendaryType.class, false, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item sawblade = new ItemBase("sawblade").setCreativeTab(MainRegistry.partsTab);
     public static final Item gear_large = new ItemGear("gear_large").setCreativeTab(MainRegistry.partsTab);
     public static final Item crt_display = new ItemBakedBase("crt_display").setCreativeTab(MainRegistry.partsTab);
-    public static final ItemEnumMulti circuit_star_piece = (ItemEnumMulti) new ItemEnumMulti("circuit_star_piece", ScrapType.class, true, true).setCreativeTab(null);
-    public static final ItemEnumMulti circuit_star_component = (ItemEnumMulti) new ItemEnumMulti("circuit_star_component", CircuitComponentType.class, true, true).setCreativeTab(null);
+    public static final ItemEnumMulti<ScrapType> circuit_star_piece = new ItemEnumMulti<>("circuit_star_piece", ScrapType.class, true, true).setCreativeTab(null);
+    public static final ItemEnumMulti<CircuitComponentType> circuit_star_component = new ItemEnumMulti<>("circuit_star_component", CircuitComponentType.class, true, true).setCreativeTab(null);
     public static final Item circuit_star = new ItemCustomLore("circuit_star").setRarity(EnumRarity.UNCOMMON).setCreativeTab(null);
     public static final Item mechanism_revolver_1 = new ItemBase("mechanism_revolver_1").setCreativeTab(MainRegistry.partsTab);
     public static final Item mechanism_revolver_2 = new ItemBase("mechanism_revolver_2").setCreativeTab(MainRegistry.partsTab);
@@ -1903,10 +1903,10 @@ public class ModItems {
     public static Item ammo_debug;
     public static Item ammo_standard;
     public static Item ammo_secret;
-    public static final ItemEnumMulti ammo_shell = (ItemEnumMulti) new ItemAmmo("ammo_shell", ItemAmmoEnums.Ammo240Shell.class).setCreativeTab(MainRegistry.weaponTab);
+    public static final ItemAmmo<ItemAmmoEnums.Ammo240Shell> ammo_shell = new ItemAmmo<>("ammo_shell", ItemAmmoEnums.Ammo240Shell.class).setCreativeTab(MainRegistry.weaponTab);
     public static final Item ammo_dgk = new ItemCustomLore("ammo_dgk").setCreativeTab(MainRegistry.weaponTab);
-    public static final ItemEnumMulti ammo_fireext = (ItemEnumMulti) new ItemAmmo("ammo_fireext", ItemAmmoEnums.AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab);
-    public static final ItemEnumMulti ammo_misc = new ItemAmmo("ammo_misc", ItemAmmoEnums.AmmoMisc.class);
+    public static final ItemAmmo<ItemAmmoEnums.AmmoFireExt> ammo_fireext = new ItemAmmo<>("ammo_fireext", ItemAmmoEnums.AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab);
+    public static final ItemAmmo<ItemAmmoEnums.AmmoMisc> ammo_misc = new ItemAmmo<>("ammo_misc", ItemAmmoEnums.AmmoMisc.class).setCreativeTab(MainRegistry.weaponTab);
     public static final Item ammo_arty = new ItemAmmoArty("ammo_arty");
     public static final Item ammo_himars = new ItemAmmoHIMARS("ammo_himars");
     public static final Item gun_b92_ammo = new GunB92Cell("gun_b92_ammo").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
@@ -2656,7 +2656,7 @@ public class ModItems {
     //Drillgon200: Shaking my head... just had to put "FOE" right on it.
     public static final Item book_of_ = new ItemBook("book_of_").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item book_lemegeton = new ItemBookLemegeton("book_lemegeton").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item page_of_ = new ItemEnumMulti("page_of_", ItemEnums.EnumPages.class, true, "page_of_").setMaxStackSize(1).setCreativeTab(null);
+    public static final Item page_of_ = new ItemEnumMulti<>("page_of_", ItemEnums.EnumPages.class, true, "page_of_").setMaxStackSize(1).setCreativeTab(null);
     public static final Item crystal_horn = new ItemCustomLore("crystal_horn").setCreativeTab(MainRegistry.partsTab);
     public static final Item crystal_charred = new ItemCustomLore("crystal_charred").setCreativeTab(MainRegistry.partsTab);
     public static final Item watch = new ItemCustomLore("watch").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1);
@@ -2685,7 +2685,7 @@ public class ModItems {
     public static final Item telepad = new ItemBase("telepad").setCreativeTab(MainRegistry.partsTab);
     public static final Item entanglement_kit = new ItemCustomLore("entanglement_kit").setCreativeTab(MainRegistry.partsTab);
     //Dummy texture items; Note: Use EffectItem to autohide them from JEI
-    public static final Item achievement_icon = new ItemEnumMulti("achievement_icon", ItemEnums.EnumAchievementType.class, true, true).setCreativeTab(null);
+    public static final Item achievement_icon = new ItemEnumMulti<>("achievement_icon", ItemEnums.EnumAchievementType.class, true, true).setCreativeTab(null);
     public static final Item cloud1 = new EffectItem("cloud1").setCreativeTab(null);
     public static final Item cloud2 = new EffectItem("cloud2").setCreativeTab(null);
     public static final Item cloud3 = new EffectItem("cloud3").setCreativeTab(null);
@@ -2746,9 +2746,9 @@ public class ModItems {
     public static final Item memory = new ItemBattery(Long.MAX_VALUE / 100L, 100000000000000L, 100000000000000L, "memory").setMaxStackSize(1).setCreativeTab(null);
     public static final Item conveyor_wand = new ItemConveyorWand("conveyor_wand").setFull3D().setCreativeTab(MainRegistry.machineTab);
 
-    public static final Item part_generic = new ItemEnumMulti("part_generic", EnumPartType.class, true, true).setCreativeTab(MainRegistry.partsTab);
-    public static final Item item_secret = new ItemEnumMulti("item_secret", EnumSecretType.class, true, true).setCreativeTab(null);
-    public static final Item item_expensive = new ItemEnumMulti("item_expensive", EnumExpensiveType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item part_generic = new ItemEnumMulti<>("part_generic", EnumPartType.class, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item item_secret = new ItemEnumMulti<>("item_secret", EnumSecretType.class, true, true).setCreativeTab(null);
+    public static final Item item_expensive = new ItemEnumMulti<>("item_expensive", EnumExpensiveType.class, true, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item chemical_dye = new ItemChemicalDye("chemical_dye").setCreativeTab(MainRegistry.partsTab);
     public static final Item crayon = new ItemCrayon("crayon").setCreativeTab(MainRegistry.partsTab);
     public static ToolMaterial enumToolMaterialElecTerra = EnumHelper.addToolMaterial(Tags.MODID + ":ELECTERRA", 4, 0, 20.0F, 12.0F, 2);

@@ -2,7 +2,7 @@ package com.hbm.items.special;
 
 import com.hbm.items.ItemEnumMulti;
 
-public class ItemPlasticScrap extends ItemEnumMulti {
+public class ItemPlasticScrap extends ItemEnumMulti<ItemPlasticScrap.ScrapType> {
 
     public ItemPlasticScrap(String registryName) {
         super(registryName, ScrapType.class, false, false);

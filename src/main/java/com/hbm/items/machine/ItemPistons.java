@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemPistons extends ItemEnumMulti {
+public class ItemPistons extends ItemEnumMulti<ItemPistons.EnumPistonType> {
 
   public ItemPistons(String name) {
     super(name, EnumPistonType.class, true, true);

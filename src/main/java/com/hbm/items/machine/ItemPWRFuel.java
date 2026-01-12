@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public class ItemPWRFuel extends ItemEnumMulti {
+public class ItemPWRFuel extends ItemEnumMulti<ItemPWRFuel.EnumPWRFuel> {
 
     public ItemPWRFuel() {
         super("pwr_fuel", EnumPWRFuel.class, true, true);

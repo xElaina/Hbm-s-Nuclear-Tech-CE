@@ -19,7 +19,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
-public class ItemDrone extends ItemEnumMulti {
+public class ItemDrone extends ItemEnumMulti<ItemDrone.EnumDroneType> {
     public ItemDrone(String s) {
         super(s, EnumDroneType.class, true, true);
         this.setCreativeTab(MainRegistry.machineTab);

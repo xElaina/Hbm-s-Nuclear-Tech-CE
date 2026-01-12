@@ -11,7 +11,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
-public class ItemFlask extends ItemEnumMulti {
+public class ItemFlask extends ItemEnumMulti<ItemFlask.EnumInfusion> {
 
     public enum EnumInfusion {
         SHIELD

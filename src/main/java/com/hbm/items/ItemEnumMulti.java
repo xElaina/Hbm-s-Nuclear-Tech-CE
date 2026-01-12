@@ -29,16 +29,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemEnumMulti extends ItemBase implements IDynamicModels {
+public class ItemEnumMulti<E extends Enum<E>> extends ItemBase implements IDynamicModels {
 
     public static final String ROOT_PATH = "items/";
     protected String[] textures;
     //hell yes, now we're thinking with enums!
-    protected Class<? extends Enum<?>> theEnum;
+    protected Class<E> theEnum;
     protected boolean multiName;
     protected boolean multiTexture;
 
-    public ItemEnumMulti(String registryName, Class<? extends Enum<?>> theEnum, boolean multiName, boolean multiTexture) {
+    public ItemEnumMulti(String registryName, Class<E> theEnum, boolean multiName, boolean multiTexture) {
         super(registryName);
         this.setHasSubtypes(true);
         this.theEnum = theEnum;
@@ -52,7 +52,7 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
                 .toArray(String[]::new);
     }
 
-    public ItemEnumMulti(String registryName, Class<? extends Enum<?>> theEnum, boolean multiName, String texture) {
+    public ItemEnumMulti(String registryName, Class<E> theEnum, boolean multiName, String texture) {
         super(registryName);
         this.setHasSubtypes(true);
         this.theEnum = theEnum;
@@ -108,13 +108,11 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
     /**
      * Returns null when the wrong enum is passed. Only really used for recipes anyway so it's good.
      */
-    public ItemStack stackFromEnum(int count, Enum<?> num) {
-        if (num.getClass() != this.theEnum)
-            return ItemStack.EMPTY;
+    public ItemStack stackFromEnum(int count, E num) {
         return new ItemStack(this, count, num.ordinal());
     }
 
-    public ItemStack stackFromEnum(Enum<?> num) {
+    public ItemStack stackFromEnum(E num) {
         return stackFromEnum(1, num);
     }
 
@@ -122,7 +120,7 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
         return multiTexture;
     }
 
-    public Class<? extends Enum<?>> getTheEnum() {
+    public Class<E> getTheEnum() {
         return theEnum;
     }
 
@@ -135,11 +133,17 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
     @Override
     public String getTranslationKey(ItemStack stack) {
         if (multiName) {
-            Enum<?> num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
+            E num = EnumUtil.grabEnumSafely(theEnum, stack.getItemDamage());
             return super.getTranslationKey() + getSeparationChar() + num.name().toLowerCase(Locale.US);
         } else {
             return super.getTranslationKey(stack);
         }
+    }
+
+    @Override
+    public ItemEnumMulti<E> setCreativeTab(CreativeTabs tab) {
+        //noinspection unchecked
+        return (ItemEnumMulti<E>) super.setCreativeTab(tab);
     }
 
     protected String getSeparationChar() {

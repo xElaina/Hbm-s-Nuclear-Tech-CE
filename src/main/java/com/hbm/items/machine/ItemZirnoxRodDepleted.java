@@ -2,7 +2,7 @@ package com.hbm.items.machine;
 
 import com.hbm.items.ItemEnumMulti;
 
-public class ItemZirnoxRodDepleted extends ItemEnumMulti {
+public class ItemZirnoxRodDepleted extends ItemEnumMulti<ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted> {
 
     public ItemZirnoxRodDepleted(String registryName) {
         super(registryName, EnumZirnoxTypeDepleted.class, true, true);

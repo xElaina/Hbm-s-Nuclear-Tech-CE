@@ -2,7 +2,7 @@ package com.hbm.items.machine;
 
 import com.hbm.items.ItemEnumMulti;
 
-public class ItemBreedingRod extends ItemEnumMulti {
+public class ItemBreedingRod extends ItemEnumMulti<ItemBreedingRod.BreedingRodType> {
 
     public ItemBreedingRod(String registryName) {
         super( registryName, BreedingRodType.class, true, true);
