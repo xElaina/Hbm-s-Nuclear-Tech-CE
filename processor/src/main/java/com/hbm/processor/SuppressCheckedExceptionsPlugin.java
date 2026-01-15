@@ -16,8 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class SuppressCheckedExceptionsPlugin implements Plugin {
     private static final String SUPPRESS_FQN = "com.hbm.interfaces.SuppressCheckedExceptions";
-    private final Map<JavaFileObject, List<LongRange>> suppressedSpansByFile = new ConcurrentHashMap<>();
-    private final Set<JavaFileObject> scannedFiles = ConcurrentHashMap.newKeySet();
+    private static final int FILE_CAP = 8192; // 3569 / 0.75 = 4758.667 -> nextPow2 = 8192
+    private final Map<JavaFileObject, List<LongRange>> suppressedSpansByFile = new ConcurrentHashMap<>(FILE_CAP);
+    private final Set<JavaFileObject> scannedFiles = ConcurrentHashMap.newKeySet(FILE_CAP);
 
     private static boolean hasMarkerAnnotation(TypeElement typeElement) {
         for (AnnotationMirror mirror : typeElement.getAnnotationMirrors()) {
@@ -41,6 +42,7 @@ public final class SuppressCheckedExceptionsPlugin implements Plugin {
         BasicJavacTask basic = (BasicJavacTask) task;
         Context context = basic.getContext();
         Log log = Log.instance(context);
+
         log.new DiagnosticHandler() {
             @Override
             public void report(JCDiagnostic diag) {
@@ -71,7 +73,10 @@ public final class SuppressCheckedExceptionsPlugin implements Plugin {
                 JavaFileObject sourceFile = compilationUnit.getSourceFile();
                 if (sourceFile == null || !scannedFiles.add(sourceFile)) return;
 
-                List<LongRange> spans = new ArrayList<>();
+                var topLevels = compilationUnit.getTypeDecls();
+                int estimate = Math.max(8, topLevels == null ? 8 : topLevels.size() << 2);
+                ArrayList<LongRange> spans = new ArrayList<>(estimate);
+
                 new TreePathScanner<Void, Void>() {
                     @Override
                     public Void visitClass(ClassTree node, Void p) {
@@ -86,10 +91,10 @@ public final class SuppressCheckedExceptionsPlugin implements Plugin {
                         }
                         return super.visitClass(node, p);
                     }
-                }.scan(cu, null);
+                }.scan(compilationUnit, null);
 
                 if (!spans.isEmpty()) {
-                    suppressedSpansByFile.put(sourceFile, Collections.synchronizedList(spans));
+                    suppressedSpansByFile.put(sourceFile, List.copyOf(spans));
                 }
             }
         });
@@ -113,14 +118,10 @@ public final class SuppressCheckedExceptionsPlugin implements Plugin {
         if (spans == null || spans.isEmpty()) return false;
 
         LongRange innermost = null;
-        synchronized (spans) {
-            for (LongRange r : spans) {
-                if (!r.contains(pos)) {
-                    continue;
-                }
-                if (innermost == null || r.length() < innermost.length()) {
-                    innermost = r;
-                }
+        for (LongRange r : spans) {
+            if (!r.contains(pos)) continue;
+            if (innermost == null || r.length() < innermost.length()) {
+                innermost = r;
             }
         }
         return innermost != null && innermost.annotated();
