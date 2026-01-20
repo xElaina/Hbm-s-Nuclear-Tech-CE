@@ -5,6 +5,7 @@ import com.google.common.collect.Queues;
 import com.hbm.Tags;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockRebar;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.ClientConfig;
 import com.hbm.config.GeneralConfig;
@@ -490,6 +491,7 @@ public class ModEventHandlerClient {
             }
         }
         ClientProxy.renderingConstant = false;
+        BlockRebar.renderRebar(evt.getPartialTicks());
 
         //SSG meathook icon projection
         if (ItemGunShotty.rayTrace != null) {

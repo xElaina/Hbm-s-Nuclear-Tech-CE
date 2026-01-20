@@ -22,9 +22,21 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	}
 
 	@Override
+	public void onLoad() {
+		super.onLoad();
+		isLoaded = true;
+	}
+
+	@Override
 	public void onChunkUnload() {
 		super.onChunkUnload();
-		this.isLoaded = false;
+		isLoaded = false;
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		isLoaded = false;
 	}
 
     /** The "chunks is modified, pls don't forget to save me" effect of markDirty, minus the block updates */

@@ -6,6 +6,7 @@ import com.hbm.blocks.generic.BlockBobble.TileEntityBobble;
 import com.hbm.blocks.generic.BlockFissure.TileEntityFissure;
 import com.hbm.blocks.generic.BlockLoot.TileEntityLoot;
 import com.hbm.blocks.generic.BlockPedestal.TileEntityPedestal;
+import com.hbm.blocks.generic.BlockRebar.TileEntityRebar;
 import com.hbm.blocks.generic.BlockSkeletonHolder.TileEntitySkeletonHolder;
 import com.hbm.blocks.generic.BlockSupplyCrate.TileEntitySupplyCrate;
 import com.hbm.blocks.generic.BlockWandJigsaw.TileEntityWandJigsaw;
@@ -431,8 +432,8 @@ public class TileMappings {
         put(TileEntityFusionBreeder.class, "tileentity_fusion_breeder");
         put(TileEntityFusionCollector.class, "tileentity_fusion_collector");
         put(TileEntityFusionBoiler.class, "tileentity_fusion_boiler");
-//        put(TileEntityFusionMHDT.class, "tileentity_fusion_mhdt");
-//        put(TileEntityFusionCoupler.class, "tileentity_fusion_coupler");
+        put(TileEntityFusionMHDT.class, "tileentity_fusion_mhdt");
+        put(TileEntityFusionCoupler.class, "tileentity_fusion_coupler");
     }
 
     private static void putNetwork() {
@@ -489,7 +490,7 @@ public class TileMappings {
 
 //        put(TileEntityRailSwitch.class, "tileentity_rail_switch");
 
-//        put(TileEntityRebar.class, "tileentity_rebar");
+        put(TileEntityRebar.class, "tileentity_rebar");
 
         // OC Compat items
 //        if (Compat.isOpenComputersLoaded()) {
