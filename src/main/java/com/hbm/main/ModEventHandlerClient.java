@@ -57,6 +57,7 @@ import com.hbm.render.misc.SoyuzPronter;
 import com.hbm.render.modelrenderer.EgonBackpackRenderer;
 import com.hbm.render.util.RenderOverhead;
 import com.hbm.render.world.RenderNTMSkyboxChainloader;
+import com.hbm.handler.radiation.RadVisOverlay;
 import com.hbm.sound.*;
 import com.hbm.sound.MovingSoundPlayerLoop.EnumHbmSound;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom;
@@ -117,6 +118,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -128,6 +131,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
 
+@SideOnly(Side.CLIENT)
 public class ModEventHandlerClient {
 
     public static final int flashDuration = 5_000;
@@ -357,6 +361,7 @@ public class ModEventHandlerClient {
                     ItemGunBaseNT.recoilHorizontal = 0;
                 }
             }
+            RadVisOverlay.clientTick(mc);
         } else {
 
             if (Minecraft.getMinecraft().world != null) {
@@ -852,6 +857,7 @@ public class ModEventHandlerClient {
             HbmShaderManager2.postProcess();
         }
         RenderOverhead.renderActionPreview(evt.getPartialTicks());
+        RadVisOverlay.render(evt);
     }
 
     @SubscribeEvent
