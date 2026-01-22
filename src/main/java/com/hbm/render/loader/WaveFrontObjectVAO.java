@@ -1,15 +1,13 @@
 package com.hbm.render.loader;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
 import java.nio.FloatBuffer;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -18,7 +16,8 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
 
     public static final List<WaveFrontObjectVAO> allVBOs = new ArrayList<>();
     public static final boolean GL30Support = GLContext.getCapabilities().OpenGL30;
-    public static final boolean AppleVAOSupport = GLContext.getCapabilities().GL_APPLE_vertex_array_object;
+    //mlbv: this check is exactly what drillgon did in GLCompat, i hope it won't break
+    public static final boolean AppleVAOSupport = Minecraft.IS_RUNNING_ON_MAC;
     public static boolean uploaded = false;
 
 
@@ -191,24 +190,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         }
     }
 
-    public void delete() {
-        var vaoIDBuffer = BufferUtils.createIntBuffer(groups.size());
-        var vboIDBuffer = BufferUtils.createIntBuffer(groups.size());
-        for (VBOBufferData data : groups) {
-            vaoIDBuffer.put(data.vaoHandle);
-            vboIDBuffer.put(data.vboHandle);
-        }
-        vaoIDBuffer.flip();
-        vboIDBuffer.flip();
-
-        if(arbOr30() == 1)
-            GL30.glDeleteVertexArrays(0);
-        else  APPLEVertexArrayObject.glDeleteVertexArraysAPPLE(0);
-        GL15.glDeleteBuffers(vboIDBuffer);
-    }
-
-
-    class VBOBufferData {
+    static class VBOBufferData {
         String name;
         int vertices = 0;
         int vboHandle = -1;

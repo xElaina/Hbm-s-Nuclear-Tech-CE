@@ -10,6 +10,7 @@
 - Fixed a 1.4.2.0 regression that caused the recipe of gas turbine to be missing
 - Added some other missing crafting recipes
 - Fixed radiation system not diffusing correctly across non-uniform sections
+- Fixed VAO not detected on macOS with cleanroom / lwjgl3ify
 ### Changes
 - Added new absorber blocks that use block metadata. Old absorber blocks will be transformed automatically.
 ### New Features
