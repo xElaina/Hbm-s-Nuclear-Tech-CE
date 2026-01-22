@@ -5,6 +5,7 @@ import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 public class GLCompat {
 
@@ -54,16 +55,12 @@ public class GLCompat {
 	public static boolean arbOcclusionQuery;
 	
 	public static int genVertexArrays(){
-		switch(vaoType){
-		case NORMAL:
-			return GL30.glGenVertexArrays();
-		case ARB:
-			return ARBVertexArrayObject.glGenVertexArrays();
-		case APPLE:
-			return APPLEVertexArrayObject.glGenVertexArraysAPPLE();
-		}
-		return 0;
-	}
+        return switch (vaoType) {
+            case NORMAL -> GL30.glGenVertexArrays();
+            case ARB -> ARBVertexArrayObject.glGenVertexArrays();
+            case APPLE -> APPLEVertexArrayObject.glGenVertexArraysAPPLE();
+        };
+    }
 	
 	public static void bindVertexArray(int vao){
 		switch(vaoType){
@@ -75,6 +72,34 @@ public class GLCompat {
 			break;
 		case APPLE:
 			APPLEVertexArrayObject.glBindVertexArrayAPPLE(vao);
+			break;
+		}
+	}
+
+	public static void deleteVertexArray(int vao){
+        switch (vaoType) {
+            case NORMAL:
+                GL30.glDeleteVertexArrays(vao);
+                break;
+            case ARB:
+                ARBVertexArrayObject.glDeleteVertexArrays(vao);
+                break;
+            case APPLE:
+                APPLEVertexArrayObject.glDeleteVertexArraysAPPLE(vao);
+                break;
+        }
+    }
+
+	public static void deleteVertexArray(IntBuffer buffer){
+		switch(vaoType){
+		case NORMAL:
+			GL30.glDeleteVertexArrays(buffer);
+			break;
+		case ARB:
+			ARBVertexArrayObject.glDeleteVertexArrays(buffer);
+			break;
+		case APPLE:
+			APPLEVertexArrayObject.glDeleteVertexArraysAPPLE(buffer);
 			break;
 		}
 	}
@@ -482,12 +507,18 @@ public class GLCompat {
 		
 		if(cap.OpenGL30)
 			vaoType = VAOType.NORMAL;
-		else if(Minecraft.IS_RUNNING_ON_MAC)
-			vaoType = VAOType.APPLE;
+		else if(Minecraft.IS_RUNNING_ON_MAC) {
+			try {
+				Class.forName("org.lwjgl.opengl.APPLEVertexArrayObject");
+				vaoType = VAOType.APPLE;
+			} catch (ClassNotFoundException e) {
+				vaoType = VAOType.NORMAL; // lwjgl3
+			}
+		}
 		else if(cap.GL_ARB_vertex_array_object)
 			vaoType = VAOType.ARB;
 		else
-			return "VAO not supported";
+			throw new UnsupportedOperationException("Your system does not support Vertex Array Objects");
 		
 		if(cap.OpenGL15)
 			arbVbo = false;

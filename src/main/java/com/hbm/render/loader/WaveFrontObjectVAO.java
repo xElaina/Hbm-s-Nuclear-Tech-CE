@@ -1,5 +1,6 @@
 package com.hbm.render.loader;
 
+import com.hbm.render.GLCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.BufferUtils;
@@ -15,18 +16,12 @@ import static org.lwjgl.opengl.GL15.*;
 public class WaveFrontObjectVAO implements IModelCustomNamed {
 
     public static final List<WaveFrontObjectVAO> allVBOs = new ArrayList<>();
-    public static final boolean GL30Support = GLContext.getCapabilities().OpenGL30;
-    //mlbv: this check is exactly what drillgon did in GLCompat, i hope it won't break
-    public static final boolean AppleVAOSupport = Minecraft.IS_RUNNING_ON_MAC;
     public static boolean uploaded = false;
-
-
     private static final int FLOAT_SIZE = 4;
     private static final int STRIDE = 9 * FLOAT_SIZE;
     static int VERTEX_SIZE = 3;
     List<VBOBufferData> groups = new ArrayList<>();
     public WaveFrontObjectVAO(HFRWavefrontObject obj) {
-        if(arbOr30() == 0) throw new UnsupportedOperationException("Your system does not support Vertex Array Objects");
         for (GroupObject g : obj.groupObjects) {
 
             VBOBufferData data = new VBOBufferData();
@@ -95,14 +90,8 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
 
     public void generate_vaos(){
         for (VBOBufferData data : groups) {
-
-            if(arbOr30() == 1) {
-                data.vaoHandle = GL30.glGenVertexArrays();
-                GL30.glBindVertexArray(data.vaoHandle);
-            } else {
-                data.vaoHandle =  APPLEVertexArrayObject.glGenVertexArraysAPPLE();
-                APPLEVertexArrayObject.glBindVertexArrayAPPLE(data.vaoHandle);
-            }
+            data.vaoHandle = GLCompat.genVertexArrays();
+            GLCompat.bindVertexArray(data.vaoHandle);
 
             glBindBuffer(GL_ARRAY_BUFFER, data.vboHandle);
 
@@ -115,19 +104,9 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
             GL11.glNormalPointer(GL11.GL_FLOAT, STRIDE, 6L * Float.BYTES);
             glEnableClientState(GL_NORMAL_ARRAY);
 
-            if (arbOr30() == 1) {
-                GL30.glBindVertexArray(0);
-            } else {
-                APPLEVertexArrayObject.glBindVertexArrayAPPLE(0);
-            }
+            GLCompat.bindVertexArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
-    }
-
-    private int arbOr30(){
-        if(GL30Support) return 1;
-        if(AppleVAOSupport) return 2;
-        return 0;
     }
 
     @Override
@@ -136,15 +115,9 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     }
 
     private void renderVBO(VBOBufferData data) {
-        if(arbOr30() == 1)
-            GL30.glBindVertexArray(data.vaoHandle);
-        else APPLEVertexArrayObject.glBindVertexArrayAPPLE(data.vaoHandle);
-
+        GLCompat.bindVertexArray(data.vaoHandle);
         GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, data.vertices);
-
-        if(arbOr30() == 1)
-            GL30.glBindVertexArray(0);
-        else  APPLEVertexArrayObject.glBindVertexArrayAPPLE(0);
+        GLCompat.bindVertexArray(0);
     }
 
     @Override
