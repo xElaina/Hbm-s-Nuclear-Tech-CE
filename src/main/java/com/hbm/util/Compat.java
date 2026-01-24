@@ -19,6 +19,10 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
+import static com.hbm.util.Compat.ModIds.*;
+
 public class Compat {
     private static final boolean MOD_EIDS = Loader.isModLoaded("jeid") || Loader.isModLoaded("neid");
     private static final boolean MOD_OC = Loader.isModLoaded(ModIds.OPEN_COMPUTERS);
@@ -57,9 +61,14 @@ public class Compat {
     }
 
     public static void exitOnIncompatible() {
+        final Map<String,String> humanReadable = Map.of(
+                HBM_NTM_LUCKY_BLOCKS, "\"HBM NTM Lucky blocks\" by Eag0la",
+                POTATOO_STRUCTURE, "\"Potatoo's Custom Structure For HBM's Nuclear Tech Mod\" by Potatoo_Cake",
+                HBM_NTM_STRUCTURE, "\"HBM/NTM structure\" by AliyKorol"
+        );
         for (String mod : ModIds.INCOMPATIBLE_MODS) {
             if (Loader.isModLoaded(mod)) {
-                throw new RuntimeException("Mod:" + mod + " is an NTM:EE addon, not compatible with NTM:CE. Please contact the addon developer");
+                throw new RuntimeException("Mod: " + humanReadable.get(mod) + " is an NTM:EE addon, not compatible with NTM:CE. Please contact the addon developer");
             }
         }
     }
