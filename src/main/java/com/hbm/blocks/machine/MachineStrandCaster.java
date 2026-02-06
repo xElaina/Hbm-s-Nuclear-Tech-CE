@@ -13,7 +13,6 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityMachineStrandCaster;
 import com.hbm.util.I18nUtil;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -190,9 +189,9 @@ public class MachineStrandCaster extends BlockDummyable implements ICrucibleAcce
     List<String> text = new ArrayList<>();
     if (caster != null) {
       if (caster.inventory.getStackInSlot(0).isEmpty()) {
-        text.add(ChatFormatting.RED + I18nUtil.resolveKey("foundry.noCast"));
+        text.add(TextFormatting.RED + I18nUtil.resolveKey("foundry.noCast"));
       } else if (caster.inventory.getStackInSlot(0).getItem() == ModItems.mold) {
-        text.add(ChatFormatting.BLUE + caster.getInstalledMold().getTitle());
+        text.add(TextFormatting.BLUE + caster.getInstalledMold().getTitle());
       }
     }
     ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xFF4000, 0x401000, text);

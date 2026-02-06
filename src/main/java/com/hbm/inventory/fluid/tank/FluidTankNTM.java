@@ -7,7 +7,6 @@ import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.util.RenderUtil;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -17,6 +16,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -287,7 +287,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
             list.add(fluid + "/" + maxFluid + "mB");
 
             if (this.pressure != 0) {
-                list.add(ChatFormatting.RED + "Pressure: " + this.pressure + " PU");
+                list.add(TextFormatting.RED + "Pressure: " + this.pressure + " PU");
             }
 
             type.addInfo(list);
