@@ -2,6 +2,7 @@ package com.hbm.handler;
 
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.GeneralConfig;
+import com.hbm.inventory.gui.GUICalculator;
 import com.hbm.items.IKeybindReceiver;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.lib.internal.MethodHandleHelper;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.settings.KeyBindingMap;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -28,7 +30,8 @@ public class HbmKeybinds {
 
 	public static final String category = "key.categories.hbm";
     private static final MethodHandle hashHandle = MethodHandleHelper.findStaticGetter(KeyBinding.class, "HASH", "field_74514_b", KeyBindingMap.class);
-	
+
+    public static KeyBinding calculatorKey = new KeyBinding(category + ".calculator", Keyboard.KEY_N, category);
 	public static KeyBinding jetpackKey = new KeyBinding(category + ".toggleBack", Keyboard.KEY_C, category);
 	public static KeyBinding hudKey = new KeyBinding(category + ".toggleHUD", Keyboard.KEY_V, category);
 	public static KeyBinding reloadKey = new KeyBinding(category + ".reload", Keyboard.KEY_R, category);
@@ -49,6 +52,7 @@ public class HbmKeybinds {
 	public static KeyBinding gunTertiaryKey = new KeyBinding(category + ".gunTertitary", -98, category);
 	
 	public static void register() {
+        ClientRegistry.registerKeyBinding(calculatorKey);
 		ClientRegistry.registerKeyBinding(jetpackKey);
 		ClientRegistry.registerKeyBinding(hudKey);
 		ClientRegistry.registerKeyBinding(reloadKey);
@@ -75,6 +79,12 @@ public class HbmKeybinds {
 
 		/// KEYBIND PROPS ///
 		handleProps(Keyboard.getEventKeyState(), Keyboard.getEventKey());
+
+        /// CALCULATOR ///
+        if(calculatorKey.isPressed()) {
+            MainRegistry.proxy.me().closeScreen();
+            FMLCommonHandler.instance().showGuiScreen(new GUICalculator());
+        }
 	}
 
 	/**
