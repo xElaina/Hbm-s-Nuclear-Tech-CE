@@ -303,6 +303,10 @@ public class MainRegistry {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+        // to make sure that foreign registered fluids are accounted for,
+        // even when the reload listener is registered too late due to load order
+        // IMPORTANT: fluids have to load before recipes. weird shit happens if not.
+        Fluids.reloadFluids();
         ModItems.postInit();
         ModBlocks.postInit();
         DamageResistanceHandler.init();
