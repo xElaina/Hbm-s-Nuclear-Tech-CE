@@ -116,10 +116,10 @@ public class SolidificationRecipes extends SerializableRecipe {
 
     }
 
-    private static void registerSFAuto(FluidType fluid) {
+    public static void registerSFAuto(FluidType fluid) {
         registerSFAuto(fluid, 1_440_000L, ModItems.solid_fuel); //3200 burntime * 1.5 burntime bonus * 300 TU/t
     }
-    private static void registerSFAuto(FluidType fluid, long tuPerSF, Item fuel) {
+    public static void registerSFAuto(FluidType fluid, long tuPerSF, Item fuel) {
         long tuPerBucket = fluid.getTrait(FT_Flammable.class).getHeatEnergy();
         double penalty = 1.25D;
 
