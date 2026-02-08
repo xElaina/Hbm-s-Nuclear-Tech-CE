@@ -1,13 +1,23 @@
 {
 	"name": "Dipole Magnets",
-	"icon": ["hbm:pa_dipole", 1, 0],
-	"trigger": [["hbm:pa_dipole"]],
+	"icon": [
+		"hbm:pa_dipole",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:pa_dipole"
+		]
+	],
 	"title": {
 		"en_us": "Dipole Magnets",
-		"ru_ru": "Дипольные магниты"
+		"ru_ru": "Дипольные магниты",
+		"zh_cn": "双极磁铁"
 	},
 	"content": {
 		"en_us": "Active component of the [[particle accelerator|Particle Accelerator]]. Used to direct particles around corners, which enables loops and branches.<br><br>Dipoles need to be configured to be usable. The first output setting determines the direction of the particle when it does not meet the speed threshold, the second determines the direction if it does, and the third determines the direction if the threshold is met AND a redstone signal is applied to one of the dipole's ports. Below the direction settings is a text field for configuring the threshold speed. <br><br>Ideally, the threshold should be set below the upper limit of the coils used in the same accelerator ring. This causes the particle to leave the ring before it can exceed the coil's maximum speed and crash.<br><br>This component uses [[large coils|Large Coil]], keep coil restrictions in mind when building the accelerator!<br><br>This component requires cooling through [[cold perfluoromethyl|Perfluoromethyl]]. The returned room temperature fluid can be cooled again using [[compressors|Compressor]].",
-		"ru_ru": "Активный компонент [[ускорителя частиц|Particle Accelerator]]. Используется для направления частиц под углом, создания поворотов, петель или ответвлений.<br><br>Диполи должны быть сконфигурированы таким образом, чтобы их можно было использовать. Первый параметр в настройках выхода частицы определяет направление частицы, которая не достигла порогового значения скорости, второй определяет направление, если значение удовлетворяет этому условию, и третий указывает траекторию движения при достижении порогового значения и наличии редстоун-сигнала, который подаётся на один из портов диполя. Под настройками направления находится текстовое поле для указания порога скорости.<br><br>В идеале это значение должно быть установлено ниже верхнего предела для катушек, используемых в одном и том же контуре ускорителя. Благодаря этому частица покинет контур до превышения максимального значения скорости для катушки и, следовательно, уничтожения.<br><br>В этом компоненте используются [[большие катушки|Large Coil]], поэтому учитывайте их ограничения при проектировании ускорителя!<br><br>Этот компонент требует охлаждения [[холодным перфторметаном|Perfluoromethyl]]. Отработанную нагретую жидкость можно охладить с помощью [[компрессоров|Compressor]] и использовать повторно."
+		"ru_ru": "Активный компонент [[ускорителя частиц|Particle Accelerator]]. Используется для направления частиц под углом, создания поворотов, петель или ответвлений.<br><br>Диполи должны быть сконфигурированы таким образом, чтобы их можно было использовать. Первый параметр в настройках выхода частицы определяет направление частицы, которая не достигла порогового значения скорости, второй определяет направление, если значение удовлетворяет этому условию, и третий указывает траекторию движения при достижении порогового значения и наличии редстоун-сигнала, который подаётся на один из портов диполя. Под настройками направления находится текстовое поле для указания порога скорости.<br><br>В идеале это значение должно быть установлено ниже верхнего предела для катушек, используемых в одном и том же контуре ускорителя. Благодаря этому частица покинет контур до превышения максимального значения скорости для катушки и, следовательно, уничтожения.<br><br>В этом компоненте используются [[большие катушки|Large Coil]], поэтому учитывайте их ограничения при проектировании ускорителя!<br><br>Этот компонент требует охлаждения [[холодным перфторметаном|Perfluoromethyl]]. Отработанную нагретую жидкость можно охладить с помощью [[компрессоров|Compressor]] и использовать повторно.",
+		"zh_cn": "[[粒子加速器|Particle Accelerator]]的主动组件，用于引导粒子转弯，<br>从而实现环路和分支。双极磁铁需要进行配置才能使用。第<br>一个输出设置决定粒子未达到速度阈值时的方向，<br>第二个决定达到阈值时的方向，<br>第三个决定既达到阈值又对双极磁铁某端口施加红石信号时<br>的方向。方向设置下方是用于配置阈值速度的文本框。理想<br>情况下，<br>阈值应设定为低于同一加速器环中所用线圈的上限。这样可<br>使粒子在超过线圈最大速度并撞毁之前离开环路。此组件使<br>用[[大型线圈|Large Coil]]，<br>建造加速器时请务必牢记线圈的限制！此组件需要通过<br>[[冷四氟甲烷|Perfluoromethyl]]进行冷却。返回的室温流体可再次使用[[压缩机|Compressor]]进<br>行冷却。"
 	}
 }

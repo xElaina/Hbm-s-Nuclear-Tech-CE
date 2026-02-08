@@ -1,13 +1,23 @@
 {
 	"name": "Quadrupole Magnets",
-	"icon": ["hbm:pa_quadrupole", 1, 0],
-	"trigger": [["hbm:pa_quadrupole"]],
+	"icon": [
+		"hbm:pa_quadrupole",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:pa_quadrupole"
+		]
+	],
 	"title": {
 		"en_us": "Quadrupole Magnets",
-		"ru_ru": "Квадрупольный магнит"
+		"ru_ru": "Квадрупольный магнит",
+		"zh_cn": "四极磁铁"
 	},
 	"content": {
 		"en_us": "Active component of the [[particle accelerator|Particle Accelerator]]. Removes 100 points of defocus per pass, which accumulates by passing [[RF cavities|RF Cavity]].<br><br>This component uses [[large coils|Large Coil]], keep coil restrictions in mind when building the accelerator!<br><br>This component requires cooling through [[cold perfluoromethyl|Perfluoromethyl]]. The returned room temperature fluid can be cooled again using [[compressors|Compressor]].<br><br>This component is one-way only, make sure the particle follows the red arrows!",
-		"ru_ru": "Активный компонент [[ускорителя частиц|Particle Accelerator]]. Снижает расфокусировку частицы на 100 единиц за проход, которая накапливается при прохождении [[радиочастотных резонаторов|RF Cavity]].<br><br>В этом компоненте используются [[большие катушки|Large Coil]], учитывайте их ограничения при сборке ускорителя!<br><br>Этот компонент требует охлаждения [[холодным перфторметаном|Perfluoromethyl]]. Отработанную нагретую жидкость можно охладить с помощью [[компрессоров|Compressor]] и использовать повторно.<br><br>Пропускает частицы лишь в одну сторону, ввиду чего необходимо учитывать направление красных стрелок."
+		"ru_ru": "Активный компонент [[ускорителя частиц|Particle Accelerator]]. Снижает расфокусировку частицы на 100 единиц за проход, которая накапливается при прохождении [[радиочастотных резонаторов|RF Cavity]].<br><br>В этом компоненте используются [[большие катушки|Large Coil]], учитывайте их ограничения при сборке ускорителя!<br><br>Этот компонент требует охлаждения [[холодным перфторметаном|Perfluoromethyl]]. Отработанную нагретую жидкость можно охладить с помощью [[компрессоров|Compressor]] и использовать повторно.<br><br>Пропускает частицы лишь в одну сторону, ввиду чего необходимо учитывать направление красных стрелок.",
+		"zh_cn": "[[粒子加速器|Particle Accelerator]]的主动组件。每次通过减少100点散焦，<br>散焦是通过[[射频腔|RF Cavity]]积累的。该组件使用[[大型线圈|Large Coil]]，<br>建造加速器时请牢记线圈限制！该组件需要通过[[冷四氟甲烷|Perfluoromethyl]]<br>进行冷却。返回的室温流体可以使用[[压缩机|Compressor]]再次冷却。该组<br>件只能单向通过，确保粒子跟随红色箭头！"
 	}
 }

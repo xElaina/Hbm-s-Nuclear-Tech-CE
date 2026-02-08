@@ -1,13 +1,23 @@
 {
 	"name": "Particle Detector",
-	"icon": ["hbm:pa_detector", 1, 0],
-	"trigger": [["hbm:pa_detector"]],
+	"icon": [
+		"hbm:pa_detector",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:pa_detector"
+		]
+	],
 	"title": {
 		"en_us": "Particle Detector",
-		"ru_ru": "Детектор частиц"
+		"ru_ru": "Детектор частиц",
+		"zh_cn": "粒子探测器"
 	},
 	"content": {
 		"en_us": "Final component of the [[particle accelerator|Particle Accelerator]], ends the simulation and tries to perform the recipe. Requires empty capsules to catch the resulting particles, inputs are simply voided if the particle cannot be collected. Particle detection requires a defocus of 0, ensure that the accelerator has sufficient [[quadrupoles|Quadrupole Magnets]].<br><br>This component requires cooling through [[cold perfluoromethyl|Perfluoromethyl]]. The returned room temperature fluid can be cooled again using [[compressors|Compressor]].",
-		"ru_ru": "Конечный компонент [[ускорителя частиц|Particle Accelerator]], который завершает процесс и выполняет рецепт. Для сбора полученных частиц требуются пустые капсулы. Если частицу не удастся получить, содержимое вводимых капсул пропадёт. Для обнаружения частиц требуется нулевой расфокус, поэтому убедитесь, что ускоритель имеет достаточно [[квадрупольных магнитов|Quadrupole Magnets]].<br><br>Этот компонент требует охлаждения [[холодным перфторметаном|Perfluoromethyl]]. Отработанную нагретую жидкость можно охладить с помощью [[компрессоров|Compressor]] и использовать повторно."
+		"ru_ru": "Конечный компонент [[ускорителя частиц|Particle Accelerator]], который завершает процесс и выполняет рецепт. Для сбора полученных частиц требуются пустые капсулы. Если частицу не удастся получить, содержимое вводимых капсул пропадёт. Для обнаружения частиц требуется нулевой расфокус, поэтому убедитесь, что ускоритель имеет достаточно [[квадрупольных магнитов|Quadrupole Magnets]].<br><br>Этот компонент требует охлаждения [[холодным перфторметаном|Perfluoromethyl]]. Отработанную нагретую жидкость можно охладить с помощью [[компрессоров|Compressor]] и использовать повторно.",
+		"zh_cn": "[[粒子加速器|Particle Accelerator]]的最终组件，<br>结束模拟并尝试执行配方。需要空胶囊来捕获生成的粒子，<br>若无法收集粒子，<br>输入物将被直接销毁。粒子探测要求散焦为0，<br>请确保加速器具有足够的[[四极磁铁|Quadrupole Magnets]]。此组件需要通过[[冷四氟甲烷|Perfluoromethyl]]<br>进行冷却。返回的室温流体可再次使用[[压缩机|Compressor]]进行冷却。"
 	}
 }
