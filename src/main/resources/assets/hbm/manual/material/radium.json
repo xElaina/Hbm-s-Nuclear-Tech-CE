@@ -1,13 +1,32 @@
 {
 	"name": "Radium-226",
-	"icon": ["hbm:billet_ra226", 1, 0],
-    "trigger": [["hbm:ingot_ra226"], ["hbm:billet_ra226"], ["hbm:nugget_ra226"], ["hbm:powder_ra226"]],
-    "title": {
-        "en_us": "Radium-226",
-		"ru_ru": "Радий-226"
-    },
+	"icon": [
+		"hbm:billet_ra226",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_ra226"
+		],
+		[
+			"hbm:billet_ra226"
+		],
+		[
+			"hbm:nugget_ra226"
+		],
+		[
+			"hbm:powder_ra226"
+		]
+	],
+	"title": {
+		"en_us": "Radium-226",
+		"ru_ru": "Радий-226",
+		"zh_cn": "镭-226"
+	},
 	"content": {
 		"en_us": "Rare radioactive material found in [[uranium|Uranium]] and [[thorium|Thorium-232]] ores, may be extracted using a [[centrifuge|Centrifuge]]. Used with [[beryllium|Beryllium]] in Ra226Be neutron sources, which are vital for kickstarting the [[Chicago Pile]], [[PWR]], [[research reactor|Research Reactor]] and [[RBMK]]. The first available neutron source, and often times the cheapest.<br><br>Moderately radioactive.",
-		"ru_ru": "Редкий радиоактивный материал, встречается в рудах [[урана|Uranium]] и [[тория-232|Thorium-232]], может быть извлечён с помощью [[центрифуги|Centrifuge]]. Используется с [[бериллием|Beryllium]] в нейтронных источниках Ra226Be, которые жизненно важны для запуска [[чикагской поленницы|Chicago Pile]], [[ВВЭР|PWR]], [[исследовательского реактора|Research Reactor]] и [[РБМК|RBMK]]. Первый доступный нейтронный источник и зачастую самый дешёвый.<br><br>Умеренно радиоактивен."
+		"ru_ru": "Редкий радиоактивный материал, встречается в рудах [[урана|Uranium]] и [[тория-232|Thorium-232]], может быть извлечён с помощью [[центрифуги|Centrifuge]]. Используется с [[бериллием|Beryllium]] в нейтронных источниках Ra226Be, которые жизненно важны для запуска [[чикагской поленницы|Chicago Pile]], [[ВВЭР|PWR]], [[исследовательского реактора|Research Reactor]] и [[РБМК|RBMK]]. Первый доступный нейтронный источник и зачастую самый дешёвый.<br><br>Умеренно радиоактивен.",
+		"zh_cn": "一种稀有的放射性物质，藏在[[铀|Uranium]]和[[钍-232|Thorium-232]]矿石里，<br>可以用[[离心机|Centrifuge]]提取出来。和[[铍|Beryllium]]一起做成 Ra226 - Be <br>中子源，这玩意儿对启动[[芝加哥反应堆|Chicago Pile]]、[[压水堆|PWR]]、<br>[[研究型反应堆|Research Reactor]]还有[[RBMK 石墨式反应堆|RBMK]]至关重要。<br>这是你能搞到的第一种中子源，通常也是最便宜的那种。<br><br><br>具有中等放射性。"
 	}
 }

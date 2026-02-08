@@ -1,13 +1,23 @@
 {
 	"name": "Arsenic Bronze",
-	"icon": ["hbm:ingot_arsenic_bronze", 1, 0],
-    "trigger": [["hbm:ingot_arsenic_bronze"]],
-    "title": {
-        "en_us": "Arsenic Bronze",
-		"ru_ru": "Мышьяковая бронза"
-    },
+	"icon": [
+		"hbm:ingot_arsenic_bronze",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_arsenic_bronze"
+		]
+	],
+	"title": {
+		"en_us": "Arsenic Bronze",
+		"ru_ru": "Мышьяковая бронза",
+		"zh_cn": "砷青铜"
+	},
 	"content": {
 		"en_us": "Derivative of [[arsenic|Arsenic]] made in the [[crucible|Crucible]], therefore available only after building an [[RBMK]] due to requiring [[high-performance solvent|High-Performance Solvent]].<br><br>Fully interchangeable with [[bismuth bronze|Bismuth Bronze]].",
-		"ru_ru": "Производное [[мышьяка|Arsenic]], изготавливаемое в [[плавильне|Crucible]]. Доступно только после постройки [[РБМК|RBMK]], так как требует [[высокоэффективный растворитель|High-Performance Solvent]].<br><br>Полностью взаимозаменимо с [[висмутовой бронзой|Bismuth Bronze]]."
+		"ru_ru": "Производное [[мышьяка|Arsenic]], изготавливаемое в [[плавильне|Crucible]]. Доступно только после постройки [[РБМК|RBMK]], так как требует [[высокоэффективный растворитель|High-Performance Solvent]].<br><br>Полностью взаимозаменимо с [[висмутовой бронзой|Bismuth Bronze]].",
+		"zh_cn": "由[[砷|Arsenic]]在[[坩埚|Crucible]]中冶炼而成的衍生合金。<br>由于需要使用[[高性能溶剂|High-Performance Solvent]]，<br>只有建好[[RBMK石墨式反应堆|RBMK]]后才能获得。<br><br>与[[铋青铜|Bismuth Bronze]]完全可互换。"
 	}
 }

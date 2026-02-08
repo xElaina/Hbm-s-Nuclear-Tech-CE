@@ -1,13 +1,32 @@
 {
 	"name": "Plutonium",
-	"icon": ["hbm:ingot_plutonium", 1, 0],
-    "trigger": [["hbm:ingot_plutonium"], ["hbm:billet_plutonium"], ["hbm:nugget_plutonium"], ["hbm:powder_plutonium"]],
-    "title": {
-        "en_us": "Plutonium",
-		"ru_ru": "Плутоний"
-    },
+	"icon": [
+		"hbm:ingot_plutonium",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_plutonium"
+		],
+		[
+			"hbm:billet_plutonium"
+		],
+		[
+			"hbm:nugget_plutonium"
+		],
+		[
+			"hbm:powder_plutonium"
+		]
+	],
+	"title": {
+		"en_us": "Plutonium",
+		"ru_ru": "Плутоний",
+		"zh_cn": "钚"
+	},
 	"content": {
 		"en_us": "Rare form of impure plutonium, composed of plutonium-238, 239 and 240. Plutonium in ore form is disabled by default. May be processed in a [[gas centrifuge|Gas Centrifuge]] in hexafluoride form, or used for certain [[cyclotron|Cyclotron]] recipes.<br><br>Moderately radioactive.<br><br>See also:<br>[[Plutonium-238]]<br>[[Plutonium-239]]<br>[[Plutonium-240]]<br>[[Plutonium-241]]",
-		"ru_ru": "Редкая форма неочищенного плутония, состоящая из плутония-238, -239 и -240. Плутоний в виде руды по умолчанию отключён. Его можно переработать в [[газовой центрифуге|Gas Centrifuge]] в виде гексафторида или использовать в некоторых рецептах [[циклотрона|Cyclotron]].<br><br>Умеренно радиоактивен.<br><br>См. также:<br>[[Плутоний-238|Plutonium-238]]<br>[[Плутоний-239|Plutonium-239]]<br>[[Плутоний-240|Plutonium-240]]<br>[[Плутоний-241|Plutonium-241]]"
+		"ru_ru": "Редкая форма неочищенного плутония, состоящая из плутония-238, -239 и -240. Плутоний в виде руды по умолчанию отключён. Его можно переработать в [[газовой центрифуге|Gas Centrifuge]] в виде гексафторида или использовать в некоторых рецептах [[циклотрона|Cyclotron]].<br><br>Умеренно радиоактивен.<br><br>См. также:<br>[[Плутоний-238|Plutonium-238]]<br>[[Плутоний-239|Plutonium-239]]<br>[[Плутоний-240|Plutonium-240]]<br>[[Плутоний-241|Plutonium-241]]",
+		"zh_cn": "稀有的不纯钚形态，由钚-238、钚-239和钚-240组成。<br>默认情况下矿石形态的钚被禁用。<br>可以六氟化物的形式在[[气体离心机|Gas Centrifuge]]中处理，<br>或用于某些[[回旋加速器|Cyclotron]]配方。<br><br>具有中等放射性。<br><br>另见：<br>[[钚-238|Plutonium-238]]<br>[[钚-239|Plutonium-239]]<br>[[钚-240|Plutonium-240]]<br>[[钚-241|Plutonium-241]]"
 	}
 }

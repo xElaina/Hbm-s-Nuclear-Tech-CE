@@ -1,13 +1,26 @@
 {
 	"name": "Bakelite",
-	"icon": ["hbm:ingot_bakelite", 1, 0],
-    "trigger": [["hbm:ingot_bakelite"], ["hbm:powder_bakelite"]],
-    "title": {
-        "en_us": "Bakelite",
-		"ru_ru": "Бакелит"
-    },
+	"icon": [
+		"hbm:ingot_bakelite",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_bakelite"
+		],
+		[
+			"hbm:powder_bakelite"
+		]
+	],
+	"title": {
+		"en_us": "Bakelite",
+		"ru_ru": "Бакелит",
+		"zh_cn": "电木"
+	},
 	"content": {
 		"en_us": "Alternative to [[polymer|Polymer]] made from [[aromatic hydrocarbons|Aromatic Hydrocarbons]] derived from [[cracked oil products|Catalytic Cracking Tower]]. Completely interchangeable in all recipes.",
-		"ru_ru": "Альтернатива [[полимеру|Polymer]], изготовлаиваемая из [[ароматических углеводородов|Aromatic Hydrocarbons]], получаемых из [[продуктов каталитического крекинга|Catalytic Cracking Tower]]. Полностью взаимозаменяемо во всех рецептах."
+		"ru_ru": "Альтернатива [[полимеру|Polymer]], изготовлаиваемая из [[ароматических углеводородов|Aromatic Hydrocarbons]], получаемых из [[продуктов каталитического крекинга|Catalytic Cracking Tower]]. Полностью взаимозаменяемо во всех рецептах.",
+		"zh_cn": "[[聚合物|Polymer]]（特氟隆）的替代品，<br>由[[催化裂化塔|Catalytic Cracking Tower]]产生的[[芳香烃|Aromatic Hydrocarbons]]制成。<br>在所有配方中均可与聚合物完全互换。"
 	}
 }

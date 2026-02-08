@@ -1,13 +1,29 @@
 {
 	"name": "Technetium",
-	"icon": ["hbm:ingot_technetium", 1, 0],
-    "trigger": [["hbm:billet_technetium"], ["hbm:ingot_technetium"], ["hbm:nugget_technetium"]],
-    "title": {
-        "en_us": "Technetium",
-		"ru_ru": "Технеций"
-    },
+	"icon": [
+		"hbm:ingot_technetium",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:billet_technetium"
+		],
+		[
+			"hbm:ingot_technetium"
+		],
+		[
+			"hbm:nugget_technetium"
+		]
+	],
+	"title": {
+		"en_us": "Technetium",
+		"ru_ru": "Технеций",
+		"zh_cn": "锝"
+	},
 	"content": {
 		"en_us": "Synthetic metal, reprocessed from [[ZIRNOX]] or [[PWR]] fuel early on. May also be extracted from some [[RBMK]] fuels or [[bedrock ore|Bedrock Ore]] with high-performance solvent.<br><br>Primarily used for [[technetium steel|Technetium Steel]].<br><br>Moderately radioactive.",
-		"ru_ru": "Синтетический металл, получаемый при переработке топлива [[Цирнокса|ZIRNOX]] или [[ВВЭР|PWR]] на раннем этапе. Также может быть извлечён из некоторых топлив [[РБМК|RBMK]] или [[бедроковой руды|Bedrock Ore]] с использованием [[высокоэффективного растворителя|High-Performance Solvent]].<br><br>В основном используется для [[технециевой стали|Technetium Steel]].<br><br>Умеренно радиоактивен."
+		"ru_ru": "Синтетический металл, получаемый при переработке топлива [[Цирнокса|ZIRNOX]] или [[ВВЭР|PWR]] на раннем этапе. Также может быть извлечён из некоторых топлив [[РБМК|RBMK]] или [[бедроковой руды|Bedrock Ore]] с использованием [[высокоэффективного растворителя|High-Performance Solvent]].<br><br>В основном используется для [[технециевой стали|Technetium Steel]].<br><br>Умеренно радиоактивен.",
+		"zh_cn": "合成金属，早期可以通过再处理[[锆诺克斯反应堆|ZIRNOX]]或[[压水堆|PWR]]燃料获得。<br>也能从某些[[RBMK 石墨式反应堆|RBMK]]燃料或者[[基岩矿石|Bedrock Ore]]里用高性能溶剂提取出来。<br><br><br>主要用于制造[[锝钢|Technetium Steel]]。<br><br>具有中等放射性。"
 	}
 }

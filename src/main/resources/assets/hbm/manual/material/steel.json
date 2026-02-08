@@ -1,13 +1,29 @@
 {
 	"name": "Steel",
-	"icon": ["hbm:ingot_steel", 1, 0],
-    "trigger": [["hbm:ingot_steel"], ["hbm:plate_steel"], ["hbm:powder_steel"]],
-    "title": {
-        "en_us": "Steel",
-		"ru_ru": "Сталь"
-    },
+	"icon": [
+		"hbm:ingot_steel",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_steel"
+		],
+		[
+			"hbm:plate_steel"
+		],
+		[
+			"hbm:powder_steel"
+		]
+	],
+	"title": {
+		"en_us": "Steel",
+		"ru_ru": "Сталь",
+		"zh_cn": "钢"
+	},
 	"content": {
 		"en_us": "Upgraded version of iron, basic material. Used in almost everything. Initially obtained by combining coal and iron in a [[blast furnace|Blast Furnace]]. Upgraded recipes are available later on via [[crucible|Crucible]] and [[rotary furnace|Rotary Furnace]].",
-		"ru_ru": "Улучшенная версия железа, базовый материал. Используется почти во всём. Изначально получается путём комбинирования угля и железа в [[доменной печи|Blast Furnace]]. Позже становятся доступны улучшенные рецепты в [[плавильне|Crucible]] и [[роторной печи|Rotary Furnace]]."
+		"ru_ru": "Улучшенная версия железа, базовый материал. Используется почти во всём. Изначально получается путём комбинирования угля и железа в [[доменной печи|Blast Furnace]]. Позже становятся доступны улучшенные рецепты в [[плавильне|Crucible]] и [[роторной печи|Rotary Furnace]].",
+		"zh_cn": "铁的豪华升级版，基础材料，干啥都要用到。<br>最初是在[[高炉|Blast Furnace]]里把煤和铁混在一起炼出来的。<br>后期还能通过[[坩埚|Crucible]]和[[回转炉|Rotary Furnace]]获得更高级的配方。"
 	}
 }

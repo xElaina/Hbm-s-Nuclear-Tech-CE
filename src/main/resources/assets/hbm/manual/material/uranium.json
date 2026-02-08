@@ -1,15 +1,37 @@
 {
 	"name": "Uranium",
-	"icon": ["hbm:ingot_uranium", 1, 0],
-	"trigger": [["hbm:ingot_uranium"], ["hbm:billet_uranium"], ["hbm:nugget_uranium"], ["hbm:powder_uranium"], ["hbm:ore_uranium"]],
+	"icon": [
+		"hbm:ingot_uranium",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_uranium"
+		],
+		[
+			"hbm:billet_uranium"
+		],
+		[
+			"hbm:nugget_uranium"
+		],
+		[
+			"hbm:powder_uranium"
+		],
+		[
+			"hbm:ore_uranium"
+		]
+	],
 	"title": {
 		"en_us": "Uranium",
 		"ru_ru": "Уран",
-		"ja_jp": "ウラニウム"
+		"ja_jp": "ウラニウム",
+		"zh_cn": "铀"
 	},
 	"content": {
 		"en_us": "Natural uranium, slightly radioactive. Not very fissile on its own, can be enriched by turning it into [[uranium hexafluoride|Uranium Hexafluoride]] and processing it in [[gas centrifuges|Gas Centrifuge]]. [[ZIRNOX]], [[RBMK]] and [[Chigago Pile]] may use natural uranium as fuel without enrichment.<br><br>See also:<br>[[Uranium-233]]<br>[[Uranium-235]]<br>[[Uranium-238]]",
 		"ru_ru": "Природный уран, слабо радиоактивен. Сам по себе плохо делится; может быть обогащён путём превращения в [[гексафторид урана|Uranium Hexafluoride]] и последующей обработки в [[газовых центрифугах|Gas Centrifuge]]. [[Цирнокс|ZIRNOX]], [[РБМК|RBMK]] и [[чикагская поленница|Chicago Pile]] могут использовать природный уран в качестве топлива без обогащения.<br><br>См. также:<br>[[Уран-233|Uranium-233]]<br>[[Уран-235|Uranium-235]]<br>[[Уран-238|Uranium-238]]",
-		"ja_jp": "少しだけ放射性の天然のウラニウム。 これだけではあまり核分裂性に欠けるが、 [[六フッ化ウラニウム|Uranium Hexafluoride]]にして[[流体用遠心分離機|Gas Centrifuge]]にかけることで濃縮できる。 [[ジルノックス|ZIRNOX]]や[[RBMK]]、 [[シカゴパイル|Chicago Pile]]は天然のウラニウムのまま使用できる。<br><br>関連資料<br>[[ウラニウム233|Uranium-233]]<br>[[ウラニウム235|Uranium-235]]<br>[[ウラニウム238|Uranium-238]]"
+		"ja_jp": "少しだけ放射性の天然のウラニウム。 これだけではあまり核分裂性に欠けるが、 [[六フッ化ウラニウム|Uranium Hexafluoride]]にして[[流体用遠心分離機|Gas Centrifuge]]にかけることで濃縮できる。 [[ジルノックス|ZIRNOX]]や[[RBMK]]、 [[シカゴパイル|Chicago Pile]]は天然のウラニウムのまま使用できる。<br><br>関連資料<br>[[ウラニウム233|Uranium-233]]<br>[[ウラニウム235|Uranium-235]]<br>[[ウラニウム238|Uranium-238]]",
+		"zh_cn": "天然铀，带点儿放射性。这玩意儿本身不太容易裂变，<br>可以转化成[[六氟化铀|Uranium Hexafluoride]]之后用[[气体离心机|Gas Centrifuge]]处理来进行浓缩。<br>[[锆诺克斯反应堆|ZIRNOX]]、[[RBMK 石墨式反应堆|RBMK]]和[[芝加哥反应堆|Chicago Pile]]可以直接使用天然铀做燃料，<br>不用浓缩。<br><br>参见：[[铀-233|Uranium-233]][[铀-235|Uranium-235]][[铀-238|Uranium-238]]"
 	}
 }

@@ -1,13 +1,29 @@
 {
 	"name": "Advanced Alloy",
-	"icon": ["hbm:ingot_advanced_alloy", 1, 0],
-    "trigger": [["hbm:ingot_advanced_alloy"], ["hbm:powder_advanced_alloy"], ["hbm:plate_advanced_alloy"]],
-    "title": {
-        "en_us": "Advanced Alloy",
-        "ru_ru": "Продвинутый сплав"
-    },
+	"icon": [
+		"hbm:ingot_advanced_alloy",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_advanced_alloy"
+		],
+		[
+			"hbm:powder_advanced_alloy"
+		],
+		[
+			"hbm:plate_advanced_alloy"
+		]
+	],
+	"title": {
+		"en_us": "Advanced Alloy",
+		"ru_ru": "Продвинутый сплав",
+		"zh_cn": "高级合金"
+	},
 	"content": {
 		"en_us": "Made in a [[blast furnace|Blast Furnace]] from [[steel|Steel]] and [[Minecraft grade copper|Minecraft Grade Copper]]. Makes better-than-diamond gear. Also used in some high-powered magnets for the [[fusion reactor|Fusion Reactor]] and the [[exposure chamber|Exposure Chamber]].",
-		"ru_ru": "Можно скрафтить в [[доменной печи|Blast Furnace]] из [[стали|Steel]] и [[красной меди|Minecraft Grade Copper]]. Снаряжение из него выходит лучше, чем из алмазов. Также используется в некоторых сверхпроводящих магнитах для [[термоядерного реактора|Fusion Reactor]] и [[камеры облучения частицами|Exposure Chamber]]."
+		"ru_ru": "Можно скрафтить в [[доменной печи|Blast Furnace]] из [[стали|Steel]] и [[красной меди|Minecraft Grade Copper]]. Снаряжение из него выходит лучше, чем из алмазов. Также используется в некоторых сверхпроводящих магнитах для [[термоядерного реактора|Fusion Reactor]] и [[камеры облучения частицами|Exposure Chamber]].",
+		"zh_cn": "在[[高炉|Blast Furnace]]中用[[钢|Steel]]和[[紫铜|Minecraft Grade Copper]]炼制而成。<br>用它打造的装备比钻石还要犀利！<br>还用于制作[[聚变反应堆|Fusion Reactor]]和[[辐照舱|Exposure Chamber]]所需的高功率磁体。"
 	}
 }

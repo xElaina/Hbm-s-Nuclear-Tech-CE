@@ -1,13 +1,29 @@
 {
 	"name": "Polonium-210",
-	"icon": ["hbm:billet_polonium", 1, 0],
-    "trigger": [["hbm:ingot_polonium"], ["hbm:billet_polonium"], ["hbm:nugget_polonium"]],
-    "title": {
-        "en_us": "Polonium-210",
-		"ru_ru": "Полоний-210"
-    },
+	"icon": [
+		"hbm:billet_polonium",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_polonium"
+		],
+		[
+			"hbm:billet_polonium"
+		],
+		[
+			"hbm:nugget_polonium"
+		]
+	],
+	"title": {
+		"en_us": "Polonium-210",
+		"ru_ru": "Полоний-210",
+		"zh_cn": "钋-210"
+	},
 	"content": {
 		"en_us": "Radioisotope derived from reprocessing [[radium-226|Radium-226]] neutron sources. Usable for [[RTGs|RTG]], or with [[beryllium|Beryllium]] in Po210Be neutron sources for [[RBMKs|RBMK]].<br><br>Highly radioactive, very hot.",
-		"ru_ru": "Радиоизотоп, получаемый при переработке нейтронных источников из [[радия-226|Radium-226]]. Используется в [[РИТЭГах|RTG]] или с [[бериллием|Beryllium]] в нейтронных источниках Po210Be для [[РБМК|RBMK]].<br><br>Сильно радиоактивен, очень горячий."
+		"ru_ru": "Радиоизотоп, получаемый при переработке нейтронных источников из [[радия-226|Radium-226]]. Используется в [[РИТЭГах|RTG]] или с [[бериллием|Beryllium]] в нейтронных источниках Po210Be для [[РБМК|RBMK]].<br><br>Сильно радиоактивен, очень горячий.",
+		"zh_cn": "通过对[[镭-226|Radium-226]]中子源进行后处理获得的放射性同位素。<br>可用于[[放射性同位素发电机|RTG]]，或与[[铍|Beryllium]]一起作为 Po210 - Be 中子源用于[[RBMK石墨式反应堆|RBMK]]。<br><br><br>高放射性，且温度极高。"
 	}
 }

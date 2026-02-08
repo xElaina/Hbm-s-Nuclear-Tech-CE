@@ -1,13 +1,23 @@
 {
 	"name": "Ferrouranium",
-	"icon": ["hbm:ingot_ferrouranium", 1, 0],
-    "trigger": [["hbm:ingot_ferrouranium"]],
-    "title": {
-        "en_us": "Ferrouranium",
-		"ru_ru": "Ферроуран"
-    },
+	"icon": [
+		"hbm:ingot_ferrouranium",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_ferrouranium"
+		]
+	],
+	"title": {
+		"en_us": "Ferrouranium",
+		"ru_ru": "Ферроуран",
+		"zh_cn": "铀铁合金"
+	},
 	"content": {
 		"en_us": "Alloy of [[steel|Steel]] and [[uranium-238|Uranium-238]] made in the [[crucible|Crucible]]. Mainly used in ducrete, weapon parts and high-explosive ammunition.",
-		"ru_ru": "Сплав [[стали|Steel]] и [[урана-238|Uranium-238]], изготавливаемый в [[плавильне|Crucible]]. В основном используется в дюкрете, деталях оружия и фугасных боеприпасах."
+		"ru_ru": "Сплав [[стали|Steel]] и [[урана-238|Uranium-238]], изготавливаемый в [[плавильне|Crucible]]. В основном используется в дюкрете, деталях оружия и фугасных боеприпасах.",
+		"zh_cn": "在[[坩埚|Crucible]]中制成的[[钢|Steel]]与[[铀-238|Uranium-238]]的合金。<br>主要用于杜克混凝土、武器部件和高爆炸药。"
 	}
 }

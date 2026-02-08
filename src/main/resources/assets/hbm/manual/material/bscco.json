@@ -1,13 +1,28 @@
 {
 	"name": "BSCCO",
-	"icon": ["hbm:ingot_bscco", 1, 0],
-    "trigger": [["hbm:ingot_bscco"], ["hbm:wire_dense", 1, 48]],
-    "title": {
-        "en_us": "BSCCO",
-		"ru_ru": "BSCCO"
-    },
+	"icon": [
+		"hbm:ingot_bscco",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_bscco"
+		],
+		[
+			"hbm:wire_dense",
+			1,
+			48
+		]
+	],
+	"title": {
+		"en_us": "BSCCO",
+		"ru_ru": "BSCCO",
+		"zh_cn": "BSCCO 超导体"
+	},
 	"content": {
 		"en_us": "Powerful superconductor, used in high tier circuits and coils for the [[particle accelerator|Particle Accelerator]]. Requires [[bismuth|Bismuth]], and is therefore only obtainable after building an [[RBMK]].",
-		"ru_ru": "Мощный сверхпроводник, используемый в высокоуровневых схемах и катушках для [[ускорителя частиц|Particle Accelerator]]. Требует [[висмута|Bismuth]], и поэтому доступен только после постройки [[РБМК|RBMK]]."
+		"ru_ru": "Мощный сверхпроводник, используемый в высокоуровневых схемах и катушках для [[ускорителя частиц|Particle Accelerator]]. Требует [[висмута|Bismuth]], и поэтому доступен только после постройки [[РБМК|RBMK]].",
+		"zh_cn": "强力的超导体，用于高阶电路和[[粒子加速器|Particle Accelerator]]的线圈。<br>需要[[铋|Bismuth]]，因此只有在建造[[RBMK]]后才能获得。"
 	}
 }

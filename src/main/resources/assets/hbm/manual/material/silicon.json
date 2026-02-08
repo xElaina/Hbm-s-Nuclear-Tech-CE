@@ -1,13 +1,29 @@
 {
 	"name": "Silicon",
-	"icon": ["hbm:billet_silicon", 1, 0],
-    "trigger": [["hbm:ingot_silicon"], ["hbm:billet_silicon"], ["hbm:nugget_silicon"]],
-    "title": {
-        "en_us": "Silicon",
-		"ru_ru": "Резина"
-    },
+	"icon": [
+		"hbm:billet_silicon",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_silicon"
+		],
+		[
+			"hbm:billet_silicon"
+		],
+		[
+			"hbm:nugget_silicon"
+		]
+	],
+	"title": {
+		"en_us": "Silicon",
+		"ru_ru": "Резина",
+		"zh_cn": "硅"
+	},
 	"content": {
 		"en_us": "Important material for producing integrated circuits, and any electronics more sophisticated than an analog circuit. Created in an [[electric arc furnace|Electric Arc Furnace]] using things that contain silicon dioxide, like regular sand, nether quartz, fiberglass, flint or [[asbestos|Asbestos]]. Used primarily as wafers (i.e. billets) which are [[pressed|Burner Press]] using a circuit stamp, and then crafted into different types of microchips. Due to requiring an arc furnace, silicon is available after obtaining [[polymer|Polymer]], requiring [[oil|Crude Oil]] processing.",
-		"ru_ru": "Важный материал для производства интегральных схем и любой электроники сложнее аналоговой. Создаётся в [[электродуговой печи|Electric Arc Furnace]] из материалов, содержащих диоксид кремния, например обычного песка, адского кварца, стекловолокна, кремня или [[асбеста|Asbestos]]. В основном используется в виде пластин (то есть заготовок), которые [[прессуются|Burner Press]] с использованием штампа для схем, а затем из них изготавливаются разные типы микросхем. Поскольку требуется дуговая печь, кремний становится доступен после получения [[полимера|Polymer]], требующего переработки [[сырой нефти|Crude Oil]]."
+		"ru_ru": "Важный материал для производства интегральных схем и любой электроники сложнее аналоговой. Создаётся в [[электродуговой печи|Electric Arc Furnace]] из материалов, содержащих диоксид кремния, например обычного песка, адского кварца, стекловолокна, кремня или [[асбеста|Asbestos]]. В основном используется в виде пластин (то есть заготовок), которые [[прессуются|Burner Press]] с использованием штампа для схем, а затем из них изготавливаются разные типы микросхем. Поскольку требуется дуговая печь, кремний становится доступен после получения [[полимера|Polymer]], требующего переработки [[сырой нефти|Crude Oil]].",
+		"zh_cn": "造集成电路和比模拟电路更高级的电子玩意儿的重要材料。<br>在[[电弧炉|Electric Arc Furnace]]里用含二氧化硅的东西炼制，<br>比如普通沙子、下界石英、玻璃纤维、燧石或者[[石棉|Asbestos]]。<br>主要做成晶圆（也就是坯料）的形式，<br>用电路锻模在[[锻压机|Burner Press]]里压一下，然后就能做成各种微芯片了。<br>因为需要电弧炉，所以得先搞到[[聚合物|Polymer]]才能造硅，<br>也就是说你得先搞[[石油|Crude Oil]]加工。"
 	}
 }

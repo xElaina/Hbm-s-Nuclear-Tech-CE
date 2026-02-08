@@ -1,12 +1,29 @@
 {
 	"name": "Plutonium-241",
-	"icon": ["hbm:billet_pu241", 1, 0],
-    "trigger": [["hbm:ingot_pu241"], ["hbm:billet_pu241"], ["hbm:nugget_pu241"]],
-    "title": {
-        "en_us": "Plutonium-241",
-		"ru_ru": "Plutonium-241"
-    },
+	"icon": [
+		"hbm:billet_pu241",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_pu241"
+		],
+		[
+			"hbm:billet_pu241"
+		],
+		[
+			"hbm:nugget_pu241"
+		]
+	],
+	"title": {
+		"en_us": "Plutonium-241",
+		"ru_ru": "Plutonium-241",
+		"zh_cn": "钚-241"
+	},
 	"content": {
-		"en_us": "Secondary fissile isotope of [[plutonium|Plutonium]]. Can be recovered from [[plutonium-240|Plutonium-240]]-rich spent [[RBMK]] fuels, as well as certain types of [[zirconium|Zirconium]] fast breefer fuels. Only used in specialized breeding fuels and as high enriched fuel, which is more powerful than its [[plutonium-239|Plutonium-239]] counterpart. Plutonium-241 in RBMKs yields [[americium-241|Americium-241]] and [[americium-242|Americium-242]] when reprocessed.<br><br>Highly radioactive."
+		"en_us": "Secondary fissile isotope of [[plutonium|Plutonium]]. Can be recovered from [[plutonium-240|Plutonium-240]]-rich spent [[RBMK]] fuels, as well as certain types of [[zirconium|Zirconium]] fast breefer fuels. Only used in specialized breeding fuels and as high enriched fuel, which is more powerful than its [[plutonium-239|Plutonium-239]] counterpart. Plutonium-241 in RBMKs yields [[americium-241|Americium-241]] and [[americium-242|Americium-242]] when reprocessed.<br><br>Highly radioactive.",
+		"ru_ru": "Вторичный делящийся изотоп [[плутония|Plutonium]]. Может быть извлечён из обогащённых [[плутонием-240|Plutonium-240]] отработавших топлив [[RBMK]], а также из определённых типов топлива на основе [[циркония|Zirconium]] для быстрых размножающих реакторов. Используется только в специализированном размножающем топливе и как высокообогащённое топливо, которое мощнее, чем [[плутоний-239|Plutonium-239]]. При переработке плутоний-241 в РБМК даёт [[америций-241|Americium-241]] и [[америций-242|Americium-242]].<br><br>Сильно радиоактивен.",
+		"zh_cn": "[[钚|Plutonium]]的次级裂变同位素。<br>可从富含[[钚-240|Plutonium-240]]的[[RBMK石墨式反应堆|RBMK]]乏燃料以及某些[[锆|Zirconium]]快中子增殖燃料中回收。<br>仅用于专门的增殖燃料和高浓缩燃料，<br>其威力比[[钚-239|Plutonium-239]]更大。在 RBMK 中，<br>钚-241经后处理可产出[[镅-241|Americium-241]]和[[镅-242|Americium-242]]。<br><br><br>高放射性。"
 	}
 }

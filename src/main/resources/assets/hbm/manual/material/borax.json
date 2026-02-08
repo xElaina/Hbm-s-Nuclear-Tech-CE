@@ -1,7 +1,15 @@
 {
 	"name": "Borax",
-	"icon": ["hbm:powder_borax", 1, 0],
-	"trigger": [["hbm:powder_borax"]],
+	"icon": [
+		"hbm:powder_borax",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:powder_borax"
+		]
+	],
 	"title": {
 		"en_us": "Borax",
 		"zh_cn": "硼砂"

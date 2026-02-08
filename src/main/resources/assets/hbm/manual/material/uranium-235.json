@@ -1,15 +1,31 @@
 {
 	"name": "Uranium-235",
-	"icon": ["hbm:billet_u235", 1, 0],
-	"trigger": [["hbm:ingot_u235"], ["hbm:billet_u235"], ["hbm:nugget_u235"]],
+	"icon": [
+		"hbm:billet_u235",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_u235"
+		],
+		[
+			"hbm:billet_u235"
+		],
+		[
+			"hbm:nugget_u235"
+		]
+	],
 	"title": {
 		"en_us": "Uranium-235",
 		"ru_ru": "Уран-235",
-		"ja_jp": "ウラニウム235"
+		"ja_jp": "ウラニウム235",
+		"zh_cn": "铀-235"
 	},
 	"content": {
 		"en_us": "Enriched uranium. Fissile, usable in some reactors directly as high enriched fuel, or mixed back with [[uranium-238|Uranium-238]] for medium enriched uranium fuels. Weapons grade. Created initially by processing [[uranium hexafluuoride|Uranium Hexafluoride]] in a cascade of four [[gas centrifuges|Gas Centriuge]], available later on by separating [[natural uranium|Uranium]] via [[SILEX]].<br><br>Moderately radioactive.",
 		"ru_ru": "Обогащённый уран. Делящийся; может использоваться в некоторых реакторах напрямую как высокообогащённое топливо, или смешивается с [[ураном-238|Uranium-238]] для получения среднеобогащённого топлива. Пригоден для боеприпасов. Изначально производится обработкой [[гексафторида урана|Uranium Hexafluoride]] в каскаде из четырёх [[газовых центрифуг|Gas Centrifuge]], позже становится доступен путём разделения [[природного урана|Uranium]] через [[SILEX]].<br><br>Умеренно радиоактивен.",
-		"ja_jp": "濃縮されたウラニウム。 核分裂性であり、 原子炉によっては高濃縮燃料として直接使用することができ、 あるいは、 [[ウラニウム238|Uranium-238]]と組み合わせて中濃縮ウラニウム燃料にすることも可能。 兵器級。 最初は[[六フッ化ウラニウム|Uranium Hexafluoride]]を4つの[[流体用遠心分離機|Gas Centrifuge]]で処理して作る。 後々[[天然のウラニウム|Uranium]]を[[SILEX]]で分離することで得ることもできる。<br><br>中程度に放射性。"
+		"ja_jp": "濃縮されたウラニウム。 核分裂性であり、 原子炉によっては高濃縮燃料として直接使用することができ、 あるいは、 [[ウラニウム238|Uranium-238]]と組み合わせて中濃縮ウラニウム燃料にすることも可能。 兵器級。 最初は[[六フッ化ウラニウム|Uranium Hexafluoride]]を4つの[[流体用遠心分離機|Gas Centrifuge]]で処理して作る。 後々[[天然のウラニウム|Uranium]]を[[SILEX]]で分離することで得ることもできる。<br><br>中程度に放射性。",
+		"zh_cn": "浓缩铀。可裂变，在某些反应堆中可以直接用作高浓缩燃料，<br>或者和[[铀-238|Uranium-238]]混合做成中浓缩铀燃料。武器级。<br>最初是通过四级[[气体离心机|Gas Centrifuge]]联机处理[[六氟化铀|Uranium Hexafluoride]]搞出来的，<br>后期还可以通过[[激光同位素分离室|SILEX]]分离[[天然铀|Uranium]]获得。<br><br>具有中等放射性。"
 	}
 }

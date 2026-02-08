@@ -1,12 +1,29 @@
 {
 	"name": "Reactor-Grade Plutonium",
-	"icon": ["hbm:billet_pu_mix", 1, 0],
-    "trigger": [["hbm:ingot_pu_mix"], ["hbm:billet_pu_mix"], ["hbm:nugget_pu_mix"]],
-    "title": {
-        "en_us": "Reactor-Grade Plutonium",
-		"ru_ru": "Плутоний реакторного качества"
-    },
+	"icon": [
+		"hbm:billet_pu_mix",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:ingot_pu_mix"
+		],
+		[
+			"hbm:billet_pu_mix"
+		],
+		[
+			"hbm:nugget_pu_mix"
+		]
+	],
+	"title": {
+		"en_us": "Reactor-Grade Plutonium",
+		"ru_ru": "Плутоний реакторного качества",
+		"zh_cn": "反应堆级钚"
+	},
 	"content": {
-		"en_us": "Mixture of [[plutonium-239|Plutonium-239]] and [[plutonium-240|Plutonium-240]]. Common result of reprocessing many [[uranium|Uranium]]-based fuels, as well as by breeding uranium in the [[Chicago Pile]]. Usable in many reactors as medium enriched plutonium fuel.<br><br>Moderately radioactive."
+		"en_us": "Mixture of [[plutonium-239|Plutonium-239]] and [[plutonium-240|Plutonium-240]]. Common result of reprocessing many [[uranium|Uranium]]-based fuels, as well as by breeding uranium in the [[Chicago Pile]]. Usable in many reactors as medium enriched plutonium fuel.<br><br>Moderately radioactive.",
+		"ru_ru": "Смесь [[плутония-239|Plutonium-239]] и [[плутония-240|Plutonium-240]]. Обычный результат переработки многих топлив на основе [[урана|Uranium]], а также выращивания урана в [[Чикагской куче|Chicago Pile]]. Пригоден для использования во многих реакторах в качестве плутониевого топлива среднего обогащения.<br><br>Умеренно радиоактивен.",
+		"zh_cn": "[[钚-239|Plutonium-239]]和[[钚-240|Plutonium-240]]的混合物。<br>是许多[[铀|Uranium]]基燃料后处理的常见产物，<br>也可通过在[[芝加哥反应堆|Chicago Pile]]中增殖铀获得。<br>可用作多种反应堆的中等浓缩钚燃料。<br><br>具有中等放射性。"
 	}
 }
