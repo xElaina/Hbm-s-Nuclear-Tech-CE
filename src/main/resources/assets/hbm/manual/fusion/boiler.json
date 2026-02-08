@@ -1,14 +1,23 @@
 {
 	"name": "Fusion Reactor Boiler",
-	"icon": ["hbm:fusion_boiler", 1, 0],
-	"trigger": [["hbm:fusion_boiler"]],
+	"icon": [
+		"hbm:fusion_boiler",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:fusion_boiler"
+		]
+	],
 	"title": {
 		"en_us": "Fusion Reactor Boiler",
-		"ru_ru": "Плазменный бойлер"
+		"ru_ru": "Плазменный бойлер",
+		"zh_cn": "聚变反应堆锅炉"
 	},
 	"content": {
 		"en_us": "Simplest energy-extracting component of a [[fusion reactor|Fusion Reactor]], uses the plasma output energy (measured in TU/t) from the [[torus|Fusion Reactor Vessel]] to boil water into [[super dense steam|Super Dense Steam]]. Each mB of water uses 200TU to boil, as a boiler would, however, the fusion reactor boiler produces a higher compression level of steam directly, making it more efficient than conventional boilers.<br><br>Due to using plasma energy, boilers are affected by port sharing rules, meaning that having multiple connected boilers (or [[MHDTs|MHD Turbine]]) decreases the amount of energy each boiler gets, but overall increases the total amount extracted from the torus.",
-		"ru_ru": "Простейший элемент [[термоядерного реактора|Fusion Reactor]] для получения полезной энергии. Использует тепловую энергию плазмы (TU/t) из [[основной камеры|Fusion Reactor Vessel]] для нагрева воды до состояния [[перегретого пара|Super Dense Steam]]. На 1 mB воды требуется 200 TU тепла, как и в обычном бойлере. Однако, в отличие от последнего, данный механизм работает эффективнее ввиду пропуска промежуточных видов пара.<br><br>Поскольку бойлеры используют энергию плазмы, они подвержены действию правила совместного использования портов: если к тору подключено сразу несколько бойлеров (или [[МГД-турбин|MHD Turbine]]), каждый из них по отдельности получит меньше энергии, хотя от самого тора суммарно энергии будет отведено больше, нежели при подключении одного бойлера."
+		"ru_ru": "Простейший элемент [[термоядерного реактора|Fusion Reactor]] для получения полезной энергии. Использует тепловую энергию плазмы (TU/t) из [[основной камеры|Fusion Reactor Vessel]] для нагрева воды до состояния [[перегретого пара|Super Dense Steam]]. На 1 mB воды требуется 200 TU тепла, как и в обычном бойлере. Однако, в отличие от последнего, данный механизм работает эффективнее ввиду пропуска промежуточных видов пара.<br><br>Поскольку бойлеры используют энергию плазмы, они подвержены действию правила совместного использования портов: если к тору подключено сразу несколько бойлеров (или [[МГД-турбин|MHD Turbine]]), каждый из них по отдельности получит меньше энергии, хотя от самого тора суммарно энергии будет отведено больше, нежели при подключении одного бойлера.",
+		"zh_cn": "[[聚变反应堆|Fusion Reactor]]中最简单的能量提取组件，\n利用[[环形容器|Fusion Reactor Vessel]]输出的等离子体能量（以 TU/t 计）将水煮沸\n为[[超密蒸汽|Super Dense Steam]]。每 mB 水消耗 200 TU 热量——这与普通锅炉\n无异——然而聚变反应堆锅炉能直接产生更高压缩等级的蒸\n汽，因此比传统锅炉更高效。由于使用等离子体能量，\n锅炉受端口共享规则制约：这意味着当你连接多台锅炉（或\n[[磁流体发电机|MHD Turbine]]）时，每台锅炉分得的能量会减少，\n但从环形容器中提取的总能量却会提升。简而言之，\n数量换效率，\n怎么算都不亏——是谁那么美丽优雅而又平易近人呢？没错，\n就是我。"
 	}
 }
-

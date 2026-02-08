@@ -1,13 +1,23 @@
 {
 	"name": "MHD Turbine",
-	"icon": ["hbm:fusion_mhdt", 1, 0],
-	"trigger": [["hbm:fusion_mhdt"]],
+	"icon": [
+		"hbm:fusion_mhdt",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:fusion_mhdt"
+		]
+	],
 	"title": {
 		"en_us": "MHD Turbine",
-		"ru_ru": "МГД-турбина"
+		"ru_ru": "МГД-турбина",
+		"zh_cn": "磁流体发电机"
 	},
 	"content": {
 		"en_us": "Magnetohydrodynamic turbines are advanced components of the [[fusion reactor|Fusion Reactor]] that make electric energy out of plasma energy directly without needing steam or turbines, as a [[boiler|Fusion Reactor Boiler]] would. While more expensive and requiring [[perfluoromethyl|Perfluoromethyl]] cooling, they do have an innate +35% conversion bonus from TU to HE. In addition, the MHD turbine requires a minimum input of 5MTU/t of plasma energy to operate normally, otherwise efficiency will be halved.<br><br>Due to using plasma energy, MHDTs are affected by port sharing rules, meaning that having multiple connected MHDTs (or boilers) decreases the amount of energy each turbine gets, but overall increases the total amount extracted from the torus.<br><br>MHDTs do in fact not have any moving parts, instead the large rotating copper wheel is part of its cooling system. Ya dweeb.",
-		"ru_ru": "Продвинутый компонент [[термоядерного реактора|Fusion Reactor]], который извлекает электричество из энергии плазмы напрямую, без использования вспомогательных процессов (вроде нагрева воды и прогона пара через паровые турбины). Дороговизна и необходимость в охлаждении [[перфторметаном|Perfluoromethyl]] окупаются безупречными значениями эффективности (135%). В дополнение следует сказать, что турбине необходима мощность не менее 5 MTU/с энергии плазмы, иначе эффективность механизма снизится вдвое.<br><br>Поскольку турбина использует энергию плазмы, на неё распространяется правило совместного использования портов: если к тору подключено сразу несколько бойлеров или турбин, каждый из потребителей по отдельности получит меньше энергии, хотя от самого тора суммарно энергии будет отведено больше.<br><br>МГДТ вообще-то почти не имеют подвижных запчастей, а большой вращающийся медный маховик является частью системы охлаждения. Да, душнила. :nerd:"
+		"ru_ru": "Продвинутый компонент [[термоядерного реактора|Fusion Reactor]], который извлекает электричество из энергии плазмы напрямую, без использования вспомогательных процессов (вроде нагрева воды и прогона пара через паровые турбины). Дороговизна и необходимость в охлаждении [[перфторметаном|Perfluoromethyl]] окупаются безупречными значениями эффективности (135%). В дополнение следует сказать, что турбине необходима мощность не менее 5 MTU/с энергии плазмы, иначе эффективность механизма снизится вдвое.<br><br>Поскольку турбина использует энергию плазмы, на неё распространяется правило совместного использования портов: если к тору подключено сразу несколько бойлеров или турбин, каждый из потребителей по отдельности получит меньше энергии, хотя от самого тора суммарно энергии будет отведено больше.<br><br>МГДТ вообще-то почти не имеет подвижных запчастей, а большой вращающийся медный маховик является частью системы охлаждения. Да, душнила. :nerd:",
+		"zh_cn": "磁流体发电机（Magnetohydrodynamic Generator，\n虽然这里叫 Turbine 但实际上没有涡轮）是[[聚变反应堆|Fusion Reactor]]的\n高级组件，能像[[锅炉|Fusion Reactor Boiler]]一样将等离子体能量直接转化为电能，\n但无需经过烧开水和蒸汽轮机这些中间商赚差价。虽然造价\n昂贵且需要[[冷四氟甲烷|Perfluoromethyl]]冷却，\n但它拥有从 TU 到 HE 的先天 +35% 转换加成。此外，\n磁流体发电机需要至少 5 MTU/t 的等离子体能量输入才能\n正常运转，否则效率将减半。由于使用等离子体能量，\n它受端口共享规则影响：\n连接多台磁流体发电机（或锅炉）会降低每台分得的能量，\n但能从环形容器中提取的总能量会增加。实际上磁流体发电\n机并没有活动部件，\n那个巨大的旋转铜轮只是冷却系统的一部分。没错，\n你被它的名字骗了，书呆子。:nerd:"
 	}
 }
