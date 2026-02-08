@@ -1,23 +1,23 @@
 {
-	"name": "Fusion Reactor Breeding Chamber",
-	"icon": [
-		"hbm:fusion_breeder",
-		1,
-		0
-	],
-	"trigger": [
-		[
-			"hbm:fusion_breeder"
-		]
-	],
-	"title": {
-		"en_us": "Fusion Reactor Breeding Chamber",
-		"ru_ru": "Камера-размножитель",
-		"zh_cn": "聚变反应堆增殖室"
-	},
-	"content": {
-		"en_us": "Uses neutron flux from a fusion reactor's [[torus|Fusion Reactor Vessel]] in order to process materials. Can perform any recipe from the [[RBMK irradiation channel|RBMK Irradiation Channel]], plus a few unique recipes with liquid inputs. Neutron flux output is not affected by port sharing rules, the neutron flux output level on a torus is constant across all ports no matter how many components are attached to it.",
-		"ru_ru": "Устройство, использующее поток нейтронов из [[главной камеры|Fusion Reactor Vessel]] для облучения материалов. Ввиду этого принцип работы камеры схож со [[стержнем облучения РБМК|RBMK Irradiation Channel]]. Но, в отличие от последнего, камера-размножитель принимает и жидкое сырьё. Нейтронный поток не подвержен действию правила совместного использования портов, а это значит, что он будет одинаков и постоянен на всех портах тора вне зависимости от количества подключенных камер.",
-		"zh_cn": "利用聚变反应堆[[环形容器|Fusion Reactor Vessel]]产生的中子通量来处理材料。它能\n执行[[RBMK辐照通道|RBMK Irradiation Channel]]的所有配方，\n外加一些需要液体输入的独特配方。中子通量输出不受端口\n共享规则影响——无论连接了多少组件，\n环形容器上的中子通量输出水平在所有端口上保持恒定。换\n句话说，这是聚变堆里的\"共产主义分配者\"，人人有份，\n不多不少。"
-	}
+    "name": "Fusion Reactor Breeding Chamber",
+    "icon": [
+        "hbm:fusion_breeder",
+        1,
+        0
+    ],
+    "trigger": [
+        [
+            "hbm:fusion_breeder"
+        ]
+    ],
+    "title": {
+        "en_us": "Fusion Reactor Breeding Chamber",
+        "ru_ru": "Камера-размножитель",
+        "zh_cn": "聚变反应堆增殖室"
+    },
+    "content": {
+        "en_us": "Uses neutron flux from a fusion reactor's [[torus|Fusion Reactor Vessel]] in order to process materials. Can perform any recipe from the [[RBMK irradiation channel|RBMK Irradiation Channel]], plus a few unique recipes with liquid inputs. Neutron flux output is not affected by port sharing rules, the neutron flux output level on a torus is constant across all ports no matter how many components are attached to it.",
+        "ru_ru": "Устройство, использующее поток нейтронов из [[главной камеры|Fusion Reactor Vessel]] для облучения материалов. Ввиду этого принцип работы камеры схож со [[стержнем облучения РБМК|RBMK Irradiation Channel]]. Но, в отличие от последнего, камера-размножитель принимает и жидкое сырьё. Нейтронный поток не подвержен действию правила совместного использования портов, а это значит, что он будет одинаков и постоянен на всех портах тора вне зависимости от количества подключенных камер.",
+        "zh_cn": "利用聚变反应堆[[环形容器|Fusion Reactor Vessel]]产生的中子通量来处理材料。它能<br>执行[[RBMK辐照通道|RBMK Irradiation Channel]]的所有配方，<br>外加一些需要液体输入的独特配方。中子通量输出不受端口<br>共享规则影响——无论连接了多少组件，<br>环形容器上的中子通量输出水平在所有端口上保持恒定。换<br>句话说，这是聚变堆里的\"共产主义分配者\"，人人有份，<br>不多不少。"
+    }
 }

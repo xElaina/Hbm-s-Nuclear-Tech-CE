@@ -18,6 +18,6 @@
 	"content": {
 		"en_us": "Main power source of a [[fusion reactor|Fusion Reactor]], uses electricity and [[compressed air|Compressed Air]] to generate input energy (klystron energy or KyU) for the connected [[torus|Fusion Reactor Vessel]]. The output target needs to be defined in the GUI. Will throttle if either the buffered electricity or compressed air falls below 50%. If the klystron's output falls below the connected torus' required input level, it will not throttle, rather the plasma will immediately extinguish.",
 		"ru_ru": "Источник энергии для [[термоядерного реактора|Fusion Reactor]]. Использует электричество и [[сжатый воздух|Compressed Air]] для генерации первичной энергии (энергия клистрона), от которой запускается подключенный [[тор|Fusion Reactor Vessel]]. Значение выводимой энергии задаётся в графическом интерфейсе клистрона. Начнёт работать хуже, если количество энергии в буфере или запас топлива будут ниже 50%. Плазма гаснет, если энергии от клистрона недостаточно.",
-		"zh_cn": "[[聚变反应堆|Fusion Reactor]]的主要能量源，\n利用电力和[[压缩空气|Compressed Air]]产生输入能量（速调管能量，\n简称 KyU）供给连接的[[环形容器|Fusion Reactor Vessel]]。需要在 GUI 中设定输出目标。\n当缓冲电力或压缩空气任一项低于 50% 时，\n速调管会节流运行。但如果速调管输出低于环形容器所需的\n最低输入水平，\n它不会节流——而是等离子体会直接熄灭。这就像开车时如\n果油门踩得不够，发动机不会半死不活地运转，\n而是直接熄火，非常有个性。"
+		"zh_cn": "[[聚变反应堆|Fusion Reactor]]的主要能量源，<br>利用电力和[[压缩空气|Compressed Air]]产生输入能量（速调管能量，<br>简称 KyU）供给连接的[[环形容器|Fusion Reactor Vessel]]。需要在 GUI 中设定输出目标。<br>当缓冲电力或压缩空气任一项低于 50% 时，<br>速调管会节流运行。但如果速调管输出低于环形容器所需的<br>最低输入水平，<br>它不会节流——而是等离子体会直接熄灭。这就像开车时如<br>果油门踩得不够，发动机不会半死不活地运转，<br>而是直接熄火，非常有个性。"
 	}
 }

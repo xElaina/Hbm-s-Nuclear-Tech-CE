@@ -18,6 +18,6 @@
 	"content": {
 		"en_us": "Can be attached to a fusion reactor's [[torus|Fusion Reactor Vessel]] in order to increase the byproduct production rate by 50%. The byproducts are extracted from the torus itself, the collector does not have a GUI, nor ports. The collector also does not use the plasma's flux or energy level, so other components affected by energy sharing are unaffected.",
 		"ru_ru": "Опциональный компонент реактора, который подключается к [[тору|Fusion Reactor Vessel]] для увеличения выхода побочных продуктов на 50%. Извлекать продукты придётся самостоятельно прямо из тора, так как коллектор не имеет ни интерфейса, ни портов. Он не нуждается в энергии или плазме, а потому не подвержен действию правила распределения энергии.",
-		"zh_cn": "可安装在聚变反应堆的[[环形容器|Fusion Reactor Vessel]]上，\n使副产品产出率提升 50%。副产品直接从环形容器中提取，\n收集室本身既没有 GUI 也没有端口。它既不消耗等离子体\n通量也不消耗能量，\n因此不会影响其他受能量共享规则制约的组件。把它想象成\n环形容器的\"寄生虫\"——白吃白喝，还能帮你多捞点好处。"
+		"zh_cn": "可安装在聚变反应堆的[[环形容器|Fusion Reactor Vessel]]上，<br>使副产品产出率提升 50%。副产品直接从环形容器中提取，<br>收集室本身既没有 GUI 也没有端口。它既不消耗等离子体<br>通量也不消耗能量，<br>因此不会影响其他受能量共享规则制约的组件。把它想象成<br>环形容器的\"寄生虫\"——白吃白喝，还能帮你多捞点好处。"
 	}
 }
