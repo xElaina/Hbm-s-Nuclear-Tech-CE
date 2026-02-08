@@ -1,6 +1,10 @@
 {
 	"name": "Basic Oil Processing",
-	"icon": ["hbm:machine_refinery", 1, 0],
+	"icon": [
+		"hbm:machine_refinery",
+		1,
+		0
+	],
 	"trigger": [],
 	"title": {
 		"en_us": "Basic Oil Processing",
@@ -8,6 +12,6 @@
 	},
 	"content": {
 		"en_us": "Basic oil processing (\"Oil 1\") involves separating [[crude oil|Crude Oil]] using a [[refinery|Oil Refinery]].<br><br>For this you will need:<br>[[Boiler]]<br>[[External Heat Source]]<br>[[Oil Refinery]]<br>[[Fractioning Tower]]<br><br>Connect your source of crude oil to the boiler. Set the boiler's input type to crude oil by right-clicking it with a fluid identifier. Power up the boiler using a heat source (like a [[firebox|Firebox]]) and pipe the resulting hot crude oil into the refinery.<br><br>Most resulting oils can be split once more with a fractioning tower. Once again use a fluid identifier to set the fractioning tower's input type, then connect it with the refinery.<br><br>This process will yield the following fluids:<br>[[Petroleum Gas]] (for plastics and various other uses)<br>[[Bitumen]] (for asphalt)<br>[[Heating Oil]] (mostly for burning)<br>[[Industrial Oil]] (may be processed into [[petroil|Petroil]])<br>[[Lubricant]] (for various uses)<br>[[Diesel]] (powerful early engine fuel)<br>[[Kerosene]] (powerful fuel)<br><br>These resources enable the creation of some new materials:<br>[[Polymer]] from petroleum gas<br>[[Gasoline]] out of naphtha<br>[[Desh]] using light oil<br>[[LPG]], a compressed form of petroleum gas, powerful fuel<br><br>See also:<br>[[Oil Collection]]<br>[[Advanced Oil Processing]]<br>[[Vacuum Oil Processing]]",
-		"zh_cn": "基础炼油（“一期石油工程”）包括使用[[炼油厂|Oil Refinery]]分离[[原油|Crude Oil]]的不同组分。<br><br>建设这个工程需要：<br>[[锅炉|Boiler]]<br>[[外部热源|External Heat Source]]<br>[[炼油厂|Oil Refinery]]<br>[[分馏塔|Fractioning Tower]]<br><br>首先将原油来源连接至锅炉，然后手持流体识别码右键点击锅炉，以将锅炉的输入 流体设定为原油；之后再使用热源（如[[燃烧室|Firebox]]） 加热锅炉，并用管道将得到的热原油导至炼油厂中。<br><br>炼油厂的大多数产品可以用分馏塔再处理一次。再一次使用流体识别码标记分馏 塔的输入流体种类，接下来将其与炼油厂连接。<br><br>上述过程会产生以下流体：<br>[[石油气|Petroleum Gas]]（用于制作塑料，也有一些其他用途）<br>[[沥青|Bitumen]]（用于制作沥青方块）<br>[[燃油|Heating Oil]]（主要用作燃料）<br>[[工业油|Industrial Oil]]（可以制成[[燃料油|Petroil]]）<br>[[润滑油|Lubricant]] （用途较多）<br>[[柴油|Diesel]]（前期强力的内燃机燃料）<br>[[煤油|Kerosene]]（高能燃料）<br><br>这些资源解锁了以下新材料的制造：<br>[[聚合物|Polymer]]，使用石油气制作；<br>[[汽油|Gasoline]]，使用石脑油制作；<br>[[Desh]]，使用轻油制作；<br>[[液化石油气|LPG]]，石油气的压缩形态，一种强力的燃料。<br><br>另见：<br>[[油藏|Oil Collection]]<br>[[高级炼油|Advanced Oil Processing]]<br>[[真空炼油|Vacuum Oil Processing]]"
+		"zh_cn": "基础炼油（\"一期石油工程\"）指使用[[炼油厂|Oil Refinery]]分离[[原油|Crude Oil]]的工<br>艺。为此你需要准备：<br>[[锅炉|Boiler]][[外部热源|External Heat Source]][[炼油厂|Oil Refinery]][[分馏塔|Fractioning Tower]]将原油源连接至锅炉。手持流体<br>识别码右键点击锅炉，<br>将其输入类型设定为原油。使用热源（例如[[燃烧室|Firebox]]）为锅炉<br>供热，<br>然后将得到的热原油通过管道输入炼油厂。多数产物可以在<br>分馏塔中进一步分离。再次使用流体识别码设定分馏塔的输<br>入类型，然后将其与炼油厂连接。该过程将产出以下流体：<br>[[石油气|Petroleum Gas]]（用于塑料及其他用途）[[沥青|Bitumen]]（用于铺设沥青）[[燃油|Heating Oil]]（<br>主要用作燃料）[[工业油|Industrial Oil]]（可加工为[[燃料油|Petroil]]）[[润滑油|Lubricant]]（多种用<br>途）[[柴油|Diesel]]（前期强力的内燃机燃料）[[煤油|Kerosene]]（高能燃料）这些<br>资源解锁了以下新材料的制造：[[聚合物|Polymer]]，由石油气制得[[汽油|Gasoline]]，<br>由石脑油制得[[Desh]]，使用轻油制得[[液化石油气|LPG]]，<br>石油气的压缩形态，一种强力燃料<br><br><br>另见：<br>[[油藏|Oil Collection]]<br>[[高级炼油|Advanced Oil Processing]]<br>[[真空炼油|Vacuum Oil Processing]]"
 	}
 }
