@@ -1,11 +1,21 @@
 {
 	"name": "Rotary Furnace",
-	"icon": ["hbm:machine_rotary_furnace", 1, 0],
-	"trigger": [["hbm:machine_rotary_furnace"]],
+	"icon": [
+		"hbm:machine_rotary_furnace",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:machine_rotary_furnace"
+		]
+	],
 	"title": {
-		"en_us": "Rotary Furnace"
+		"en_us": "Rotary Furnace",
+		"zh_cn": "回转炉"
 	},
 	"content": {
-		"en_us": "A type of alloying furnace that can accept multiple item inputs and a fluid and output the result as liquid metal which needs to be cast. Used to make [[weapon steel|Weapon Steel]] and [[saturnite|Saturnite]], and features alternate recipes for [[gunmetal|Gunmetal]] and [[steel|Steel]]. Requires both a solid fuel and [[steam|Steam]] to function, creating [[low-pressure steam|Low-Pressure Steam]] in the process.<br><br>Items can be inserted from the color-coded access points in the back. The input fluid can only be connected to one of the two grey ports on the output side. Steam and low-pressure steam ducts need to be connected to the steam engine on the left. Solid fuel can be inserted through the iron bars at the front. Exhaust smoke can be extracted from the opening at the top, the furnace will emit a smoke plume if not connected to a smoke stack."
+		"en_us": "A type of alloying furnace that can accept multiple item inputs and a fluid and output the result as liquid metal which needs to be cast. Used to make [[weapon steel|Weapon Steel]] and [[saturnite|Saturnite]], and features alternate recipes for [[gunmetal|Gunmetal]] and [[steel|Steel]]. Requires both a solid fuel and [[steam|Steam]] to function, creating [[low-pressure steam|Low-Pressure Steam]] in the process.<br><br>Items can be inserted from the color-coded access points in the back. The input fluid can only be connected to one of the two grey ports on the output side. Steam and low-pressure steam ducts need to be connected to the steam engine on the left. Solid fuel can be inserted through the iron bars at the front. Exhaust smoke can be extracted from the opening at the top, the furnace will emit a smoke plume if not connected to a smoke stack.",
+		"zh_cn": "一种合金冶炼炉，能同时接受多种物品和一种流体作为输入，<br>产出液态金属（需要铸造）。用于制造[[武器钢|Weapon Steel]]和[[土星合金|Saturnite]]，<br>也提供[[炮铜|Gunmetal]]和[[钢|Steel]]的替代配方。需要同时供给固体燃料和[[蒸汽|Steam]]<br>才能工作，<br>过程中会产生[[低压蒸汽|Low-Pressure Steam]]。物品可以从背面彩色标识的接入点<br>输入；<br>流体输入只能连接到输出侧两个灰色端口中的任意一个。蒸<br>汽和低压蒸汽管道需连接到左侧的蒸汽接口。固体燃料可通<br>过前方的铁栅栏投入。废气可以从顶部的开口导出，<br>如果没有连接[[烟囱|Smokestack]]，炉子就会冒出一股烟柱。"
 	}
 }

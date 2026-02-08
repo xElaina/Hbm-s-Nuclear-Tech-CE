@@ -1,11 +1,24 @@
 {
 	"name": "Blast Furnace",
-	"icon": ["hbm:machine_difurnace_off", 1, 0],
-	"trigger": [["hbm:machine_difurnace_off"], ["hbm:machine_difurnace_ext"]],
+	"icon": [
+		"hbm:machine_difurnace_off",
+		1,
+		0
+	],
+	"trigger": [
+		[
+			"hbm:machine_difurnace_off"
+		],
+		[
+			"hbm:machine_difurnace_ext"
+		]
+	],
 	"title": {
-		"en_us": "Blast Furnace"
+		"en_us": "Blast Furnace",
+		"zh_cn": "高炉"
 	},
 	"content": {
-		"en_us": "Simple furnace that can combine two items into one output, usually in the form of an alloy. Needed early on as the first source of [[steel|Steel]], [[red copper|Minecraft Grade Copper]] and [[advanced alloy|Advanced Alloy]]. Does not accept all furnace fuels, only works with hot burning ones like coal, coke or lava buckets. Can be accelerated by placing a blast furnace extension on top, which also makes it more efficient."
+		"en_us": "Simple furnace that can combine two items into one output, usually in the form of an alloy. Needed early on as the first source of [[steel|Steel]], [[red copper|Minecraft Grade Copper]] and [[advanced alloy|Advanced Alloy]]. Does not accept all furnace fuels, only works with hot burning ones like coal, coke or lava buckets. Can be accelerated by placing a blast furnace extension on top, which also makes it more efficient.",
+		"zh_cn": "一种简单的熔炉，能将两种物品合成为一种产物，<br>通常是合金。前期必备，是你获得[[钢|Steel]]、<br>[[紫铜|Minecraft Grade Copper]]和[[高级合金|Advanced Alloy]]的第一途径。不是所有燃料都能用，<br>它只认煤炭、<br>焦炭或岩浆桶这类高热值燃料。在顶上放个高炉扩展器能加<br>速冶炼，还能提高效率。"
 	}
 }
