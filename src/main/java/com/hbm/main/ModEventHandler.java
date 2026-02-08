@@ -172,7 +172,7 @@ public class ModEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void replaceBlocks(ChunkEvent.Load evt) {
-        // TODO: add config option
+        if (!GeneralConfig.enableBlockReplcement) return;
         Chunk chunk = evt.getChunk();
         for (ExtendedBlockStorage storage : chunk.getBlockStorageArray())
             replacePalette(storage);
