@@ -1,0 +1,21 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "hbm:blocks/rtty_rec_off"
+  },
+  "elements": [
+    {
+      "from": [7, 0, 7],
+      "to": [9, 9, 9],
+      "shade": false,
+      "faces": {
+        "north": { "uv": [7, 6, 9, 16], "texture": "hbm:blocks/rtty_rec_off" },
+        "south": { "uv": [7, 6, 9, 16], "texture": "hbm:blocks/rtty_rec_off" },
+        "east": { "uv": [7, 6, 9, 16], "texture": "hbm:blocks/rtty_rec_off" },
+        "west": { "uv": [7, 6, 9, 16], "texture": "hbm:blocks/rtty_rec_off" },
+        "up": { "uv": [7, 6, 9,  8], "texture": "hbm:blocks/rtty_rec_off" },
+        "down": { "uv": [7, 14, 9, 16], "texture": "hbm:blocks/rtty_rec_off" }
+      }
+    }
+  ]
+}
