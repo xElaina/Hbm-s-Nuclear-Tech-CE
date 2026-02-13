@@ -30,6 +30,8 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.Tuple;
 import com.hbm.world.WorldUtil;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -62,7 +64,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -87,7 +91,8 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
      * The converters coming first have the highest priority
      */
     public static List<Function<Tuple.Triplet<Entity, Object, IRadarDetectableNT.RadarScanParams>, RadarEntry>> converters = new ArrayList<>();
-    public static List<Class<?>> classes = new ArrayList<>();
+    public static ReferenceOpenHashSet<Class<?>> classes = new ReferenceOpenHashSet<>();
+    private static final Reference2BooleanOpenHashMap<Class<?>> isMatchCache = new Reference2BooleanOpenHashMap<>();
     public static List<Entity> matchingEntities = new ArrayList<>();
     public boolean scanMissiles = true;
     public boolean scanShells = true;
@@ -116,21 +121,27 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
      */
     public static void updateSystem() {
         matchingEntities.clear();
-        WorldServer[] worlds = DimensionManager.getWorlds();
-        for (WorldServer world : worlds) {
+
+        for (WorldServer world : DimensionManager.getWorlds()) {
             List<Entity> list = world.loadedEntityList;
             for (int i = 0; i < list.size(); i++) {
+                if (i >= list.size()) break;
+
                 Entity entity = list.get(i);
                 if (entity == null) continue;
 
-                for (Class<?> clazz : classes) {
-                    if (clazz.isInstance(entity)) {
-                        matchingEntities.add(entity);
-                        break;
-                    }
+                if (isMatchCache.computeIfAbsent(entity.getClass(), TileEntityMachineRadarNT::checkHierarchy)) {
+                    matchingEntities.add(entity);
                 }
             }
         }
+    }
+
+    private static boolean checkHierarchy(Class<?> entityClass) {
+        for (Class<?> target : classes) {
+            if (target.isAssignableFrom(entityClass)) return true;
+        }
+        return false;
     }
 
     /**
