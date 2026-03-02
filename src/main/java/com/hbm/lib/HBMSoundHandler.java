@@ -325,6 +325,7 @@ public final class HBMSoundHandler {
     public static SoundEvent coilgunReload;
     public static SoundEvent smack;
     public static SoundEvent squeakyToy;
+    public static SoundEvent hundunsMagnificentHowl;
     public static SoundEvent fireSilenced;
     public static SoundEvent fireGreaseGun;
     public static SoundEvent firePistol;
@@ -721,6 +722,7 @@ public final class HBMSoundHandler {
         coilgunReload = register("weapon.coilgunReload");
         smack = register("weapon.fire.smack");
         squeakyToy = register("block.squeakyToy");
+        hundunsMagnificentHowl = register("block.hundunsMagnificentHowl");
         motor = register("block.motor");
         fireSilenced = register("weapon.fire.silenced");
         firePistol = register("weapon.fire.pistol");
