@@ -350,8 +350,8 @@ public class NTMClientRegistry {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             }
         } else if (item == ModItems.siren_track) {
-            for (int i = 0; i < ItemCassette.TrackType.VALUES.size(); i++) {
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            for (ItemCassette.TrackType track : ItemCassette.TrackType.VALUES.values()) {
+                ModelLoader.setCustomModelResourceLocation(item, track.getId(), new ModelResourceLocation(item.getRegistryName(), "inventory"));
             }
         } else if (item == ModItems.ingot_u238m2) {
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
