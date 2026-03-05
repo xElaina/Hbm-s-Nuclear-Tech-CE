@@ -84,6 +84,10 @@ public class EntityEffectHandler {
 
             Biome biome = entity.world.getBiome(entity.getPosition());
             float radiation = 0;
+			//only sets players on fire so mod compatibility doesnt die
+			if(GeneralConfig.enable528NetherBurn && entity instanceof EntityPlayer && !entity.isImmuneToFire() && entity.world.provider.isNether()) {
+				entity.setFire(5);
+			}
             if(biome == BiomeGenCraterBase.craterOuterBiome) radiation = WorldConfig.craterBiomeOuterRad;
             if(biome == BiomeGenCraterBase.craterBiome) radiation = WorldConfig.craterBiomeRad;
             if(biome == BiomeGenCraterBase.craterInnerBiome) radiation = WorldConfig.craterBiomeInnerRad;

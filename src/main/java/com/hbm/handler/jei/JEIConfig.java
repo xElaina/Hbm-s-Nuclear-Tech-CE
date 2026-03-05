@@ -1,6 +1,7 @@
 package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.ClientConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.jei.transfer.ExposureChamberTransferInfo;
 import com.hbm.inventory.FluidContainerRegistry;
@@ -373,14 +374,14 @@ public class JEIConfig implements IModPlugin {
         transferRegistry.addRecipeTransferHandler(ContainerFurnaceCombo.class, COMBINATION, 0, 1, 4, 36);
 
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
-        for(Item item : ItemGunBaseNT.secrets) {
-            blacklist.addIngredientToBlacklist(new ItemStack(item));
+        if(ClientConfig.JEI_HIDE_SECRETS.get()) {
+            for (Item item : ItemGunBaseNT.secrets) blacklist.addIngredientToBlacklist(new ItemStack(item));
+            for (int i = 0; i < GunFactory.EnumAmmoSecret.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_secret, 1, i));
+            for (int i = 0; i < ItemEnums.EnumSecretType.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.item_secret, 1, i));
         }
+
         // Some things are even beyond my control...or are they?
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.memory));
-        for(int i = 0; i < GunFactory.EnumAmmoSecret.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_secret, 1, i));
-        for(int i = 0; i < ItemEnums.EnumSecretType.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.item_secret, 1, i));
-
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_electric_furnace_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_difurnace_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_rtg_furnace_on));
