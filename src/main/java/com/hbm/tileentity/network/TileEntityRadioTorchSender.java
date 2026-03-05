@@ -4,7 +4,6 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerRadioTorchSender;
 import com.hbm.inventory.gui.GUIScreenRadioTorch;
 import com.hbm.tileentity.IGUIProvider;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,46 +15,50 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static com.hbm.blocks.network.RadioTorchBase.LIT;
+
 @AutoRegister
 public class TileEntityRadioTorchSender extends TileEntityRadioTorchBase implements IGUIProvider {
 
-	@Override
-	public void update() {
-		
-		if(!world.isRemote) {
-			EnumFacing facing = getTorchFacing();
-			BlockPos inputPos = pos.offset(facing.getOpposite());
-			IBlockState inputState = world.getBlockState(inputPos);
+    @Override
+    public void update() {
 
-			int redstonePower = world.getRedstonePower(inputPos, facing);
-			if(inputState.hasComparatorInputOverride()) {
-				redstonePower = inputState.getComparatorInputOverride(world, inputPos);
-			}
-			redstonePower = MathHelper.clamp(redstonePower, 0, 15);
+        if (!world.isRemote) {
+            EnumFacing facing = getTorchFacing();
+            BlockPos inputPos = pos.offset(facing.getOpposite());
+            IBlockState inputState = world.getBlockState(inputPos);
 
-			boolean shouldSend = this.polling;
-			if(redstonePower != this.lastState) {
-				this.markDirty();
-				this.lastState = redstonePower;
-				shouldSend = true;
-			}
+            int input = world.getRedstonePower(inputPos, facing);
+            if (inputState.hasComparatorInputOverride()) {
+                input = inputState.getComparatorInputOverride(world, inputPos);
+            }
+            input = MathHelper.clamp(input, 0, 15);
 
-			if(shouldSend && !this.channel.isEmpty()) {
-				RTTYSystem.broadcast(world, this.channel, this.customMap ? this.mapping[redstonePower] : (redstonePower + ""));
-			}
-		}
-		
-		super.update();
-	}
+            boolean shouldSend = this.polling;
 
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerRadioTorchSender();
-	}
+            if (input != this.lastState) {
+                this.markDirty();
+                world.setBlockState(pos, world.getBlockState(pos).withProperty(LIT, input > 0), 2);
+                this.lastState = input;
+                shouldSend = true;
+            }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIScreenRadioTorch(this, true);
-	}
+            if (shouldSend && !this.channel.isEmpty()) {
+                RTTYSystem.broadcast(world, this.channel, this.customMap ? this.mapping[input] : (input + ""));
+            }
+        }
+
+        super.update();
+    }
+
+    @Override
+    public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return new ContainerRadioTorchSender();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return new GUIScreenRadioTorch(this, true);
+    }
 }
