@@ -45,7 +45,6 @@ public class GeneralConfig {
 	public static boolean advancedRadiation = true;
 	public static boolean enableCataclysm = false;
 	public static boolean enableExtendedLogging = false;
-	public static boolean enableHardcoreTaint = false;
 	public static boolean enableGuns = true;
 	public static boolean ssgAnim = true;
 	public static boolean enableVirus = true;
@@ -147,7 +146,6 @@ public class GeneralConfig {
 		enableRads = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_GENERAL, "1.16_enableRadiation", "GENERAL SWITCH: Enables radiation system", true);
 		enableCataclysm = config.get(CommonConfig.CATEGORY_GENERAL, "1.17_enableCataclysm", false, "Causes satellites to fall whenever a mob dies").getBoolean(false);
 		enableExtendedLogging = config.get(CommonConfig.CATEGORY_GENERAL, "1.18_enableExtendedLogging", false, "Logs uses of the detonator, nuclear explosions, missile launches, grenades, etc.").getBoolean(false);
-		enableHardcoreTaint = config.get(CommonConfig.CATEGORY_GENERAL, "1.19_enableHardcoreTaint", false, "Allows taint blocks to basically be unstoppable. NOT RECOMMENDED FOR REGULAR SURVIVAL").getBoolean(false);
 		enableGuns = config.get(CommonConfig.CATEGORY_GENERAL, "1.20_enableGuns", true, "Prevents new system guns to be fired").getBoolean(true);
 		enableVirus = config.get(CommonConfig.CATEGORY_GENERAL, "1.21_enableVirus", false, "Allows virus blocks to spread").getBoolean(false);
 		enableCrosshairs = config.get(CommonConfig.CATEGORY_GENERAL, "1.22_enableCrosshairs", true, "Shows custom crosshairs when an NTM gun is being held").getBoolean(true);

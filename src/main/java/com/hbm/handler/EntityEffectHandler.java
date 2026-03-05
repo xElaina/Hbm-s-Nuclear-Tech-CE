@@ -5,10 +5,7 @@ import com.hbm.capability.HbmLivingCapability.EntityHbmProps;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.capability.HbmLivingProps.ContaminationEffect;
-import com.hbm.config.CompatibilityConfig;
-import com.hbm.config.GeneralConfig;
-import com.hbm.config.RadiationConfig;
-import com.hbm.config.WorldConfig;
+import com.hbm.config.*;
 import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.entity.mob.EntityDuck;
 import com.hbm.entity.mob.EntityQuackos;
@@ -366,6 +363,7 @@ public class EntityEffectHandler {
 	}
 	
 	private static void handleContagion(EntityLivingBase entity) {
+		if(!ServerConfig.ENABLE_MKU.get()) return;
 		
 		World world = entity.world;
 		
