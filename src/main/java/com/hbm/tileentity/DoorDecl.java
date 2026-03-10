@@ -287,7 +287,7 @@ public abstract class DoorDecl {
 			}
 		};
 
-		@Override public ResourceLocation[] getDefaultSkins() {
+		@Override @SideOnly(Side.CLIENT) public ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
 					ResourceManager.pheo_secure_door_tex,
 					ResourceManager.pheo_secure_door_grey_tex
@@ -328,7 +328,7 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@Override
+		@Override @SideOnly(Side.CLIENT)
 		protected ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[]{
 					ResourceManager.pheo_airlock_door_tex,
