@@ -6,6 +6,7 @@ import com.hbm.interfaces.IDoor.DoorState;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.anim.BusAnimationSequence;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -22,11 +23,20 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import java.util.function.Consumer;
 
 public abstract class DoorDecl {
+
+	public DoorDecl() {
+		if (hasSkins())
+			addSkins(getDefaultSkins());
+	}
 
 	public static final DoorDecl TRANSITION_SEAL = new DoorDecl(){
 		
@@ -128,7 +138,23 @@ public abstract class DoorDecl {
 		}
 
 		@Override
-		public int getSkinCount() { return 7; }
+		public boolean hasSkins() {
+			return true;
+		}
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		protected ResourceLocation[] getDefaultSkins() {
+			return new ResourceLocation[] {
+					ResourceManager.pheo_label_101,
+					ResourceManager.pheo_label_87,
+					ResourceManager.pheo_label_106,
+					ResourceManager.pheo_label_81,
+					ResourceManager.pheo_label_111,
+					ResourceManager.pheo_label_2,
+					ResourceManager.pheo_label_99
+			};
+		}
 
 		@Override public int timeToOpen() { return 120; }
 		@Override public int[][] getDoorOpenRanges() { return new int[][] { { -1, 1, 0, 3, 3, 2 } }; }
@@ -327,16 +353,17 @@ public abstract class DoorDecl {
 			}
 		};
 
-		@Override
-		@SideOnly(Side.CLIENT)
-		protected ResourceLocation[] getDefaultSkins() {
+		@Override @SideOnly(Side.CLIENT) public ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
 					ResourceManager.pheo_secure_door_tex,
 					ResourceManager.pheo_secure_door_grey_tex
 			};
 		}
 
-		@Override public int getSkinCount() { return 2; }
+		@Override
+		public boolean hasSkins() {
+			return true;
+		}
 	};
 	
 	public static final DoorDecl ROUND_AIRLOCK_DOOR = new DoorDecl(){
@@ -367,17 +394,19 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@Override
-		@SideOnly(Side.CLIENT)
+		@Override @SideOnly(Side.CLIENT)
 		protected ResourceLocation[] getDefaultSkins() {
-			return new ResourceLocation[] {
+			return new ResourceLocation[]{
 					ResourceManager.pheo_airlock_door_tex,
 					ResourceManager.pheo_airlock_door_clean_tex,
 					ResourceManager.pheo_airlock_door_green_tex
 			};
 		}
 
-		@Override public int getSkinCount() { return 3; }
+		@Override
+		public boolean hasSkins() {
+			return true;
+		}
 
 		@Override
 		public AxisAlignedBB getBlockBound(BlockPos relPos, boolean open) {
@@ -543,9 +572,7 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@Override
-		@SideOnly(Side.CLIENT)
-		protected ResourceLocation[] getDefaultSkins() {
+		@SideOnly(Side.CLIENT) @Override public ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
 					ResourceManager.pheo_fire_door_tex,
 					ResourceManager.pheo_fire_door_black_tex,
@@ -553,7 +580,10 @@ public abstract class DoorDecl {
 			};
 		}
 
-		@Override public int getSkinCount() { return 3; }
+		@Override
+		public boolean hasSkins() {
+			return true;
+		}
 
 		@Override public int timeToOpen() { return 160; }
 		@Override public int[][] getDoorOpenRanges() { return new int[][] { { -1, 0, 0, 3, 4, 1 } }; }
@@ -658,16 +688,17 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@Override
-		@SideOnly(Side.CLIENT)
-		protected ResourceLocation[] getDefaultSkins() {
+		@SideOnly(Side.CLIENT) @Override public ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
 					ResourceManager.pheo_containment_door_tex,
 					ResourceManager.pheo_containment_door_trefoil_tex
 			};
 		}
 
-		@Override public int getSkinCount() { return 2; }
+		@Override
+		public boolean hasSkins() {
+			return true;
+		}
 
 		@Override public int timeToOpen() { return 160; };
 		@Override public int[][] getDoorOpenRanges() { return new int[][] { { -1, 0, 0, 3, 3, 1 } }; }
@@ -731,16 +762,17 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@Override
-		@SideOnly(Side.CLIENT)
-		protected ResourceLocation[] getDefaultSkins() {
-			return new ResourceLocation[] {
+		@SideOnly(Side.CLIENT) @Override public ResourceLocation[] getDefaultSkins() {
+			return  new ResourceLocation[] {
 					ResourceManager.pheo_water_door_tex,
 					ResourceManager.pheo_water_door_clean_tex
 			};
 		}
 
-		@Override public int getSkinCount() { return 2; }
+		@Override
+		public boolean hasSkins() {
+			return true;
+		}
 
 		@Override
 		public AxisAlignedBB getBlockBound(BlockPos relPos, boolean open) {
@@ -1050,34 +1082,51 @@ public abstract class DoorDecl {
 
 	// NEW DOORS
 
-	private ResourceLocation[] skins;
+	/// Do NOT access this directly. Use getSEDNASkins()
+	private List<ResourceLocation> skins;
 
-	public ResourceLocation[] getSEDNASkins() {
-		if(skins == null) skins = getDefaultSkins();
+	/// A little modification shouldn't hurt
+	/// -Leafia
+	public final List<ResourceLocation> getSEDNASkins() {
+		if (hasSkins() && skins == null)
+			skins = new ArrayList<>();
 		return skins;
 	}
 
+	/// Override this to enable skins.
+	public boolean hasSkins() { return false; }
+
+	/// Utility method for initializing skins. Called by constructor.
+	/// Made public for addons.
 	public final void addSkins(ResourceLocation... skins) {
-		this.skins = skins.clone();
+		getSEDNASkins().addAll(Arrays.asList(skins));
 	}
 
+	/// Override this method to initialize skins. Called by constructor.
 	protected ResourceLocation[] getDefaultSkins() {
 		return new ResourceLocation[0];
 	}
 
-	public boolean hasSkins() { return getSkinCount() > 0; }
-	public int getSkinCount() { return skins == null ? 0 : skins.length; }
+	/// screw it
+	/// Override hasSkins to enable skins, otherwise this will always return 0.
+	public final int getSkinCount() {
+		if (!hasSkins())
+			return 0;
+		List<ResourceLocation> skins = getSEDNASkins();
+		if (skins == null) return 0;
+		return skins.size();
+	}
 
 	/// For item rendering
 	public ResourceLocation getCyclingSkins() {
-		ResourceLocation[] skins = this.getSEDNASkins();
-		int index = (int) ((Clock.get_ms() % (skins.length * 1000)) / 1000);
-		return skins[index];
+		List<ResourceLocation> skins = this.getSEDNASkins();
+		int index = (int) ((Clock.get_ms() % (skins.size() * 1000)) / 1000);
+		return skins.get(index);
 	}
 
 	public ResourceLocation getSkinFromIndex(int index) {
-		ResourceLocation[] skins = this.getSEDNASkins();
-		return skins[Math.abs(index) % skins.length];
+		List<ResourceLocation> skins = this.getSEDNASkins();
+		return skins.get(Math.abs(index) % skins.size());
 	}
 
 	// keyframe animation system sneakily stitched into the door decl
