@@ -585,8 +585,8 @@ public class ModBlocks {
     public static final Block block_ra226 = new BlockHazard(Material.IRON, "block_ra226").makeBeaconable().setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
     public static final Block block_actinium = new BlockBeaconable(Material.IRON, "block_actinium").setSoundType(SoundType.METAL).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
     public static final Block block_tritium = new BlockRotatablePillar(Material.GLASS, "block_tritium", SoundType.GLASS).setCreativeTab(MainRegistry.blockTab).setHardness(3.0F).setResistance(2.0F);
-    public static final Block block_semtex = new BlockPlasticExplosive(Material.TNT, SoundType.METAL, "block_semtex", BlockBakeFrame.simpleSouthRotatable("block_semtex", "block_semtex_front")).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(2.0F);
-    public static final Block block_c4 = new BlockPlasticExplosive(Material.TNT, SoundType.METAL, "block_c4", BlockBakeFrame.simpleSouthRotatable("block_c4", "block_c4_front")).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(2.0F);
+    public static final Block block_semtex = new BlockPlasticExplosive(Material.TNT, SoundType.METAL, "block_semtex", BlockBakeFrame.southFacingCube("block_semtex", "block_semtex_front")).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(2.0F);
+    public static final Block block_c4 = new BlockPlasticExplosive(Material.TNT, SoundType.METAL, "block_c4", BlockBakeFrame.southFacingCube("block_c4", "block_c4_front")).setCreativeTab(MainRegistry.blockTab).setHardness(2.0F).setResistance(2.0F);
     public static final Block block_smore = new BlockBase(Material.ROCK, "block_smore").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(450.0F);
     public static final Block block_slag = new BlockMeta(Material.ROCK, SoundType.STONE, "block_slag", "block_slag", "block_slag_broken").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 

@@ -37,6 +37,9 @@ public class RBMKControlBakedModel extends AbstractWavefrontBakedModel {
     private List<BakedQuad> cacheWorldNoLid;
     private List<BakedQuad> cacheWorldNormalLid;
     private List<BakedQuad> cacheWorldGlassLid;
+    private int cacheWorldNoLidHeight = Integer.MIN_VALUE;
+    private int cacheWorldNormalLidHeight = Integer.MIN_VALUE;
+    private int cacheWorldGlassLidHeight = Integer.MIN_VALUE;
 
     public RBMKControlBakedModel(TextureAtlasSprite baseTop, TextureAtlasSprite baseSide,
                                  TextureAtlasSprite pipeTop, TextureAtlasSprite pipeSide,
@@ -77,6 +80,7 @@ public class RBMKControlBakedModel extends AbstractWavefrontBakedModel {
             return cacheInventory;
         }
 
+        int columnHeight = RBMKColumnBakedModel.getColumnHeight();
         int lidType = RBMKBase.LID_NONE;
         if (state != null) {
             int meta = state.getBlock().getMetaFromState(state);
@@ -84,16 +88,25 @@ public class RBMKControlBakedModel extends AbstractWavefrontBakedModel {
         }
 
         if (lidType == RBMKBase.LID_STANDARD) {
-            if (cacheWorldNormalLid == null) cacheWorldNormalLid = Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_STANDARD));
+            if (cacheWorldNormalLid == null || cacheWorldNormalLidHeight != columnHeight) {
+                cacheWorldNormalLid = Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_STANDARD, columnHeight));
+                cacheWorldNormalLidHeight = columnHeight;
+            }
             return cacheWorldNormalLid;
         } else if (lidType == RBMKBase.LID_GLASS) {
-            if (cacheWorldGlassLid == null) cacheWorldGlassLid = Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_GLASS));
+            if (cacheWorldGlassLid == null || cacheWorldGlassLidHeight != columnHeight) {
+                cacheWorldGlassLid = Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_GLASS, columnHeight));
+                cacheWorldGlassLidHeight = columnHeight;
+            }
             return cacheWorldGlassLid;
         } else if (lidType == RBMKBase.LID_NONE) {
-            if (cacheWorldNoLid == null) cacheWorldNoLid = Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_NONE));
+            if (cacheWorldNoLid == null || cacheWorldNoLidHeight != columnHeight) {
+                cacheWorldNoLid = Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_NONE, columnHeight));
+                cacheWorldNoLidHeight = columnHeight;
+            }
             return cacheWorldNoLid;
         }
-        return Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_NULL));
+        return Collections.unmodifiableList(buildWorldQuads(RBMKBase.LID_NULL, columnHeight));
     }
 
     private List<BakedQuad> buildInventoryQuads() {
@@ -112,21 +125,19 @@ public class RBMKControlBakedModel extends AbstractWavefrontBakedModel {
         return quads;
     }
 
-    private List<BakedQuad> buildWorldQuads(int lidType) {
+    private List<BakedQuad> buildWorldQuads(int lidType, float columnHeight) {
         List<BakedQuad> quads = new ArrayList<>();
 
         RBMKColumnBakedModel.addTexturedBox(quads, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, baseTopSprite, baseSideSprite, baseBottomSprite);
-
-        float height = RBMKColumnBakedModel.getColumnHeight();
 
         if (lidType != RBMKBase.LID_NONE && lidType != RBMKBase.LID_NULL) {
             if (coverTopSprite != null) {
                 TextureAtlasSprite lidTop = (lidType == RBMKBase.LID_GLASS) ? glassTopSprite : coverTopSprite;
                 TextureAtlasSprite lidSide = (lidType == RBMKBase.LID_GLASS) ? glassSideSprite : coverSideSprite;
-                RBMKColumnBakedModel.addTexturedBox(quads, 0.0F, height, 0.0F, 1.0F, height + 0.25F, 1.0F, lidTop, lidSide, lidTop);
+                RBMKColumnBakedModel.addTexturedBox(quads, 0.0F, columnHeight, 0.0F, 1.0F, columnHeight + 0.25F, 1.0F, lidTop, lidSide, lidTop);
             }
         } else if(lidType != RBMKBase.LID_NULL) {
-            addPipes(quads, height);
+            addPipes(quads, columnHeight);
         }
 
         return quads;
