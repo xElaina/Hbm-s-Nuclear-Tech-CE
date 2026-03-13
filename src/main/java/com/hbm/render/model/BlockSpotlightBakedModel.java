@@ -148,7 +148,7 @@ public class BlockSpotlightBakedModel extends AbstractWavefrontBakedModel {
             default -> partName;
         };
 
-        return new ArrayList<>(bakeSimpleQuads(Collections.singletonList(partName), 0, 0, itemYaw, false, true, sprite));
+        return new ArrayList<>(bakeSimpleQuads(Collections.singleton(partName), 0, 0, itemYaw, false, true, sprite));
     }
 
     @Override
