@@ -1,8 +1,11 @@
 package com.hbm.blocks.machine.rbmk;
 
 import com.hbm.handler.BossSpawnHandler;
+import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.render.model.RBMKRodBakedModel;
 import com.hbm.tileentity.TileEntityProxyInventory;
+import com.hbm.tileentity.machine.rbmk.RBMKDials;
+import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBase;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKRod;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -52,7 +55,27 @@ public class RBMKRod extends RBMKBase {
 		return openInv(worldIn, pos.getX(), pos.getY(), pos.getZ(), playerIn, hand);
 	}
 
-    @Override
+	@Override
+	public void breakBlock(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state) {
+		int meta = getMetaFromState(state);
+
+		if(meta >= offset && !RBMKDials.getMeltdownsDisabled(world)) {
+			TileEntity te = world.getTileEntity(pos);
+			if(te instanceof TileEntityRBMKRod tile) {
+                if(TileEntityRBMKBase.explodeOnBroken) {
+					if(!tile.inventory.getStackInSlot(0).isEmpty() && tile.inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod && ItemRBMKRod.getHullHeat(tile.inventory.getStackInSlot(0)) >= 1500) {
+						tile.meltdown();
+					}
+				}
+			}
+		}
+
+		super.breakBlock(world, pos, state);
+		world.removeTileEntity(pos);
+	}
+
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerSprite(TextureMap map) {
 		super.registerSprite(map);

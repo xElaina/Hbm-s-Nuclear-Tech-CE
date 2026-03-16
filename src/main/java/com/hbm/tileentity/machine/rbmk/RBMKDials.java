@@ -250,7 +250,7 @@ public class RBMKDials {
      * @param world
      * @return
      */
-    static boolean getMeltdownsDisabled(World world) {
+    public static boolean getMeltdownsDisabled(World world) {
         return world.getGameRules().getBoolean(RBMKKeys.KEY_DISABLE_MELTDOWNS.keyString);
     }
 
