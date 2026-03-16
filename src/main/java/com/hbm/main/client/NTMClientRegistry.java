@@ -38,7 +38,6 @@ import com.hbm.render.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -48,7 +47,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -60,7 +58,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.List;
 import java.util.Objects;
 
 
@@ -343,12 +340,12 @@ public class NTMClientRegistry {
         }
 
         teisr.itemModel = model;
-        if (owned.useIdentityTransform) {
-            reg.putObject(targetLocation, new BakedModelNoFPV(teisr, model));
+        if (teisr.useFMMPerspective(owned.item)) {
+            reg.putObject(targetLocation, new FancyMissingModelPerspective(teisr, model));
             return;
         }
-        if (owned.item instanceof net.minecraft.item.ItemArmor) {
-            reg.putObject(targetLocation, new FancyMissingModelPerspective(teisr, model));
+        if (owned.useIdentityTransform) {
+            reg.putObject(targetLocation, new BakedModelNoFPV(teisr, model));
             return;
         }
         reg.putObject(targetLocation, new WrappedTEISRModel(teisr, model, null, binding, false));

@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.item.ItemRenderBaseFMM;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.model.ModelArmorEnvsuit;
 import com.hbm.render.tileentity.IItemRendererProvider;
@@ -128,7 +129,7 @@ public class ArmorEnvsuit extends ArmorFSBPowered implements IItemRendererProvid
   @Override
   @SideOnly(Side.CLIENT)
   public ItemRenderBase getRenderer(Item item) {
-    return new ItemRenderBase() {
+    return new ItemRenderBaseFMM() {
       public void renderInventory() {
         setupRenderInv();
       }

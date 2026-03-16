@@ -10,6 +10,7 @@ import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.render.item.ItemRenderBaseFMM;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.model.ModelArmorDNT;
 import com.hbm.render.tileentity.IItemRendererProvider;
@@ -191,7 +192,7 @@ public class ArmorDNT extends ArmorFSBPowered implements IItemRendererProvider {
     @Override
     @SideOnly(Side.CLIENT)
     public ItemRenderBase getRenderer(Item item) {
-        return new ItemRenderBase( ) {
+        return new ItemRenderBaseFMM() {
             public void renderInventory() {
                 if(armorType == EntityEquipmentSlot.MAINHAND) {
                     GlStateManager.translate(0, -1, 0);
