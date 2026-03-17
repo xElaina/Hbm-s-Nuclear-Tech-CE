@@ -108,7 +108,8 @@ public class OilSpot {
 
                 } else if (groundState.getMaterial() == Material.LEAVES) {
                     pos.setPos(rX, y, rZ);
-                    world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2 | 16);
+                    // Th3_Sl1ze: debatable ig. flag 3 (1+2) may probably cause cascading lag, but otherwise snow layers will be left floating (check #1184)
+                    world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
                     break;
                 }
             }
