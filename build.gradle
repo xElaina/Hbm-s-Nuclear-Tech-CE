@@ -299,15 +299,30 @@ java {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     def suppressCheckedExceptionsPluginArg = '-Xplugin:suppress-checked-exceptions'
-    def javacExports = [
-            '--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
-            '--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED'
+    def upgradeInfoProviderSourcePluginArg = '-Xplugin:inject-upgrade-info-provider-source'
+    def javacExportPackages = [
+            'jdk.compiler/com.sun.tools.javac.api',
+            'jdk.compiler/com.sun.tools.javac.code',
+            'jdk.compiler/com.sun.tools.javac.tree',
+            'jdk.compiler/com.sun.tools.javac.util'
     ]
-    if (name in ['compileJava', 'compileTestJava'] && !options.compilerArgs.contains(suppressCheckedExceptionsPluginArg)) {
-        options.compilerArgs.add(suppressCheckedExceptionsPluginArg)
+    def javacExports = javacExportPackages.collect { "--add-exports=${it}=ALL-UNNAMED".toString() }
+    if (name in ['compileJava', 'compileTestJava']) {
+        if (!options.compilerArgs.contains(suppressCheckedExceptionsPluginArg)) {
+            options.compilerArgs.add(suppressCheckedExceptionsPluginArg)
+        }
+        if (!options.compilerArgs.contains(upgradeInfoProviderSourcePluginArg)) {
+            options.compilerArgs.add(upgradeInfoProviderSourcePluginArg)
+        }
         javacExports.each { arg ->
             if (!options.compilerArgs.contains(arg)) {
                 options.compilerArgs.add(arg)
+            }
+        }
+        options.fork = true
+        javacExports.each { arg ->
+            if (!options.forkOptions.jvmArgs.contains(arg)) {
+                options.forkOptions.jvmArgs.add(arg)
             }
         }
     }

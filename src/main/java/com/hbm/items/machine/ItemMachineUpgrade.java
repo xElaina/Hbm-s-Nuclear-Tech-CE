@@ -2,6 +2,7 @@ package com.hbm.items.machine;
 
 import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.inventory.gui.IUpgradeInfoProviderSource;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.IUpgradeInfoProvider;
@@ -24,7 +25,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
@@ -76,10 +76,10 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 
 		if (open instanceof GuiContainer guiContainer) {
 			Container container = guiContainer.inventorySlots;
+			IUpgradeInfoProvider provider = null;
 
-			IUpgradeInfoProvider provider = findProvider(container);
-			if (provider == null) {
-				provider = findProvider(guiContainer);
+			if (open instanceof IUpgradeInfoProviderSource providerSource) {
+				provider = providerSource.getUpgradeInfoProvider();
 			}
 
 			if (provider == null && !container.inventorySlots.isEmpty()) {
@@ -167,27 +167,6 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 			list.add("Allows for total isotopic separation of HEUF6");
 			list.add(TextFormatting.YELLOW + "also your centrifuge goes sicko mode");
 		}
-	}
-
-	// Th3_Sl1ze: Idk how, but IUIP simply refuses to be detected the regular way. Yes, whatever shit below is atrocious, but it works
-	private IUpgradeInfoProvider findProvider(Object obj) {
-		if (obj == null) return null;
-		if (obj instanceof IUpgradeInfoProvider) return (IUpgradeInfoProvider) obj;
-
-		Class<?> clazz = obj.getClass();
-		while (clazz != Object.class && clazz != null) {
-			for (Field f : clazz.getDeclaredFields()) {
-				try {
-					f.setAccessible(true);
-					Object val = f.get(obj);
-					if (val instanceof IUpgradeInfoProvider) {
-						return (IUpgradeInfoProvider) val;
-					}
-				} catch (Exception ignored) {}
-			}
-			clazz = clazz.getSuperclass();
-		}
-		return null;
 	}
 
 	public static final Set<Item> scrapItems = Sets.newHashSet(Item.getItemFromBlock(Blocks.GRASS),
