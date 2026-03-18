@@ -11,13 +11,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockPlasmaStruct extends BlockStruct {
+public class BlockICFStruct extends BlockStruct {
 
-	public BlockPlasmaStruct(Material materialIn, String s, Class<? extends TileEntity> tileEntityClass) {
+	public BlockICFStruct(Material materialIn, String s, Class<? extends TileEntity> tileEntityClass) {
 		super(materialIn, s, tileEntityClass);
 	}
-	
-
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {

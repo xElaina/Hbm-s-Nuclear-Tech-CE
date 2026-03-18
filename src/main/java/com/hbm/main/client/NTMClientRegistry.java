@@ -259,40 +259,6 @@ public class NTMClientRegistry {
 
     @SubscribeEvent
     public void textureStitchPost(TextureStitchEvent.Post evt) {
-
-
-        RenderStructureMarker.fusion[0][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/block_steel");
-        RenderStructureMarker.fusion[0][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_conductor_side_alt3");
-        RenderStructureMarker.fusion[1][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_heater_top");
-        RenderStructureMarker.fusion[1][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_heater_side");
-        RenderStructureMarker.fusion[2][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/block_tungsten");
-        RenderStructureMarker.fusion[2][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_hatch");
-        RenderStructureMarker.fusion[3][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_motor_top_alt");
-        RenderStructureMarker.fusion[3][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_motor_side_alt");
-        RenderStructureMarker.fusion[4][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_center_top_alt");
-        RenderStructureMarker.fusion[4][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_center_side_alt");
-        RenderStructureMarker.fusion[5][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_center_top_alt");
-        RenderStructureMarker.fusion[5][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/fusion_core_side_alt");
-        RenderStructureMarker.fusion[6][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/block_tungsten");
-        RenderStructureMarker.fusion[6][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/block_tungsten");
-
-        RenderStructureMarker.watz[0][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/reinforced_brick");
-        RenderStructureMarker.watz[0][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/reinforced_brick");
-        RenderStructureMarker.watz[1][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/reinforced_brick");
-        RenderStructureMarker.watz[1][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_hatch");
-        RenderStructureMarker.watz[2][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_control_top");
-        RenderStructureMarker.watz[2][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_control_side");
-        RenderStructureMarker.watz[3][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_end");
-        RenderStructureMarker.watz[3][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_end");
-        RenderStructureMarker.watz[4][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_conductor_top");
-        RenderStructureMarker.watz[4][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_conductor_side");
-        RenderStructureMarker.watz[5][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_computer");
-        RenderStructureMarker.watz[5][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_computer");
-        RenderStructureMarker.watz[6][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_cooler");
-        RenderStructureMarker.watz[6][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_cooler");
-        RenderStructureMarker.watz[7][0] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_element_top");
-        RenderStructureMarker.watz[7][1] = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/watz_element_side");
-
         RenderMultiblock.structLauncher = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/struct_launcher");
         RenderMultiblock.structScaffold = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/struct_scaffold");
 

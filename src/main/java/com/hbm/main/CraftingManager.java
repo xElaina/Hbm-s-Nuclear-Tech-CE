@@ -760,7 +760,6 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.barrel_tcalloy, 1), "IPI", "I I", "IPI", 'I', "ingotTcAlloy", 'P', TI.plate() );
 		addRecipeAuto(new ItemStack(ModBlocks.barrel_antimatter, 1), "IPI", "I I", "IPI", 'I', BIGMT.plate(), 'P', ModItems.coil_advanced_torus);
 		addRecipeAuto(new ItemStack(ModBlocks.tesla, 1), "CCC", "PIP", "WTW", 'C', ModItems.coil_copper, 'I', IRON.ingot(), 'P', ANY_PLASTIC.ingot(), 'T', ModBlocks.machine_transformer, 'W', KEY_PLANKS );
-		addRecipeAuto(new ItemStack(ModBlocks.struct_plasma_core, 1), "CBC", "BHB", "CBC", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), 'B', ModBlocks.machine_lithium_battery, 'H', ModBlocks.fusion_heater );
 		addRecipeAuto(new ItemStack(ModBlocks.struct_watz_core, 1), "CBC", "BHB", "CBC", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), 'B', ANY_RESISTANTALLOY.plateCast(), 'H', ModBlocks.watz_cooler );
 		addShapelessAuto(new ItemStack(ModBlocks.fusion_heater), ModBlocks.fusion_hatch );
 		addShapelessAuto(new ItemStack(ModItems.energy_core), ModItems.fusion_core, ModItems.fuse );

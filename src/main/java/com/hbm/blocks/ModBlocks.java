@@ -1191,8 +1191,6 @@ public class ModBlocks {
     public static final Block machine_radiolysis = new MachineRadiolysis(Material.IRON, "machine_radiolysis").setHardness(10.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block machine_hephaestus = new MachineHephaestus(Material.IRON, "machine_hephaestus").setHardness(10.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
-    public static final Block marker_structure = new BlockMarker(Material.IRON, "marker_structure").setHardness(0.0F).setResistance(0.0F).setLightLevel(1.0F).setCreativeTab(MainRegistry.machineTab);
-
     public static final Block muffler = new BlockBase(Material.CLOTH, "muffler").setSoundType(SoundType.CLOTH).setHardness(0.8F).setCreativeTab(MainRegistry.blockTab);
 
     //Launcher Components
@@ -1201,10 +1199,9 @@ public class ModBlocks {
     public static final Block struct_launcher_core = new BlockStruct(Material.IRON, "struct_launcher_core", TileEntityMultiblock.class).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
     public static final Block struct_launcher_core_large = new BlockStruct(Material.IRON, "struct_launcher_core_large", TileEntityMultiblock.class).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
     public static final Block struct_soyuz_core = new BlockStruct(Material.IRON, "struct_soyuz_core", TileEntitySoyuzStruct.class).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
-    public static final Block struct_plasma_core = new BlockPlasmaStruct(Material.IRON, "struct_plasma_core", TileEntityPlasmaStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block struct_torus_core = new BlockFusionTorusStruct(Material.IRON, "struct_torus_core", TileEntityFusionTorusStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block struct_watz_core = new BlockStruct(Material.IRON, "struct_watz_core", TileEntityWatzStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-    public static final Block struct_icf_core = new BlockPlasmaStruct(Material.IRON, "struct_icf_core", TileEntityICFStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block struct_icf_core = new BlockICFStruct(Material.IRON, "struct_icf_core", TileEntityICFStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
     // Wood Barrier
     public static final Block wood_barrier = new BlockBarrier(Material.WOOD, "wood_barrier").setSoundType(SoundType.WOOD).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(15.0F);
