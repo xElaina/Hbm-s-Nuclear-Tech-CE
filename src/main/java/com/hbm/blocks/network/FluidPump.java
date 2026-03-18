@@ -107,17 +107,6 @@ public class FluidPump extends BlockContainerBakeable implements INBTBlockTransf
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        int i = MathHelper.floor((double) (placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        int meta = switch (i) {
-            case 0 -> 2;
-            case 1 -> 5;
-            case 2 -> 3;
-            default -> 4;
-        };
-        worldIn.setBlockState(pos, this.getStateFromMeta(meta), 2);
-    }
-    @Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         int i = MathHelper.floor((double) (placer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         return this.getStateFromMeta(i == 0 ? 2 : i == 1 ? 5 : i == 2 ? 3 : 4);

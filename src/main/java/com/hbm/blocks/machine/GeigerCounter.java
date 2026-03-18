@@ -112,12 +112,6 @@ public class GeigerCounter extends BlockContainer {
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		EnumFacing enumFacing = EnumFacing.fromAngle(placer.rotationYaw);
-		worldIn.setBlockState(pos, state.withProperty(FACING, enumFacing), 2);
-	}
-
-	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (hand != EnumHand.MAIN_HAND) {
 			return true;

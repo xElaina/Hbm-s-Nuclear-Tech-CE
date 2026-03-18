@@ -154,8 +154,6 @@ public class BlockStorageCrate extends BlockContainer implements ICustomBlockIte
 	public void onBlockPlacedBy(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase placer, @NotNull ItemStack stack){
 
 		IPersistentNBT.onBlockPlacedBy(world, pos, stack);
-		if(this == ModBlocks.safe)
-			world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 	}
 
 	@Override

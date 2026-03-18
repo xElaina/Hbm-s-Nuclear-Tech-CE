@@ -80,8 +80,6 @@ public class MachinePuF6Tank extends BlockContainer implements IMultiBlock {
 	
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-
 		if (MultiblockHandler.checkSpace(world, pos, MultiblockHandler.uf6Dimension)) {
 			MultiblockHandler.fillUp(world, pos, MultiblockHandler.uf6Dimension, ModBlocks.dummy_block_puf6);
 
