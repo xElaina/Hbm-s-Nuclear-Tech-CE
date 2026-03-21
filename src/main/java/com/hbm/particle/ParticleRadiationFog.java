@@ -139,10 +139,10 @@ public class ParticleRadiationFog extends Particle {
             double pY = baseY + OFF_Y[i] + JIT_Y[i];
             double pZ = baseZ + OFF_Z[i] + JIT_Z[i];
 
-            buffer.appendParticlePositionTexColorLmap(pX - rotationX * size - rotationXY * size, pY - rotationZ * size, pZ - rotationYZ * size - rotationXZ * size, 1.0D, 1.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
-            buffer.appendParticlePositionTexColorLmap(pX - rotationX * size + rotationXY * size, pY + rotationZ * size, pZ - rotationYZ * size + rotationXZ * size, 1.0D, 0.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
-            buffer.appendParticlePositionTexColorLmap(pX + rotationX * size + rotationXY * size, pY + rotationZ * size, pZ + rotationYZ * size + rotationXZ * size, 0.0D, 0.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
-            buffer.appendParticlePositionTexColorLmap(pX + rotationX * size - rotationXY * size, pY - rotationZ * size, pZ + rotationYZ * size - rotationXZ * size, 0.0D, 1.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
+            buffer.appendParticlePositionTexColorLmapUnchecked(pX - rotationX * size - rotationXY * size, pY - rotationZ * size, pZ - rotationYZ * size - rotationXZ * size, 1.0D, 1.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
+            buffer.appendParticlePositionTexColorLmapUnchecked(pX - rotationX * size + rotationXY * size, pY + rotationZ * size, pZ - rotationYZ * size + rotationXZ * size, 1.0D, 0.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
+            buffer.appendParticlePositionTexColorLmapUnchecked(pX + rotationX * size + rotationXY * size, pY + rotationZ * size, pZ + rotationYZ * size + rotationXZ * size, 0.0D, 0.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
+            buffer.appendParticlePositionTexColorLmapUnchecked(pX + rotationX * size - rotationXY * size, pY - rotationZ * size, pZ + rotationYZ * size - rotationXZ * size, 0.0D, 1.0D, packedColor, PACKED_FULLBRIGHT_LIGHTMAP);
         }
         NTMImmediate.INSTANCE.draw();
 
