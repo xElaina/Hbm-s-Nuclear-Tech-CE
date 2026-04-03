@@ -112,6 +112,7 @@ public class HbmCorePlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
     public List<String> getMixinConfigs() {
         return Arrays.asList(
                 "hbm.common.mixin.json",
+                "hbm.mod.mixin.json",
                 bufferBuilderBackend.mixinConfig
         );
     }

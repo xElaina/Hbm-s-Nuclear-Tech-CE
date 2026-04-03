@@ -75,8 +75,6 @@ public class FixedTransformWavefrontBakedModel extends AbstractBakedModel {
                 Vertex faceNormal = face.faceNormal;
                 Vector3f transformedFaceNormal = BakedModelMatrixUtil.transformNormal(transform, faceNormal.x,
                         faceNormal.y, faceNormal.z);
-                int color = shaded ? GeometryBakeUtil.computeShade(transformedFaceNormal.x, transformedFaceNormal.y,
-                        transformedFaceNormal.z) : 255;
 
                 int vertexCount = face.vertices.length;
                 if (vertexCount < 3) {
@@ -90,6 +88,7 @@ public class FixedTransformWavefrontBakedModel extends AbstractBakedModel {
                 float[] uu = new float[4];
                 float[] vv = new float[4];
                 Vector3f[] vertexNormals = new Vector3f[4];
+                int[] colors = new int[4];
 
                 for (int v = 0; v < 4; v++) {
                     int idx = indices[v];
@@ -113,6 +112,8 @@ public class FixedTransformWavefrontBakedModel extends AbstractBakedModel {
                         transformedVertexNormal.set(transformedFaceNormal);
                     }
                     vertexNormals[v] = transformedVertexNormal;
+                    colors[v] = shaded ? GeometryBakeUtil.computeShade(transformedVertexNormal.x,
+                            transformedVertexNormal.y, transformedVertexNormal.z) : 255;
                 }
 
                 EnumFacing facing = EnumFacing.getFacingFromVector(transformedFaceNormal.x, transformedFaceNormal.y,
@@ -121,7 +122,7 @@ public class FixedTransformWavefrontBakedModel extends AbstractBakedModel {
                 float[] scratch = new float[4];
                 for (int i = 0; i < 4; i++) {
                     GeometryBakeUtil.putVertex(DefaultVertexFormats.BLOCK, vertexData, i, px[i], py[i], pz[i],
-                            uu[i] * uScale, vv[i] * vScale, color, color, color, vertexNormals[i], sprite, scratch);
+                            uu[i] * uScale, vv[i] * vScale, colors[i], colors[i], colors[i], vertexNormals[i], sprite, scratch);
                 }
                 quads.add(new BakedQuad(vertexData, -1, facing, sprite, false, DefaultVertexFormats.BLOCK));
             }

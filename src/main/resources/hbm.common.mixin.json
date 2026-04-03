@@ -4,7 +4,11 @@
   "refmap": "mixins.hbm.refmap.json",
   "compatibilityLevel": "JAVA_8",
   "target": "@env(DEFAULT)",
-  "client": [],
+  "client": [
+    "MixinCompiledChunk",
+    "MixinSetVisibility",
+    "MixinRenderChunk"
+  ],
   "mixins": [
     "MixinFMLProxyPacket",
     "MixinNetworkDispatcher"
