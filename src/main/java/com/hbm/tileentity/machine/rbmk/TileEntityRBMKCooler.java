@@ -29,6 +29,7 @@ import java.util.Map;
 public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidStandardTransceiverMK2, SimpleComponent, CompatHandler.OCComponent {
 
 	protected int timer = 0;
+	public int lastCooled;
 	private final FluidTankNTM[] tanks;
 	protected TileEntityRBMKBase[] neighborCache = new TileEntityRBMKBase[25];
 
@@ -40,7 +41,9 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 	}
 
 	public void getDiagData(NBTTagCompound nbt) {
+		diag = true;
 		writeToNBT(nbt);
+		diag = false;
 		nbt.removeTag("jumpheight");
 	}
 
@@ -69,12 +72,22 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 				tanks[0].setFill(tanks[0].getFill() - 50);
 				tanks[1].setFill(tanks[1].getFill() + 50);
 
+				int cooled = 0;
 				for(TileEntityRBMKBase neighbor : neighborCache) {
-					if(neighbor != null) {
+					if(neighbor != null && !neighbor.isInvalid()) {
+						double before = neighbor.heat;
 						neighbor.heat -= 200;
 						if(neighbor.heat < 20) neighbor.heat = 20;
+						int delta = (int)(before - neighbor.heat);
+						if(delta > 0) {
+							cooled += delta;
+							neighbor.markDirty();
+						}
 					}
 				}
+				lastCooled = cooled;
+			} else {
+				lastCooled = 0;
 			}
 
 			trySubscribe(tanks[0].getTankType(), world, pos.getX(), pos.getY() - 1, pos.getZ(), Library.NEG_Y);
@@ -153,6 +166,7 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 	@Override
 	public RBMKColumn getConsoleData() {
 		RBMKColumn.CoolerColumn data = (RBMKColumn.CoolerColumn) super.getConsoleData();
+		data.cooled = lastCooled;
 		data.cryo = tanks[0].getFill();
 		data.maxCryo = tanks[0].getMaxFill();
 		data.hot = tanks[1].getFill();
