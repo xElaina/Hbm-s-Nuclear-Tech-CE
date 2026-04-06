@@ -108,7 +108,6 @@ public abstract class MixinChunkBuilderMeshingTask {
         return isGlobal;
     }
 
-
     @Dynamic
     @SuppressWarnings({"ConstantValue", "UnreachableCode"})
     @Inject(method = "execute", at = @At("RETURN"), require = 2)

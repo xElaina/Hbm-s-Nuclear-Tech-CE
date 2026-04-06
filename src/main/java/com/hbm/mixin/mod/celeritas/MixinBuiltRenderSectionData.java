@@ -100,4 +100,18 @@ public abstract class MixinBuiltRenderSectionData implements IExtraExtentsHolder
             cir.setReturnValue(false);
         }
     }
+
+    @Dynamic
+    @Inject(method = "hashCode", at = @At("RETURN"), cancellable = true, require = 1)
+    private void hbm$includeExtentsInHashCode(CallbackInfoReturnable<Integer> cir) {
+        int hash = cir.getReturnValueI();
+        hash = 31 * hash + hbm$negX;
+        hash = 31 * hash + hbm$posX;
+        hash = 31 * hash + hbm$negY;
+        hash = 31 * hash + hbm$posY;
+        hash = 31 * hash + hbm$negZ;
+        hash = 31 * hash + hbm$posZ;
+        hash = 31 * hash + Arrays.hashCode(hbm$chunkSpanningTesrs);
+        cir.setReturnValue(hash);
+    }
 }

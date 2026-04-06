@@ -1,5 +1,6 @@
 package com.hbm.mixin.mod.celeritas;
 
+import com.hbm.render.chunk.CeleritasCameraTransformAccess;
 import com.hbm.render.chunk.IExtraExtentsHolder;
 import org.embeddedt.embeddium.impl.render.chunk.RenderSection;
 import org.embeddedt.embeddium.impl.render.chunk.data.BuiltRenderSectionData;
@@ -31,6 +32,7 @@ public abstract class MixinOcclusionCuller {
      * chunk compilation in {@link MixinChunkBuilderMeshingTask}.
      */
     @Dynamic
+    @SuppressWarnings("UnreachableCode")
     @Inject(method = "isWithinFrustum", at = @At("HEAD"), cancellable = true, require = 1)
     private static void hbm$expandFrustumForOversizedModels(Viewport viewport, OcclusionNode section,
                                                             CallbackInfoReturnable<Boolean> cir) {
@@ -68,6 +70,7 @@ public abstract class MixinOcclusionCuller {
      * upstream "closest point on box" logic with the extents applied on each side.
      */
     @Dynamic
+    @SuppressWarnings("UnreachableCode")
     @Inject(method = "isWithinRenderDistance", at = @At("HEAD"), cancellable = true, require = 1)
     private static void hbm$expandDistanceForOversizedModels(CameraTransform camera, OcclusionNode section,
                                                              float maxDistance,
@@ -77,25 +80,27 @@ public abstract class MixinOcclusionCuller {
             return;
         }
         BuiltRenderSectionData info = rs.getBuiltContext();
-        if (info == null) {
-            return;
+        int negX = 0;
+        int posX = 0;
+        int negY = 0;
+        int posY = 0;
+        int negZ = 0;
+        int posZ = 0;
+        if (info != null) {
+            IExtraExtentsHolder holder = (IExtraExtentsHolder) info;
+            negX = holder.hbm$getNegX();
+            posX = holder.hbm$getPosX();
+            negY = holder.hbm$getNegY();
+            posY = holder.hbm$getPosY();
+            negZ = holder.hbm$getNegZ();
+            posZ = holder.hbm$getPosZ();
         }
-        IExtraExtentsHolder holder = (IExtraExtentsHolder) info;
-        int negX = holder.hbm$getNegX();
-        int posX = holder.hbm$getPosX();
-        int negY = holder.hbm$getNegY();
-        int posY = holder.hbm$getPosY();
-        int negZ = holder.hbm$getNegZ();
-        int posZ = holder.hbm$getPosZ();
-        if ((negX | posX | negY | posY | negZ | posZ) == 0) {
-            return;
-        }
-        int ox = section.getOriginX() - camera.intX;
-        int oy = section.getOriginY() - camera.intY;
-        int oz = section.getOriginZ() - camera.intZ;
-        float dx = hbm$nearestToZero(ox - negX, ox + 16 + posX) - camera.fracX;
-        float dy = hbm$nearestToZero(oy - negY, oy + 16 + posY) - camera.fracY;
-        float dz = hbm$nearestToZero(oz - negZ, oz + 16 + posZ) - camera.fracZ;
+        int ox = section.getOriginX() - CeleritasCameraTransformAccess.getIntX(camera);
+        int oy = section.getOriginY() - CeleritasCameraTransformAccess.getIntY(camera);
+        int oz = section.getOriginZ() - CeleritasCameraTransformAccess.getIntZ(camera);
+        float dx = hbm$nearestToZero(ox - negX, ox + 16 + posX) - CeleritasCameraTransformAccess.getFracX(camera);
+        float dy = hbm$nearestToZero(oy - negY, oy + 16 + posY) - CeleritasCameraTransformAccess.getFracY(camera);
+        float dz = hbm$nearestToZero(oz - negZ, oz + 16 + posZ) - CeleritasCameraTransformAccess.getFracZ(camera);
         cir.setReturnValue((((dx * dx) + (dz * dz)) < (maxDistance * maxDistance)) && (Math.abs(dy) < maxDistance));
     }
 

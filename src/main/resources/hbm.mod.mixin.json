@@ -9,10 +9,13 @@
   "target": "@env(MOD)",
   "client": [
     "celeritas.MixinBuiltRenderSectionData",
+    "celeritas.MixinCameraTransform",
     "celeritas.MixinCeleritasWorldRenderer",
     "celeritas.MixinChunkBuilderMeshingTask",
+    "celeritas.MixinDefaultChunkRenderer",
     "celeritas.MixinOcclusionCuller",
     "celeritas.MixinRenderSectionManager",
+    "celeritas.MixinViewport",
     "neonium.MixinChunkGraphNode",
     "neonium.MixinChunkRenderRebuildTask",
     "nothirium.MixinAbstractRenderChunk",
