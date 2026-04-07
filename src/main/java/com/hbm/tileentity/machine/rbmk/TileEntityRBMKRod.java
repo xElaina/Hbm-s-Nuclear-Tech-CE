@@ -3,7 +3,6 @@ package com.hbm.tileentity.machine.rbmk;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.blocks.machine.rbmk.RBMKRod;
-import com.hbm.config.MobConfig;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.handler.CompatHandler;
 import com.hbm.handler.neutron.NeutronNodeWorld;
@@ -32,10 +31,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -85,6 +82,7 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 	
 	@Override
 	public boolean isModerated() {
+        // throws CCE if anything goes wrong
 		return ((RBMKRod)this.getBlockType()).moderated;
 	}
 
@@ -110,15 +108,17 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 		return true;
 	}
 
-	@Override
-	public void invalidate() {
-		super.invalidate();
-
-		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod && ItemRBMKRod.getHullHeat(inventory.getStackInSlot(0)) >= 150) {
-			this.meltdown();
-		}
-	}
-	
+    //mlbv: leafia told me that this override made rbmks explode on load, not sure how since 1.7 repo also has it
+    //anyway commenting out for now
+//	@Override
+//	public void invalidate() {
+//		super.invalidate();
+//
+//		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod && ItemRBMKRod.getHullHeat(inventory.getStackInSlot(0)) >= 150) {
+//			this.meltdown();
+//		}
+//	}
+//
 	@Override
 	public void update() {
 
