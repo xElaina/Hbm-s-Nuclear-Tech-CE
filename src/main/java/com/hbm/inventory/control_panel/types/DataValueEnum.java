@@ -1,4 +1,4 @@
-package com.hbm.inventory.control_panel;
+package com.hbm.inventory.control_panel.types;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

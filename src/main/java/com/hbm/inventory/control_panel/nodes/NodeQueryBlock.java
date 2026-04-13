@@ -2,6 +2,8 @@ package com.hbm.inventory.control_panel.nodes;
 
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.modular.StockNodesRegister;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -62,7 +64,7 @@ public class NodeQueryBlock extends Node {
             TileEntity tile = ctrl.panel.parent.getControlWorld().getTileEntity(ctrl.taggedLinks.get(tag));
             if (tile instanceof IControllable) {
                 IControllable te = (IControllable) tile;
-                for (Map.Entry<String, DataValue> var : te.getQueryData().entrySet()) {
+                for (Map.Entry<String,DataValue> var : te.getQueryData().entrySet()) {
                     dataSelector.list.addItems(var.getKey());
                 }
             }

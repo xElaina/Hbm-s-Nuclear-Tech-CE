@@ -1,12 +1,13 @@
 package com.hbm.inventory.control_panel.nodes;
 
 import com.hbm.inventory.control_panel.*;
-import com.hbm.inventory.control_panel.DataValue.DataType;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValue.DataType;
 import com.hbm.inventory.control_panel.modular.StockNodesRegister;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
 import java.util.Map;
 
 public class NodeSetVar extends NodeOutput {

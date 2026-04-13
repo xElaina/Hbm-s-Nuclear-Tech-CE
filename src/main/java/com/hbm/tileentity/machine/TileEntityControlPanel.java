@@ -5,6 +5,8 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.control_panel.*;
+import com.hbm.inventory.control_panel.types.*;
+import com.hbm.inventory.control_panel.types.DataValue.DataType;
 import com.hbm.packet.toclient.ControlPanelUpdatePacket;
 import com.hbm.tileentity.IGUIProvider;
 import li.cil.oc.api.machine.Arguments;
@@ -33,12 +35,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
@@ -542,6 +539,12 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 		if (Objects.requireNonNull(value.getType()) == DataValue.DataType.NUMBER) {
 			return new Object[]{value.getNumber()};
 		}
+		if (Objects.requireNonNull(value.getType()) == DataType.COMPOSITE) {
+			Map<String,String> map = new HashMap<>();
+			for (String s : value.values())
+				map.put(s,value.getValueOf(s));
+			return new Object[]{map};
+		}
 		return new Object[]{value.toString()};
 	}
 
@@ -558,6 +561,15 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 			panel.globalVars.put(name, new DataValueFloat((float) args.checkDouble(1)));
 		else if (args.isInteger(1))
 			panel.globalVars.put(name, new DataValueFloat((float) args.checkInteger(1)));
+		else if (args.isTable(1)) {
+			DataValueComposite value = new DataValueComposite();
+			Map mop = args.checkTable(1);
+			for (Object o : mop.keySet()) {
+				if (mop.containsKey(o))
+					value.setValueOf(o.toString(),mop.get(o).toString());
+			}
+			panel.globalVars.put(name,value);
+		}
 		else
 			return new Object[]{"ERROR: unsupported value type"};
 
@@ -578,6 +590,12 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 		DataValue value = panel.controls.get(index).getVar(name);
 		if (Objects.requireNonNull(value.getType()) == DataValue.DataType.NUMBER) {
 			return new Object[]{value.getNumber()};
+		}
+		if (Objects.requireNonNull(value.getType()) == DataType.COMPOSITE) {
+			Map<String,String> map = new HashMap<>();
+			for (String s : value.values())
+				map.put(s,value.getValueOf(s));
+			return new Object[]{map};
 		}
 		return new Object[]{value.toString()};
 	}
@@ -614,7 +632,15 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 			panel.controls.get(index).vars.put(name, new DataValueFloat((float) args.checkDouble(2)));
 		else if (args.isInteger(2))
 			panel.controls.get(index).vars.put(name, new DataValueFloat(args.checkInteger(2)));
-		else
+		else if (args.isTable(2)) {
+			DataValueComposite value = new DataValueComposite();
+			Map mop = args.checkTable(2);
+			for (Object o : mop.keySet()) {
+				if (mop.containsKey(o))
+					value.setValueOf(o.toString(),mop.get(o).toString());
+			}
+			panel.controls.get(index).vars.put(name,value);
+		} else
 			return new Object[]{"ERROR: unsupported value type"};
 
 		return new Object[]{};

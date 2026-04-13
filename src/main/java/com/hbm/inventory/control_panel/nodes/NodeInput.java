@@ -1,6 +1,6 @@
 package com.hbm.inventory.control_panel.nodes;
 
-import com.hbm.inventory.control_panel.DataValue;
+import com.hbm.inventory.control_panel.types.DataValue;
 import com.hbm.inventory.control_panel.NodeConnection;
 import com.hbm.inventory.control_panel.NodeSystem;
 import com.hbm.inventory.control_panel.modular.StockNodesRegister;

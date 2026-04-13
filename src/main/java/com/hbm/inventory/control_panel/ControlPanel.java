@@ -1,5 +1,7 @@
 package com.hbm.inventory.control_panel;
 
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.ControlPanelUpdatePacket.VarUpdate;
 import com.hbm.tileentity.machine.TileEntityControlPanel;
@@ -103,7 +105,7 @@ public class ControlPanel {
 
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 		NBTTagCompound globalVars = new NBTTagCompound();
-		for(Entry<String, DataValue> e : this.globalVars.entrySet()) {
+		for(Entry<String,DataValue> e : this.globalVars.entrySet()) {
 			globalVars.setTag(e.getKey(), e.getValue().writeToNBT());
 		}
 

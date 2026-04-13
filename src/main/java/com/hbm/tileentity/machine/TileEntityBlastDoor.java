@@ -8,7 +8,7 @@ import com.hbm.interfaces.IAnimatedDoor;
 import com.hbm.interfaces.IDoor;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
-import com.hbm.inventory.control_panel.DataValueFloat;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import com.hbm.inventory.control_panel.IControllable;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;

@@ -2,6 +2,8 @@ package com.hbm.inventory.control_panel;
 
 import com.hbm.inventory.control_panel.controls.*;
 import com.hbm.inventory.control_panel.controls.configs.SubElementBaseConfig;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import com.hbm.render.loader.IModelCustom;
 import com.hbm.render.util.NTMBufferBuilder;
 import com.hbm.render.util.NTMImmediate;

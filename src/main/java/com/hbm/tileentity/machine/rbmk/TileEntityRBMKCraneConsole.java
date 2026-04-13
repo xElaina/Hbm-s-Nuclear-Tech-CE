@@ -7,6 +7,8 @@ import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.*;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -23,7 +25,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -649,7 +650,7 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
 
     // control panel
     @Override
-    public Map<String, DataValue> getQueryData() {
+    public Map<String,DataValue> getQueryData() {
         Map<String, DataValue> data = new HashMap<>();
         if (setUpCrane) {
             data.put("posX", new DataValueFloat((float) -posLeft));

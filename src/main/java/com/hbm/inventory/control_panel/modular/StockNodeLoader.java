@@ -57,6 +57,12 @@ public class StockNodeLoader implements INodeLoader {
 			case "input":
 				node = new NodeInput(0, 0, null);
 				break;
+			case "composite_read":
+				node = new NodeCompositeRead(0,0);
+				break;
+			case "composite_write":
+				node = new NodeCompositeWrite(0,0);
+				break;
 		}
 		return node;
 	}

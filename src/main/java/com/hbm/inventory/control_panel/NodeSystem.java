@@ -2,6 +2,10 @@ package com.hbm.inventory.control_panel;
 
 import com.hbm.Tags;
 import com.hbm.inventory.control_panel.nodes.*;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValue.DataType;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
+import com.hbm.inventory.control_panel.types.DataValueString;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.util.NTMImmediate;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -457,7 +461,7 @@ public class NodeSystem {
 						return;
 				}
 				if(intersectsBox && NTMRenderHelper.intersects2DBox(gridMX, gridMY, c.getValueBox())){
-					if(currentTypingBox != c && c.connection == null){
+					if(currentTypingBox != c && c.connection == null && c.type != DataType.COMPOSITE){
 						c.isTyping = true;
 						c.startTyping();
 						if(currentTypingBox != null){

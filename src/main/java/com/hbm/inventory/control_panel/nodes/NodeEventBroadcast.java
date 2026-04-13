@@ -1,8 +1,10 @@
 package com.hbm.inventory.control_panel.nodes;
 
 import com.hbm.inventory.control_panel.*;
-import com.hbm.inventory.control_panel.DataValue.DataType;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValue.DataType;
 import com.hbm.inventory.control_panel.modular.StockNodesRegister;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -91,7 +93,7 @@ public class NodeEventBroadcast extends NodeOutput {
 		}
 		this.inputs.clear();
 		ControlEvent evt = ControlEvent.getRegisteredEvent(name);
-		for(Entry<String, DataValue> e : evt.vars.entrySet()){
+		for(Entry<String,DataValue> e : evt.vars.entrySet()){
 			inputs.add(new NodeConnection(e.getKey(), this, inputs.size(), true, e.getValue().getType(), e.getValue().copy()));
 		}
 		inputs.add(new NodeConnection("Cancel", this, inputs.size(), true, DataType.GENERIC, new DataValueFloat(0)));

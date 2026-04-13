@@ -17,6 +17,9 @@ import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerMachineFluidTank;
 import com.hbm.inventory.control_panel.*;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
+import com.hbm.inventory.control_panel.types.DataValueString;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -43,7 +46,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -512,7 +514,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
     @Override
     public Map<String, DataValue> getQueryData() {
-        Map<String, DataValue> data = new HashMap<>();
+        Map<String,DataValue> data = new HashMap<>();
 
         if (tank.getTankType() != Fluids.NONE) {
             data.put("t0_fluidType", new DataValueString(tank.getTankType().getLocalizedName()));
