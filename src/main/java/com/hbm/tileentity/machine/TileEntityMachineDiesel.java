@@ -117,7 +117,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
             this.wasOn = false;
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                 this.tryProvide(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
-                this.sendSmoke(pos.getX() + dir.offsetX, pos.getX() + dir.offsetY, pos.getX() + dir.offsetZ, dir);
+                this.sendSmoke(pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
             }
 
             //Tank Management
