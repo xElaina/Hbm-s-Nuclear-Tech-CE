@@ -981,7 +981,12 @@ public class ModBlocks {
     public static final Block rbmk_storage = new RBMKStorage("rbmk_storage", "rbmk_storage").setHardness(15.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block rbmk_console = new RBMKConsole("rbmk_console").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block rbmk_crane_console = new RBMKCraneConsole("rbmk_crane_console").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block rbmk_display_blank = new RBMKMiniPanelBase("rbmk_display_blank").setCreativeTab(MainRegistry.machineTab);
     public static final Block rbmk_display = new RBMKDisplay("rbmk_display").setCreativeTab(MainRegistry.machineTab);
+    public static final Block rbmk_key_pad = new RBMKKeyPad("rbmk_key_pad").setCreativeTab(MainRegistry.machineTab);
+    //public static final Block rbmk_gauge = new RBMKGauge("rbmk_gauge").setCreativeTab(MainRegistry.machineTab);
+    //public static final Block rbmk_numitron = new RBMKNumitron("rbmk_numitron").setCreativeTab(MainRegistry.machineTab);
+    //public static final Block rbmk_graph = new RBMKGraph("rbmk_graph").setCreativeTab(MainRegistry.machineTab);
     public static final Block rbmk_autoloader = new RBMKAutoloader("rbmk_autoloader").setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F);
     public static final Block rbmk_loader = new RBMKLoader(Material.IRON, "rbmk_loader").setHardness(15.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F);
     public static final Block rbmk_steam_inlet = new RBMKInlet(Material.IRON, "rbmk_steam_inlet").setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F);

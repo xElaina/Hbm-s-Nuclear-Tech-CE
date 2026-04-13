@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class RBMKDisplayBakedModel extends AbstractBakedModel {
+public class RBMKMiniPanelBakedModel extends AbstractBakedModel {
 
     private final TextureAtlasSprite sprite;
     private final boolean isInventory;
@@ -22,7 +22,7 @@ public class RBMKDisplayBakedModel extends AbstractBakedModel {
     private final List<BakedQuad>[] cache = new List[6];
     private List<BakedQuad> inventoryCache;
 
-    public RBMKDisplayBakedModel(TextureAtlasSprite sprite, boolean isInventory) {
+    public RBMKMiniPanelBakedModel(TextureAtlasSprite sprite,boolean isInventory) {
         super(BakedModelTransforms.standardBlock());
         this.sprite = sprite;
         this.isInventory = isInventory;

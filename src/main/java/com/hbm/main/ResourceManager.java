@@ -412,6 +412,14 @@ public class ResourceManager {
     public static final WaveFrontObjectVAO rbmk_crane_console = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/crane_console.obj")).asVBO();
     public static final WaveFrontObjectVAO rbmk_crane = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/crane.obj")).asVBO();
     public static final WaveFrontObjectVAO rbmk_autoloader = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/autoloader.obj")).asVBO();
+    public static final WaveFrontObjectVAO rbmk_button = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/button.obj")).asVBO();
+    public static final WaveFrontObjectVAO rbmk_gauge = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/gauge.obj")).asVBO();
+    public static final WaveFrontObjectVAO rbmk_numitron = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/numitron.obj")).asVBO();
+    public static final ResourceLocation rbmk_keypad_tex = new ResourceLocation(Tags.MODID, "textures/models/network/keypad.png");
+    public static final ResourceLocation rbmk_gauge_tex = new ResourceLocation(Tags.MODID, "textures/models/network/gauge.png");
+    public static final ResourceLocation rbmk_numitron_tex = new ResourceLocation(Tags.MODID, "textures/models/network/numitron.png");
+    public static final ResourceLocation rbmk_numitron_lights_tex = new ResourceLocation(Tags.MODID, "textures/models/network/numitron_lights.png");
+
     public static final ResourceLocation rbmk_crane_console_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/crane_console.png");
     public static final ResourceLocation rbmk_crane_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/rbmk_crane.png");
     public static final ResourceLocation rbmk_autoloader_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/rbmk_autoloader.png");

@@ -1,6 +1,7 @@
 package com.hbm.render.tileentity;
 
 import com.hbm.blocks.machine.rbmk.RBMKDisplay;
+import com.hbm.blocks.machine.rbmk.RBMKMiniPanelBase;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.util.NTMBufferBuilder;
 import com.hbm.render.util.NTMImmediate;
@@ -21,7 +22,7 @@ public class RenderRBMKDisplay extends TileEntitySpecialRenderer<TileEntityRBMKD
         GlStateManager.enableCull();
         GlStateManager.enableLighting();
 
-        EnumFacing facing = te.getWorld().getBlockState(te.getPos()).getValue(RBMKDisplay.FACING);
+        EnumFacing facing = te.getWorld().getBlockState(te.getPos()).getValue(RBMKMiniPanelBase.FACING);
         switch(facing) {
             case NORTH: GlStateManager.rotate(90, 0F, 1F, 0F); break;
             case WEST: GlStateManager.rotate(180, 0F, 1F, 0F); break;
