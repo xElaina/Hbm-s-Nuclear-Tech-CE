@@ -1958,7 +1958,6 @@ public class ModItems {
     public static final Item grenade_universal = new ItemGrenadeUniversal("grenade_universal").setCreativeTab(MainRegistry.weaponTab);
     public static final Item weaponized_starblaster_cell = new WeaponizedCell("weaponized_starblaster_cell").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
     //Turret
-    public static final Item turret_control = new ItemTurretControl("turret_control").setFull3D().setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
     public static final Item turret_chip = new ItemTurretChip("turret_chip").setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
     public static final Item turret_biometry = new ItemTurretBiometry("turret_biometry").setFull3D().setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
     public static final Item designator_arty_range = new ItemDesignatorArtyRange("designator_arty_range").setCreativeTab(MainRegistry.missileTab);
@@ -2320,7 +2319,7 @@ public class ModItems {
     public static final Item key = new ItemKey("key").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item key_red = new ItemCustomLore("key_red").setMaxStackSize(1).setCreativeTab(null);
     public static final Item key_red_cracked = new ItemCustomLore("key_red_cracked").setMaxStackSize(1).setCreativeTab(null);
-    public static final Item key_kit = new ItemCounterfitKeys("key_kit").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item key_kit = new ItemCounterfeitKeys("key_kit").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item key_fake = new ItemKey("key_fake").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item pin = new ItemCustomLore("pin").setMaxStackSize(8).setCreativeTab(MainRegistry.consumableTab);
     public static final Item padlock_rusty = new ItemLock(1, "padlock_rusty").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);

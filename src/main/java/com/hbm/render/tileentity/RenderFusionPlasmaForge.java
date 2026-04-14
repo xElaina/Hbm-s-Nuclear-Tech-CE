@@ -3,9 +3,12 @@ package com.hbm.render.tileentity;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
+import com.hbm.render.util.NTMBufferBuilder;
+import com.hbm.render.util.NTMImmediate;
 import com.hbm.tileentity.machine.fusion.TileEntityFusionPlasmaForge;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.Clock;
@@ -54,6 +57,7 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
 
         renderPlasma(forge);
         renderRecipeItem(forge);
+        renderBeam(forge, partialTicks);
 
         bindTexture(ResourceManager.fusion_plasma_forge_tex);
 
@@ -64,7 +68,7 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
         GlStateManager.pushMatrix();
         GlStateManager.rotate(rotor, 0F, 1F, 0F);
         renderStrikerArm(striker);
-        renderJetArm(jet);
+        renderJetArm(forge, jet);
         GlStateManager.popMatrix();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -107,7 +111,7 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
         GlStateManager.popMatrix();
     }
 
-    private void renderJetArm(double[] jet) {
+    private void renderJetArm(TileEntityFusionPlasmaForge forge, double[] jet) {
         GlStateManager.pushMatrix();
         ResourceManager.fusion_plasma_forge.renderPart("SliderJet");
         GlStateManager.translate(2.75D, 2.5D, 0D);
@@ -122,7 +126,65 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
         GlStateManager.rotate((float) jet[2], 0F, 0F, 1F);
         GlStateManager.translate(-1.5D, -3.75D, 0D);
         ResourceManager.fusion_plasma_forge.renderPart("Jet");
+        // needs to be active, arm must be stationary, and not at base position
+        if(forge.didProcess && forge.armJet.angles[2] == forge.armJet.prevAngles[2] && forge.armJet.angles[2] != 0D) renderJetPlume(forge);
         GlStateManager.popMatrix();
+    }
+
+    private void renderJetPlume(TileEntityFusionPlasmaForge forge) {
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.disableLighting();
+        GlStateManager.enableBlend();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
+        GlStateManager.depthMask(false);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        GlStateManager.disableCull();
+        GlStateManager.disableTexture2D();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+
+        double outerLen = 1D + MainRegistry.proxy.me().getRNG().nextDouble() * 0.125D;
+        double narrow = 0.01D;
+        double side = 0.125D;
+        double near = 1.375D;
+        double far = 1.625D;
+
+        int solid = NTMBufferBuilder.packColor(forge.plasmaRed, forge.plasmaGreen, forge.plasmaBlue, 1F);
+        int fade = NTMBufferBuilder.packColor(forge.plasmaRed, forge.plasmaGreen, forge.plasmaBlue, 0F);
+
+        NTMBufferBuilder buf = NTMImmediate.INSTANCE.beginPositionColorQuads(8);
+        // inner pyramid — 4 sides
+        emitPlumeQuad(buf, near, 3D, side, far, 3D, side, far - narrow, 3D - outerLen, side - narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3D, -side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, -side + narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3D, side, near, 3D, -side, near + narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, far, 3D, side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, far - narrow, 3D - outerLen, side - narrow, solid, fade);
+
+        // outer pyramid — wider narrow + longer len
+        narrow = 0.0625D * 1.5D;
+        outerLen *= 1.5D;
+        emitPlumeQuad(buf, near, 3D, side, far, 3D, side, far - narrow, 3D - outerLen, side - narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3D, -side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, -side + narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3D, side, near, 3D, -side, near + narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, far, 3D, side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, far - narrow, 3D - outerLen, side - narrow, solid, fade);
+        NTMImmediate.INSTANCE.draw();
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableCull();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
+    }
+
+    private static void emitPlumeQuad(NTMBufferBuilder buf,
+                                      double x1, double y1, double z1,
+                                      double x2, double y2, double z2,
+                                      double x3, double y3, double z3,
+                                      double x4, double y4, double z4,
+                                      int solid, int fade) {
+        buf.appendPositionColorUnchecked(x1, y1, z1, solid);
+        buf.appendPositionColorUnchecked(x2, y2, z2, solid);
+        buf.appendPositionColorUnchecked(x3, y3, z3, fade);
+        buf.appendPositionColorUnchecked(x4, y4, z4, fade);
     }
 
     private void renderPlasma(TileEntityFusionPlasmaForge forge) {
@@ -158,6 +220,16 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
 
         GlStateManager.color(forge.plasmaRed * 2F, forge.plasmaGreen * 2F, forge.plasmaBlue * 2F, 1F);
+        GlStateManager.matrixMode(GL11.GL_TEXTURE);
+        GlStateManager.loadIdentity();
+        bindTexture(ResourceManager.fusion_plasma_glow_tex);
+        GlStateManager.translate(0D, glowOsc + glowExtra, 0D);
+        ResourceManager.fusion_plasma_forge.renderPart("Plasma");
+        GlStateManager.loadIdentity();
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+
+        glowOsc = Math.sin(time / 600D + 2D) % 1D;
+        glowExtra = time / 5000D % 1D;
         GlStateManager.matrixMode(GL11.GL_TEXTURE);
         GlStateManager.loadIdentity();
         bindTexture(ResourceManager.fusion_plasma_glow_tex);
@@ -208,6 +280,61 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
 
     private float partialTicks() {
         return Minecraft.getMinecraft().getRenderPartialTicks();
+    }
+
+    // beam renders after the item so transparency layers correctly; LOD a bit further out since the beam is larger
+    private void renderBeam(TileEntityFusionPlasmaForge forge, float partialTicks) {
+        if(forge.plasmaModule.getRecipe() == null) return;
+        if(MainRegistry.proxy.me().getDistanceSq(forge.getPos().getX() + 0.5D, forge.getPos().getY() + 1D, forge.getPos().getZ() + 0.5D) > 50D * 50D) return;
+
+        GlStateManager.disableLighting();
+        GlStateManager.enableBlend();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
+        GlStateManager.depthMask(false);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        GlStateManager.disableCull();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
+        // reuse the stellar flux fluid texture
+        bindTexture(Fluids.STELLAR_FLUX.getTexture());
+
+        double offset = ((MainRegistry.proxy.me().ticksExisted + partialTicks) / 15D) % 1D;
+        double in = 0.4375D;
+        double b = 1D;
+        double t = 1.5D;
+        double h = b + t;
+
+        int solid = NTMBufferBuilder.packColor(1F, 1F, 1F, 1F);
+        int fade = NTMBufferBuilder.packColor(1F, 1F, 1F, 0F);
+
+        NTMBufferBuilder buf = NTMImmediate.INSTANCE.beginPositionTexColorQuads(4);
+        buf.appendPositionTexColorQuadUnchecked(
+                -in, b, in, offset + t, 0D, solid,
+                -in, h, in, offset, 0D, fade,
+                -in, h, -in, offset, 1D, fade,
+                -in, b, -in, offset + t, 1D, solid);
+        buf.appendPositionTexColorQuadUnchecked(
+                in, h, in, offset, 0D, fade,
+                in, b, in, offset + t, 0D, solid,
+                in, b, -in, offset + t, 1D, solid,
+                in, h, -in, offset, 1D, fade);
+        buf.appendPositionTexColorQuadUnchecked(
+                in, b, in, offset + t, 0D, solid,
+                in, h, in, offset, 0D, fade,
+                -in, h, in, offset, 1D, fade,
+                -in, b, in, offset + t, 1D, solid);
+        buf.appendPositionTexColorQuadUnchecked(
+                in, h, -in, offset, 0D, fade,
+                in, b, -in, offset + t, 0D, solid,
+                -in, b, -in, offset + t, 1D, solid,
+                -in, h, -in, offset, 1D, fade);
+        NTMImmediate.INSTANCE.draw();
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableCull();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+        GlStateManager.enableLighting();
+        GlStateManager.disableBlend();
     }
 
     @Override

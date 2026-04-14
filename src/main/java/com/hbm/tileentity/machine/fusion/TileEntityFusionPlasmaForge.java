@@ -378,7 +378,7 @@ public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implement
 
     @Override
     public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        return new ContainerMachinePlasmaForge(player.inventory, this.inventory);
+        return new ContainerMachinePlasmaForge(player.inventory, this);
     }
 
     @Override
