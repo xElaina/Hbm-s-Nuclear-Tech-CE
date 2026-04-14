@@ -7,30 +7,61 @@
 >   - For changelog updates, verify actual diffs instead of trusting commit subjects; summarize the net result as if the
 > changes were squashed into one commit. That is, fold follow-up fixes into the original feature/change entry where
 > appropriate, and omit anything that was fully reverted before release.
+>   - Avoid explaining technical details in the changelog; the target audience is end-users, not developers.
 >   - SUBSTANTIAL CHANGES are for changes that could substantially impact backward compatibility, e.g. fluid id
 > shifting. The major version number must be bumped.  
 >   - Breaking Changes are for casual breakages like the removal of a block(minor version bump), or a significant API
 > change(major API bump).  
 >   - Changes, New Features correspond to a minor bump.  
 >   - Fixes/Performance/Misc correspond to a minor or patch bump.
-> - Previous public release: 2.3.0.0
-> - Next release: at least 2.3.0.1
+> - Previous public release: 2.3.0.1
+> - Next release: at least 2.4.0.0
 
 ### SUBSTANTIAL CHANGES
 
 ### Breaking Changes
+- Reworked grenade system: all individual grenade items (`grenade_generic`, `grenade_strong`, `grenade_frag`, `grenade_fire`, `grenade_shrapnel`, `grenade_cluster`, `grenade_flare`, `grenade_electric`, `grenade_poison`, `grenade_gas`, `grenade_cloud`, `grenade_pink_cloud`, `grenade_smart`, `grenade_mirv`, `grenade_breach`, `grenade_burst`, `grenade_pulse`, `grenade_plasma`, `grenade_tau`, `grenade_schrabidium`, `grenade_nuke`, `grenade_lemon`, `grenade_gascan`, `grenade_kyiv`, `grenade_mk2`, `grenade_aschrab`, `grenade_nuclear`, `grenade_zomg`, `grenade_solinium`, `grenade_black_hole`, and all `grenade_if_*` variants) have been removed and replaced with five modular items (`grenade_shell`, `grenade_filling`, `grenade_fuze`, `grenade_extra`, `grenade_universal`); existing grenades in the world and in inventories will be lost
+- Removed `crucible_template`; the recipe is now picked directly on the crucible through its GUI, and `template_folder`/`journal_pip`/`journal_bj`/`journal_silver` no longer open a template folder GUI
+- Removed `turret_control`
+- Siege mobs now drop plain steel ingots instead of tier-specific siege coins
 
 ### Fixes
-- Fixed crate item stack custom name not being displayed
-- Fixed a crash when the GUI of Klystron is opened immediately after placement
-- Fixed a 2.3.0.0 regression that caused Celeritas to incorrectly cull chunks
-- Fixed an issue that may cause RBMK to explode on chunk load/unload
-- Fixed a hazard system oredict aliasing issue
+- Fixed multiblocks jump-placing over living entities; placement is now refused if anything is standing inside the footprint
+- Fixed sliding blast door dropping its keypad when broken
+- Fixed diesel generator failing to locate its smokestack
+- Fixed wood-burner visual drift
+- Fixed RBMK console text drifting over time
+- Fixed ICF splash particle being off-center
+- Fixed custom missile rendering glitches
+- Fixed Astolfization potion effect not having its intended visuals
+- Smoothed out the visual transition of items moving between conveyors
+- Drill-equipped weapons no longer spam block-break sounds on unbreakable blocks
+- Custom Control Panel: fixed visual color leak and relog bug, keyboard-repeat not firing, nodes being deletable while typing in text fields, and panels not loading properly
 
 ### Changes
+- Ported new fallout block textures
+- RBMK Crane Console: highlights the column currently under the crane in yellow on both `rbmk_console` and `rbmk_display` screens
+- Machine Press GUI gained a 9-slot extra-storage row
+- Custom mob bonus drops (spider/zombie/skeleton/creeper ingots) are now gated behind the `doMobLoot` gamerule
+- Bedrock heavy-metal radsolvent output tweaked: bismuth 1 → 2, added tantalium 2
+- Plasma Forge port completed
+- DFC parts (`dfc_core`, `dfc_emitter`, `dfc_receiver`, `dfc_injector`, `dfc_stabilizer`) can no longer be crafted on the crafting table and must now be produced in the Plasma Forge
 
 ### New Features
+- Added modular RBMK Redstone-over-Radio panel system: `rbmk_key_pad`, `rbmk_gauge`, `rbmk_graph`, `rbmk_numitron`, and `rbmk_display_blank`, compatible with RBMK control rods, manual control rods and fuel rods
+- Added fluid-barrel connector: barrels now visually link up to adjacent fluid pipes carrying the same fluid
+- Added `pill_red` consumable
+- Added `plates_cast` mold and matching triple-cast-plate anvil recipe
+- Added toggle-magnet keybind (default Z) with on-screen ON/OFF feedback; existing jetpack and HUD toggles also report their new state
+- Added zombie bonus drops (copper, aluminium, titanium ingots at 1/200 each)
+- Added crafting recipes for NUMITRON circuit, vanilla hopper, vanilla bucket, and graphite ingot from fine carbon wire
+- Added copy-paste for Custom Control Panel instruments
+- Added tagged-link system for Custom Control Panel: links survive the linked block being broken and can be identified by a tag string; hint "Shift+A to add node" shown in the node editor
+- Added composite data-value type for the Custom Control Panel
+- Siege mobs can now be configured with laser-weapon responses (block-breaking, explosion, incendiary)
 
 ### Performance
+- Reduced redundant per-frame work in the chunk and tile-entity rendering path
 
 ### Misc
+- Custom Control Panel is no longer marked `[WIP]`
