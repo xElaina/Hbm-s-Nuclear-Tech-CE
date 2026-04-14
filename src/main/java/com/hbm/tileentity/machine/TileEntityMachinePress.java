@@ -46,7 +46,7 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 	public ItemStack syncStack;
 
 	public TileEntityMachinePress() {
-		super(4);
+		super(13);
 	}
 
 	@Override
@@ -235,7 +235,8 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 			case 0 -> TileEntityFurnace.getItemBurnTime(stack) > 0;
 			case 1 -> stack.getItem() instanceof ItemStamp;
 			case 2 -> !(stack.getItem() instanceof ItemStamp) && TileEntityFurnace.getItemBurnTime(stack) <= 0;
-			default -> false;
+			case 3 -> false;
+			default -> i >= 4 && i <= 12;
 		};
 	}
 

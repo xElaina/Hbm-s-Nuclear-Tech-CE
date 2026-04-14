@@ -561,11 +561,12 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
     @Override
     public String[] getFunctionInfo() {
-        return new String[]{PREFIX_VALUE + "coreheat", PREFIX_VALUE + "hullheat", PREFIX_VALUE + "flux", PREFIX_VALUE + "depletion", PREFIX_FUNCTION + "setrods" + NAME_SEPARATOR + "percent", PREFIX_FUNCTION + "jettison",};
+        return new String[]{PREFIX_VALUE + "rods", PREFIX_VALUE + "coreheat", PREFIX_VALUE + "hullheat", PREFIX_VALUE + "flux", PREFIX_VALUE + "depletion", PREFIX_FUNCTION + "setrods" + NAME_SEPARATOR + "percent", PREFIX_FUNCTION + "jettison",};
     }
 
     @Override
     public String provideRORValue(String name) {
+        if ((PREFIX_VALUE + "rods").equals(name)) return "" + (int) this.rodLevel;
         if ((PREFIX_VALUE + "coreheat").equals(name)) return "" + this.coreHeat;
         if ((PREFIX_VALUE + "hullheat").equals(name)) return "" + this.hullHeat;
         if ((PREFIX_VALUE + "flux").equals(name)) return "" + (int) this.flux;

@@ -7,9 +7,9 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.util.NTMBufferBuilder;
 import com.hbm.render.util.NTMImmediate;
+import com.hbm.tileentity.machine.rbmk.RBMKColumn;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.RBMKScreen;
-import com.hbm.tileentity.machine.rbmk.RBMKColumn;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -142,7 +142,7 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
 
             if (i % 2 == 1) GlStateManager.translate(0, 0, 1.75F * -2);
 
-            GlStateManager.translate(0, -0.75F * ((float) i / 2), 0);
+            GlStateManager.translate(0, -0.75F * (i >> 1), 0);
 
             RBMKScreen screen = te.screens[i];
             String text = screen.display;

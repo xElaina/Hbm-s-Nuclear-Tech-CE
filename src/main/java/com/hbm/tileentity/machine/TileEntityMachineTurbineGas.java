@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.CompatHandler;
 import com.hbm.handler.pollution.PollutionHandler;
@@ -47,7 +48,7 @@ import java.util.HashMap;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityMachineTurbineGas extends TileEntityMachineBase implements IFluidStandardTransceiver, IEnergyProviderMK2, IControlReceiver, IGUIProvider, SimpleComponent, CompatHandler.OCComponent, IFluidCopiable, ITickable {
+public class TileEntityMachineTurbineGas extends TileEntityMachineBase implements IFluidStandardTransceiver, IEnergyProviderMK2, IControlReceiver, IGUIProvider, SimpleComponent, CompatHandler.OCComponent, IFluidCopiable, IRORValueProvider, ITickable {
 
 	public long power;
 	public static final long maxPower = 1000000L;
@@ -699,6 +700,23 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIMachineTurbineGas(player.inventory, this);
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "turbinepercent",
+				PREFIX_VALUE + "turbinespeed",
+				PREFIX_VALUE + "output"
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if ((PREFIX_VALUE + "turbinepercent").equals(name)) return "" + (int) (this.powerSliderPos * 100D / 60D);
+		if ((PREFIX_VALUE + "turbinespeed").equals(name))   return "" + this.rpm;
+		if ((PREFIX_VALUE + "output").equals(name))         return "" + (int) this.instantPowerOutput;
+		return null;
 	}
 /*
 	@Override

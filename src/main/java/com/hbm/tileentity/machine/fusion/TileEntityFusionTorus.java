@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine.fusion;
 
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerFusionTorus;
@@ -18,7 +19,6 @@ import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.tileentity.machine.albion.TileEntityCooledBase;
-import com.hbm.uninos.GenNode;
 import com.hbm.uninos.INetworkProvider;
 import com.hbm.uninos.UniNodespace;
 import com.hbm.uninos.networkproviders.KlystronNetwork;
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 @AutoRegister
-public class TileEntityFusionTorus extends TileEntityCooledBase implements ITickable, IGUIProvider, IControlReceiver {
+public class TileEntityFusionTorus extends TileEntityCooledBase implements ITickable, IGUIProvider, IControlReceiver, IRORValueProvider {
 
     public boolean didProcess = false;
 
@@ -476,5 +476,20 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
                 this.markChanged();
             }
         }
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "plasma",
+                PREFIX_VALUE + "consumption"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if ((PREFIX_VALUE + "plasma").equals(name))      return "" + this.plasmaEnergy;
+        if ((PREFIX_VALUE + "consumption").equals(name)) return "" + (int) (this.fuelConsumption * 100);
+        return null;
     }
 }
