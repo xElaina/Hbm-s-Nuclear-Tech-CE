@@ -319,6 +319,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getSILEXRecipes(EnumWavelengths.GAMMA), SILEX_GAMMA);
         registry.addRecipes(JeiRecipes.getSILEXRecipes(EnumWavelengths.DRX), SILEX_DIGAMMA);
         registry.addRecipes(JeiRecipes.getRBMKFuelRecipes(), RBMKFUEL);
+        registry.addRecipes(JeiRecipes.getGrenadeRecipes(), VanillaRecipeCategoryUid.CRAFTING);
         registry.addRecipes(DFCRecipes.getDFCRecipes(), DFC);
         registry.addRecipes(oreSlopperHandler.getRecipes(), ORE_SLOPPER);
         registry.addRecipes(particleAcceleratorHandler.getRecipes(), PA);
