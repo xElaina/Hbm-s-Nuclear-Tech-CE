@@ -109,19 +109,6 @@ public class BlockNTMOre extends BlockOre {
     }
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
-        if (stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_uranium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_gneiss_uranium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_nether_uranium)) {
-            tooltip.addAll(Arrays.asList(I18nUtil.resolveKey("tile.ore_uranium.desc").split("\\$")));
-        }
-        if (stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_schrabidium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_gneiss_schrabidium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_nether_schrabidium)) {
-            tooltip.addAll(Arrays.asList(I18nUtil.resolveKey("tile.ore_schrabidium.desc").split("\\$")));
-        }
-        if (stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_oil)) {
-            tooltip.addAll(Arrays.asList(I18nUtil.resolveKey("tile.ore_oil.desc").split("\\$")));
-        }
-    }
-
-    @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entity) {
         if (entity instanceof EntityLivingBase)
             HazardSystem.applyHazards(this, (EntityLivingBase)entity);
