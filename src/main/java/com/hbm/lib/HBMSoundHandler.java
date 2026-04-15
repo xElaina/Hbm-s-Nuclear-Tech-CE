@@ -312,6 +312,8 @@ public final class HBMSoundHandler {
     public static SoundEvent lockon;
     public static SoundEvent boltOpen;
     public static SoundEvent boltClose;
+    public static SoundEvent grenadeTech;
+    public static SoundEvent grenadeNuka;
     public static SoundEvent shredderCycle;
     public static SoundEvent rifleCock;
     public static SoundEvent screw;
@@ -706,6 +708,8 @@ public final class HBMSoundHandler {
         lockon = register("weapon.fire.lockon");
         boltOpen = register("weapon.reload.boltOpen");
         boltClose = register("weapon.reload.boltClose");
+        grenadeTech = register("weapon.reload.grenadeTech");
+        grenadeNuka = register("weapon.reload.grenadeNuka");
         shredderCycle = register("weapon.fire.shredderCycle");
         rifleCock = register("weapon.reload.rifleCock");
         screw = register("weapon.reload.screw");

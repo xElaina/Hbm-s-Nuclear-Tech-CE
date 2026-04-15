@@ -26,15 +26,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -129,17 +123,17 @@ public class ItemGrenadeUniversal extends ItemBase implements IAnimatedItem, IEq
 
                 EnumGrenadeShell shell = getShell(stack);
                 if (shell == EnumGrenadeShell.FRAG && deployment == 18) {
-                    playCue(world, player, SoundEvents.BLOCK_NOTE_HAT, 1F);
+                    playCue(world, player, HBMSoundHandler.revolverCock, 1F);
                 }
                 if (shell == EnumGrenadeShell.STICK) {
-                    if (deployment == 16) playCue(world, player, SoundEvents.BLOCK_WOOD_HIT, 1.25F);
-                    if (deployment == 25) playCue(world, player, SoundEvents.BLOCK_WOOD_HIT, 1.25F);
+                    if (deployment == 16) playCue(world, player, HBMSoundHandler.boltOpen, 1.25F);
+                    if (deployment == 25) playCue(world, player, HBMSoundHandler.boltOpen, 1.25F);
                 }
                 if (shell == EnumGrenadeShell.TECH && deployment == 18) {
-                    playCue(world, player, SoundEvents.BLOCK_LEVER_CLICK, 1F);
+                    playCue(world, player, HBMSoundHandler.grenadeTech, 1F);
                 }
                 if (shell == EnumGrenadeShell.NUKE && deployment == 26) {
-                    playCue(world, player, HBMSoundHandler.ufoBlast, 1F);
+                    playCue(world, player, HBMSoundHandler.grenadeNuka, 1F);
                 }
             }
 

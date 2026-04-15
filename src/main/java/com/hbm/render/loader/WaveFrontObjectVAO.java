@@ -3,8 +3,6 @@ package com.hbm.render.loader;
 import com.hbm.render.GLCompat;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -23,6 +21,10 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     List<VBOBufferData> groups = new ArrayList<>();
 
     public WaveFrontObjectVAO(HFRWavefrontObject obj) {
+        if (uploaded) throw new UnsupportedOperationException(
+                "Cannot load new models after uploadModels() has been called. " +
+                        "Move your model to ResourceManager's static initializer!"
+        );
         load(obj);
     }
 
@@ -94,12 +96,6 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     }
 
     public void uploadModels() {
-        if (!GLCompat.aplLwjglWorkaround)
-            uploadVAOs();
-    }
-
-
-    private void uploadVAOs() {
 
         for (VBOBufferData data : groups) {
             data.vaoHandle = GLCompat.genVertexArrays();
@@ -107,13 +103,13 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
 
             glBindBuffer(GL_ARRAY_BUFFER, data.vboHandle);
 
-            GL11.glVertexPointer(3, GL11.GL_FLOAT, STRIDE, 0L);
+            glVertexPointer(3, GL_FLOAT, STRIDE, 0L);
             glEnableClientState(GL_VERTEX_ARRAY);
 
-            GL11.glTexCoordPointer(3, GL11.GL_FLOAT, STRIDE, 3L * Float.BYTES);
+            glTexCoordPointer(3, GL_FLOAT, STRIDE, 3L * Float.BYTES);
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-            GL11.glNormalPointer(GL11.GL_FLOAT, STRIDE, 6L * Float.BYTES);
+            glNormalPointer(GL_FLOAT, STRIDE, 6L * Float.BYTES);
             glEnableClientState(GL_NORMAL_ARRAY);
 
             GLCompat.bindVertexArray(0);
@@ -127,9 +123,9 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     // documentation on GL15 functions seems nonexistant so fuck it we ball i guess
     public void destroy() {
         for(VBOBufferData data : groups) {
-            GL15.glDeleteBuffers(data.vboHandle);
-            GL15.glDeleteBuffers(data.vaoHandle);
-            GL15.glDeleteBuffers(data.vertices);
+            glDeleteBuffers(data.vboHandle);
+            glDeleteBuffers(data.vaoHandle);
+            glDeleteBuffers(data.vertices);
         }
         groups.clear();
     }
@@ -139,35 +135,16 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         return "obj_vao";
     }
 
-    private void renderVBO(VBOBufferData data) {
-        if(GLCompat.aplLwjglWorkaround){
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, data.vboHandle);
-            GL11.glVertexPointer(3, GL11.GL_FLOAT, STRIDE, 0L);
-            GL11.glTexCoordPointer(3, GL11.GL_FLOAT, STRIDE, 3L * Float.BYTES);
-            GL11.glNormalPointer(GL11.GL_FLOAT, STRIDE, 6L * Float.BYTES);
-
-            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-            GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-            GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-
-            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, data.vertices);
-
-            GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-            GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-            GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
-
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-        } else {
-            GLCompat.bindVertexArray(data.vaoHandle);
-            GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, data.vertices);
-            GLCompat.bindVertexArray(0);
-        }
+    private void renderVAO(VBOBufferData data) {
+        GLCompat.bindVertexArray(data.vaoHandle);
+        GlStateManager.glDrawArrays(GL_TRIANGLES, 0, data.vertices);
+        GLCompat.bindVertexArray(0);
     }
 
     @Override
     public void renderAll() {
         for (VBOBufferData data : groups) {
-            renderVBO(data);
+            renderVAO(data);
         }
     }
 
@@ -176,7 +153,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         for (VBOBufferData data : groups) {
             for (String name : groupNames) {
                 if (data.name.equalsIgnoreCase(name)) {
-                    renderVBO(data);
+                    renderVAO(data);
                 }
             }
         }
@@ -186,7 +163,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     public void renderPart(String partName) {
         for (VBOBufferData data : groups) {
             if (data.name.equalsIgnoreCase(partName)) {
-                renderVBO(data);
+                renderVAO(data);
             }
         }
     }
@@ -202,7 +179,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
                 }
             }
             if (!skip) {
-                renderVBO(data);
+                renderVAO(data);
             }
         }
     }

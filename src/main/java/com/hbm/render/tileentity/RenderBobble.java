@@ -8,8 +8,6 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
-import com.hbm.render.loader.HFRWavefrontObject;
-import com.hbm.render.loader.IModelCustom;
 import com.hbm.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -29,7 +27,6 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
     public static RenderBobble instance = new RenderBobble();
 
-    public static final IModelCustom bobble = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/bobble.obj")).asVBO();
     public static final ResourceLocation socket = new ResourceLocation(Tags.MODID, "textures/models/trinkets/socket.png");
     public static final ResourceLocation glow = new ResourceLocation(Tags.MODID, "textures/models/trinkets/glow.png");
     public static final ResourceLocation lamp = new ResourceLocation(Tags.MODID, "textures/blocks/fluorescent_lamp.png");
@@ -88,7 +85,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.enableRescaleNormal();
 
         bindTexture(socket);
-        bobble.renderPart("Socket");
+        ResourceManager.bobble.renderPart("Socket");
 
         switch (type) {
             case STRENGTH:
@@ -250,7 +247,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.pushMatrix();
         GlStateManager.rotate((float) rotBody, 0, 1, 0);
 
-        if (type == BobbleType.PEEP) bobble.renderPart("PeepTail");
+        if (type == BobbleType.PEEP) ResourceManager.bobble.renderPart("PeepTail");
 
         GlStateManager.disableCull();
 
@@ -268,7 +265,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.rotate((float) rotLeftLeg[1], 0, 1, 0);
         GlStateManager.rotate((float) rotLeftLeg[2], 0, 0, 1);
         GlStateManager.translate(0, -1, 0.125);
-        bobble.renderPart("LL" + suffix);
+        ResourceManager.bobble.renderPart("LL" + suffix);
         GlStateManager.popMatrix();
 
         // RIGHT LEG
@@ -278,7 +275,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.rotate((float) rotRightLeg[1], 0, 1, 0);
         GlStateManager.rotate((float) rotRightLeg[2], 0, 0, 1);
         GlStateManager.translate(0, -1, -0.125);
-        bobble.renderPart("RL" + suffix);
+        ResourceManager.bobble.renderPart("RL" + suffix);
         GlStateManager.popMatrix();
 
         // LEFT ARM
@@ -288,7 +285,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.rotate((float) rotLeftArm[1], 0, 1, 0);
         GlStateManager.rotate((float) rotLeftArm[2], 0, 0, 1);
         GlStateManager.translate(0, -1.625, 0.25);
-        bobble.renderPart("LA" + suffix);
+        ResourceManager.bobble.renderPart("LA" + suffix);
         GlStateManager.popMatrix();
 
         // RIGHT ARM
@@ -298,11 +295,11 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.rotate((float) rotRightArm[1], 0, 1, 0);
         GlStateManager.rotate((float) rotRightArm[2], 0, 0, 1);
         GlStateManager.translate(0, -1.625, -0.25);
-        bobble.renderPart("RA" + suffix);
+        ResourceManager.bobble.renderPart("RA" + suffix);
         GlStateManager.popMatrix();
 
         // BODY
-        bobble.renderPart("Body" + suffix);
+        ResourceManager.bobble.renderPart("Body" + suffix);
 
         // HEAD (light bobble)
         double speed = 0.005;
@@ -318,10 +315,10 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.rotate((float) rotHead[2], 0, 0, 1);
 
         GlStateManager.translate(0, -1.75, 0);
-        bobble.renderPart("Head" + suffix);
+        ResourceManager.bobble.renderPart("Head" + suffix);
 
-        if (type == BobbleType.VT) bobble.renderPart("Horn");
-        if (type == BobbleType.PEEP) bobble.renderPart("PeepHat");
+        if (type == BobbleType.VT) ResourceManager.bobble.renderPart("Horn");
+        if (type == BobbleType.PEEP) ResourceManager.bobble.renderPart("PeepHat");
 
         if (type == BobbleType.VAER) {
             GlStateManager.translate(0.25, 1.9, 0.075);
@@ -358,14 +355,14 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         float lastY = net.minecraft.client.renderer.OpenGlHelper.lastBrightnessY;
         net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, 240F, 240F);
         GlStateManager.disableLighting();
-        bobble.renderPart("Pellet");
+        ResourceManager.bobble.renderPart("Pellet");
 
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
         GlStateManager.color(1F, 1F, 0F, 0.1F + (float) Math.sin(time * 0.001D) * 0.05F);
-        bobble.renderPart("PelletShine");
+        ResourceManager.bobble.renderPart("PelletShine");
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.disableBlend();
@@ -378,7 +375,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
     public void renderFumo(BobbleType type) {
         GlStateManager.enableCull();
-        bobble.renderPart("Fumo");
+        ResourceManager.bobble.renderPart("Fumo");
 
         double speed = 0.005;
         double amplitude = 1;
@@ -390,13 +387,13 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.translate(0, -0.75, 0);
 
         GlStateManager.disableCull();
-        bobble.renderPart("FumoHead");
+        ResourceManager.bobble.renderPart("FumoHead");
 
         GlStateManager.popMatrix();
     }
 
     public void renderDrillgon(BobbleType type) {
-        bobble.renderPart("Drillgon");
+        ResourceManager.bobble.renderPart("Drillgon");
     }
 
     private final ResourceLocation shot_tex = new ResourceLocation(Tags.MODID + ":textures/models/ModelUboinik.png");
@@ -490,9 +487,9 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
                 GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
                 GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
                 this.bindTexture(lamp);
-                bobble.renderPart("Fluoro");
+                ResourceManager.bobble.renderPart("Fluoro");
                 this.bindTexture(glow);
-                bobble.renderPart("Glow");
+                ResourceManager.bobble.renderPart("Glow");
                 GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
                 GlStateManager.disableBlend();
                 net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, lastX, lastY);

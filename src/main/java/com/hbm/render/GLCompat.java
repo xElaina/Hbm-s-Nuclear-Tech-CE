@@ -56,8 +56,7 @@ public class GLCompat {
     public static boolean arbFragmentShader;
     public static boolean arbMultitexture;
     public static boolean arbOcclusionQuery;
-    @Deprecated
-    public static boolean aplLwjglWorkaround;
+
 
     public static int genVertexArrays() {
         return switch (vaoType) {

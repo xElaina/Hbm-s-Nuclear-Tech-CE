@@ -16,6 +16,8 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
+import com.hbm.items.weapon.grenade.ItemGrenadeExtra.EnumGrenadeExtra;
+import com.hbm.items.weapon.grenade.ItemGrenadeUniversal;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.main.MainRegistry;
@@ -545,6 +547,14 @@ public class JEIConfig implements IModPlugin {
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, stack -> ModItems.missile_custom.getTranslationKey() + "w" +
                 ItemCustomMissile.readFromNBT(stack, "warhead") + "f" + ItemCustomMissile.readFromNBT(stack, "fuselage") + "s" +
                 ItemCustomMissile.readFromNBT(stack, "stability") + "t" + ItemCustomMissile.readFromNBT(stack, "thruster"));
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.grenade_universal, stack -> {
+            EnumGrenadeExtra extra = ItemGrenadeUniversal.getExtra(stack);
+            return ModItems.grenade_universal.getTranslationKey()
+                    + "s" + ItemGrenadeUniversal.getShell(stack).ordinal()
+                    + "f" + ItemGrenadeUniversal.getFilling(stack).ordinal()
+                    + "z" + ItemGrenadeUniversal.getFuze(stack).ordinal()
+                    + "e" + (extra == null ? "n" : extra.ordinal());
+        });
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, stack -> {
             FluidType fluidType = ItemFluidIcon.getFluidType(stack);
             if (fluidType == null) return "";

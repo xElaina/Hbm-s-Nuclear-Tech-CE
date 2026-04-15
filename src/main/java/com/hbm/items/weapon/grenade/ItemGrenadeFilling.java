@@ -259,7 +259,7 @@ public class ItemGrenadeFilling extends ItemEnumMulti<ItemGrenadeFilling.EnumGre
 
     public static void spawnMush(EntityGrenadeUniversal grenade) {
         grenade.world.playSound(null, grenade.posX, grenade.posY, grenade.posZ,
-                SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 15.0F, 1.0F);
+                HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
         NBTTagCompound data = new NBTTagCompound();
         data.setString("type", "muke");
         data.setBoolean("balefire", MainRegistry.polaroidID == 11 || grenade.world.rand.nextInt(100) == 0);

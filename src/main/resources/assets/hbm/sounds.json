@@ -258,6 +258,8 @@
     "weapon.reload.boltOpen": {"category": "player", "sounds": ["hbm:weapon/reload/boltopen"]},
     "weapon.reload.closeClick": {"category": "player", "sounds": ["hbm:weapon/reload/closeclick"]},
     "weapon.reload.dryFireClick": {"category": "player", "sounds": ["hbm:weapon/reload/dryfireclick"]},
+    "weapon.reload.grenadeNuka": {"category": "player", "sounds": ["hbm:weapon/reload/grenadenuka"]},
+    "weapon.reload.grenadeTech": {"category": "player", "sounds": ["hbm:weapon/reload/grenadetech"]},
     "weapon.reload.insertCanister": {"category": "player", "sounds": ["hbm:weapon/reload/insertcanister"]},
     "weapon.reload.insertGrenade": {"category": "player", "sounds": ["hbm:weapon/reload/insertgrenade"]},
     "weapon.reload.insertLarge": {"category": "player", "sounds": ["hbm:weapon/reload/insertlarge"]},

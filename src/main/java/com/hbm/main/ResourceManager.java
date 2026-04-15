@@ -39,6 +39,7 @@ public class ResourceManager {
 
     public static final IModelCustom cat = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/cat.obj"));
     public static final IModelCustom horse = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mobs/horse.obj")).asVBO();
+    public static final IModelCustom skeleton = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/effect/skeleton.obj")).asVBO();
 
     //Press
     public static final IModelCustom press_body = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/press_body.obj")).asVBO();
@@ -281,6 +282,17 @@ public class ResourceManager {
     public static final IModelCustom drone = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mobs/quadcopter.obj")).asVBO();
     //Lights
     public static final IModelCustom lantern = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/lantern.obj")).asVBO();
+    //Trinkets
+    public static final IModelCustom snowglobe = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/snowglobe.obj")).asVBO();
+    public static final IModelCustom bobble = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/bobble.obj")).asVBO();
+    public static final IModelCustom plushie_yomi = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/yomi.obj")).asVBO();
+    public static final IModelCustom plushie_hundun = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/hundun.obj")).asVBO();
+    public static final IModelCustom plushie_derg = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/derg.obj")).asVBO();
+    //Mobs
+    public static final IModelCustom bot_prime_head = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mobs/bot_prime_head.obj")).asVBO();
+    //Projectiles
+    public static final IModelCustom aa_shell = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/Mirv.obj")).asVBO();
+    public static final IModelCustom bomblet_selena = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombletSelena.obj")).asVBO();
     //Belt
     public static final IModelCustom arrow = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/arrow.obj")).asVBO();
     //RotaryFurnace

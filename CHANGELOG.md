@@ -37,6 +37,7 @@
 - Smoothed out the visual transition of items moving between conveyors
 - Drill-equipped weapons no longer spam block-break sounds on unbreakable blocks
 - Custom Control Panel: fixed visual color leak and relog bug, keyboard-repeat not firing, nodes being deletable while typing in text fields, and panels not loading properly
+- Fixed skeleton particle rendering
 
 ### Changes
 - Ported new fallout block textures
