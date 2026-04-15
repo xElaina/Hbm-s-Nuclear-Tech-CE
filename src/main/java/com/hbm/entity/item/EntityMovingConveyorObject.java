@@ -86,12 +86,9 @@ public abstract class EntityMovingConveyorObject extends Entity {
                 }
             } else {
                 Vec3d target = ((IConveyorBelt) b).getTravelLocation(world, blockX, blockY, blockZ, new Vec3d(posX, posY, posZ), getMoveSpeed());
-                double diffX = target.x - this.posX;
-                double diffY = target.y - this.posY;
-                double diffZ = target.z - this.posZ;
-                this.motionX += (diffX - this.motionX) * 0.2D;
-                this.motionY += (diffY - this.motionY) * 0.2D;
-                this.motionZ += (diffZ - this.motionZ) * 0.2D;
+                this.motionX = target.x - this.posX;
+                this.motionY = target.y - this.posY;
+                this.motionZ = target.z - this.posZ;
             }
 
             BlockPos lastPos = new BlockPos(posX, posY, posZ);

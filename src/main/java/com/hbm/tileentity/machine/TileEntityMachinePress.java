@@ -183,8 +183,12 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 		speed = nbt.getInteger("speed");
 		isRetracting = nbt.getBoolean("isRetracting");
 		delay = nbt.getInteger("delay");
-		if (nbt.hasKey("inventory"))
+		if (nbt.hasKey("inventory")) {
 			inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
+			if (inventory.getSlots() < 13) {
+				resizeInventory(13);
+			}
+		}
 	}
 
 	@Override

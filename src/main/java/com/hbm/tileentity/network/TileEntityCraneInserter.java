@@ -37,10 +37,8 @@ public class TileEntityCraneInserter extends TileEntityCraneBase implements IGUI
     @Override
     public void update() {
         super.update();
-        if(!world.isRemote) {
-
+        if(!world.isRemote && !world.isBlockPowered(pos)) {
             tryFillTe();
-
         }
     }
 
