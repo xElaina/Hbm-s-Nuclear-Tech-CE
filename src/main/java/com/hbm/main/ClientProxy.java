@@ -1905,7 +1905,7 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void checkGLCaps() {
-        GLCompat.error = GLCompat.init();
+        // Reading GLCompat.error triggers its <clinit>, which runs the caps probe.
         if (GLCompat.error.isEmpty()) {
             MainRegistry.logger.log(Level.INFO, "Advanced rendering fully supported");
         } else {
@@ -1929,6 +1929,8 @@ public class ClientProxy extends ServerProxy {
         // IItemRendererProvider is not applicable to Render<T extends Entity>
         NTMClientRegistry.bindTeisr(Item.getItemFromBlock(ModBlocks.boat), new RenderBoat.BoatItemRenderer());
         registerMissileItems(null);
+
+        ClientHttpHandler.preinit();
     }
 
     @Deprecated

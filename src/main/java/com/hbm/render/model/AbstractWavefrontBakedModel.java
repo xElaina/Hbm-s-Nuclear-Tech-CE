@@ -11,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +162,79 @@ public abstract class AbstractWavefrontBakedModel extends AbstractBakedModel {
         return geometries;
     }
 
+    /**
+     * Matrix4f-driven variant of {@link #buildGeometry(Set, float, float, float, boolean, boolean)}.
+     * Applies the given transform as-is to OBJ vertex positions and normals; ignores {@code baseScale}
+     * and {@code baseTx/ty/tz}. Useful when each part of a model needs a distinct pivot/rotation
+     * chain that can't be expressed as shared roll/pitch/yaw.
+     */
+    protected List<FaceGeometry> buildGeometryMatrix(Set<String> partNames, Matrix4f transform,
+                                                     boolean applyShading) {
+        return buildGeometryMatrix(model, partNames, transform, applyShading);
+    }
+
+    /**
+     * Matrix-driven geometry builder that accepts an explicit {@link HFRWavefrontObject} source,
+     * used when a baked model composites parts from more than one OBJ.
+     */
+    protected List<FaceGeometry> buildGeometryMatrix(HFRWavefrontObject objModel, Set<String> partNames,
+                                                     Matrix4f transform, boolean applyShading) {
+        List<FaceGeometry> geometries = new ArrayList<>();
+
+        for (GroupObject group : objModel.groupObjects) {
+            if (partNames != null && !partNames.contains(group.name)) continue;
+
+            for (Face face : group.faces) {
+                int vertexCount = face.vertices.length;
+                if (vertexCount < 3) continue;
+
+                if (face.faceNormal == null) {
+                    face.faceNormal = face.calculateFaceNormal();
+                }
+
+                int[] indices = vertexCount >= 4 ? new int[]{0, 1, 2, 3} : new int[]{0, 1, 2, 2};
+
+                float[] px = new float[4];
+                float[] py = new float[4];
+                float[] pz = new float[4];
+                float[] uu = new float[4];
+                float[] vv = new float[4];
+                Vector3f[] vertexNormals = new Vector3f[4];
+                int[] colors = new int[4];
+
+                Vector3f faceNormal = BakedModelMatrixUtil.transformNormal(transform, face.faceNormal.x,
+                        face.faceNormal.y, face.faceNormal.z);
+
+                for (int v = 0; v < 4; v++) {
+                    int idx = indices[v];
+                    Vertex vertex = face.vertices[idx];
+                    Vector3f p = BakedModelMatrixUtil.transformPosition(transform, vertex.x, vertex.y, vertex.z);
+                    px[v] = p.x;
+                    py[v] = p.y;
+                    pz[v] = p.z;
+
+                    TextureCoordinate tex = face.textureCoordinates[idx];
+                    uu[v] = tex.u * 16.0F;
+                    vv[v] = tex.v * 16.0F;
+
+                    Vertex source = face.vertexNormals != null && idx < face.vertexNormals.length
+                            ? face.vertexNormals[idx] : null;
+                    Vector3f n = source != null
+                            ? BakedModelMatrixUtil.transformNormal(transform, source.x, source.y, source.z)
+                            : new Vector3f(faceNormal);
+                    if (n.lengthSquared() <= 0.0F) n.set(faceNormal);
+                    vertexNormals[v] = n;
+                    colors[v] = applyShading ? GeometryBakeUtil.computeShade(n.x, n.y, n.z) : 255;
+                }
+
+                EnumFacing facing = EnumFacing.getFacingFromVector(faceNormal.x, faceNormal.y, faceNormal.z);
+                geometries.add(new FaceGeometry(facing, px, py, pz, uu, vv, vertexNormals, colors));
+            }
+        }
+
+        return geometries;
+    }
+
     protected float[] computeGeometryBounds(Set<String> partNames, float roll, float pitch, float yaw,
                                             boolean centerToBlock, float extraTx, float extraTy, float extraTz) {
         List<FaceGeometry> geometries = buildGeometry(partNames, roll, pitch, yaw, false, centerToBlock, extraTx,
@@ -207,8 +281,8 @@ public abstract class AbstractWavefrontBakedModel extends AbstractBakedModel {
         private final long colors01;
         private final long colors23;
 
-        private FaceGeometry(EnumFacing facing, float[] px, float[] py, float[] pz, float[] uu, float[] vv,
-                             Vector3f[] vertexNormals, int[] colors) {
+        FaceGeometry(EnumFacing facing, float[] px, float[] py, float[] pz, float[] uu, float[] vv,
+                     Vector3f[] vertexNormals, int[] colors) {
             this.facing = facing;
             this.px = px;
             this.py = py;

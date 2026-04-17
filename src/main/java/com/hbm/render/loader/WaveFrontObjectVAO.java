@@ -1,24 +1,26 @@
 package com.hbm.render.loader;
 
+import com.hbm.interfaces.SuppressCheckedExceptions;
 import com.hbm.render.GLCompat;
-import net.minecraft.client.renderer.GlStateManager;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.lwjgl.BufferUtils;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 
 public class WaveFrontObjectVAO implements IModelCustomNamed {
 
     public static final List<WaveFrontObjectVAO> allVBOs = new ArrayList<>();
-    private static final int FLOAT_SIZE = 4;
-    private static final int STRIDE = 9 * FLOAT_SIZE;
+    private static final int FLOATS_PER_VERTEX = 9; // pos3 + uv3 + normal3
+    private static final int STRIDE = FLOATS_PER_VERTEX * Float.BYTES;
+    private static final int MAX_INDEXED_VERTICES = 1 << 16;
     public static boolean uploaded = false;
-    static int VERTEX_SIZE = 3;
-    List<VBOBufferData> groups = new ArrayList<>();
+
+    final List<VBOBufferData> groups = new ArrayList<>();
 
     public WaveFrontObjectVAO(HFRWavefrontObject obj) {
         if (uploaded) throw new UnsupportedOperationException(
@@ -30,78 +32,102 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
 
     public void load(HFRWavefrontObject obj) {
         for (GroupObject g : obj.groupObjects) {
-
             VBOBufferData data = new VBOBufferData();
             data.name = g.name;
 
-            List<Float> vertexData = new ArrayList<>(g.faces.size() * 3 * VERTEX_SIZE);
-            List<Float> uvwData = new ArrayList<>(g.faces.size() * 3 * VERTEX_SIZE);
-            List<Float> normalData = new ArrayList<>(g.faces.size() * 3 * VERTEX_SIZE);
+            int maxVerts = 0;
+            int triangleCount = 0;
+            for (Face face : g.faces) {
+                int n = face.vertices.length;
+                maxVerts += n;
+                if (n >= 3) triangleCount += n - 2;
+            }
 
+            float[] vertexData = new float[maxVerts * FLOATS_PER_VERTEX];
+            short[] indices = new short[triangleCount * 3];
+            Object2IntOpenHashMap<VertexKey> lookup = new Object2IntOpenHashMap<>(maxVerts * 2);
+            lookup.defaultReturnValue(-1);
+            VertexKey probe = new VertexKey();
+            int[] faceIdx = new int[4];
+            int vertexCount = 0;
+            int indexCursor = 0;
 
             for (Face face : g.faces) {
-                for (int i = 0; i < face.vertices.length; i++) {
-                    Vertex vert = face.vertices[i];
-                    TextureCoordinate tex = new TextureCoordinate(0, 0);
-                    Vertex normal = face.vertexNormals[i];
+                int n = face.vertices.length;
+                if (faceIdx.length < n) faceIdx = new int[n];
 
+                for (int i = 0; i < n; i++) {
+                    Vertex vert = face.vertices[i];
+                    Vertex normal = face.vertexNormals[i];
+                    float u = 0f, v = 0f, w = 0f;
                     if (face.textureCoordinates != null && face.textureCoordinates.length > 0) {
-                        tex = face.textureCoordinates[i];
+                        TextureCoordinate tex = face.textureCoordinates[i];
+                        u = tex.u;
+                        v = tex.v;
+                        w = tex.w;
                     }
 
-                    data.vertices++;
-                    vertexData.add(vert.x);
-                    vertexData.add(vert.y);
-                    vertexData.add(vert.z);
+                    probe.set(vert.x, vert.y, vert.z, u, v, w, normal.x, normal.y, normal.z);
+                    int idx = lookup.getInt(probe);
+                    if (idx < 0) {
+                        if (vertexCount >= MAX_INDEXED_VERTICES) {
+                            throw new IllegalStateException("Group '" + g.name + "' in model '" + obj.resource + "' exceeds 16-bit index capacity");
+                        }
+                        idx = vertexCount++;
+                        int dst = idx * FLOATS_PER_VERTEX;
+                        vertexData[dst] = vert.x;
+                        vertexData[dst + 1] = vert.y;
+                        vertexData[dst + 2] = vert.z;
+                        vertexData[dst + 3] = u;
+                        vertexData[dst + 4] = v;
+                        vertexData[dst + 5] = w;
+                        vertexData[dst + 6] = normal.x;
+                        vertexData[dst + 7] = normal.y;
+                        vertexData[dst + 8] = normal.z;
+                        lookup.put(probe.clone(), idx);
+                    }
+                    faceIdx[i] = idx;
+                }
 
-                    uvwData.add(tex.u);
-                    uvwData.add(tex.v);
-                    uvwData.add(tex.w);
-
-                    normalData.add(normal.x);
-                    normalData.add(normal.y);
-                    normalData.add(normal.z);
+                for (int i = 2; i < n; i++) {
+                    indices[indexCursor++] = (short) faceIdx[0];
+                    indices[indexCursor++] = (short) faceIdx[i - 1];
+                    indices[indexCursor++] = (short) faceIdx[i];
                 }
             }
-            float[] combinedData = new float[data.vertices * 9];
-            int dst = 0;
-            for (int i = 0; i < data.vertices; i++) {
-                combinedData[dst++] = vertexData.get(i * 3);
-                combinedData[dst++] = vertexData.get(i * 3 + 1);
-                combinedData[dst++] = vertexData.get(i * 3 + 2);
 
-                combinedData[dst++] = uvwData.get(i * 3);
-                combinedData[dst++] = uvwData.get(i * 3 + 1);
-                combinedData[dst++] = uvwData.get(i * 3 + 2);
+            int usedFloats = vertexCount * FLOATS_PER_VERTEX;
+            FloatBuffer vBuf = BufferUtils.createFloatBuffer(usedFloats);
+            vBuf.put(vertexData, 0, usedFloats);
+            vBuf.flip();
 
-                combinedData[dst++] = normalData.get(i * 3);
-                combinedData[dst++] = normalData.get(i * 3 + 1);
-                combinedData[dst++] = normalData.get(i * 3 + 2);
-            }
+            ByteBuffer iBuf = BufferUtils.createByteBuffer(indexCursor * Short.BYTES);
+            iBuf.asShortBuffer().put(indices, 0, indexCursor);
+            iBuf.limit(indexCursor * Short.BYTES);
 
+            data.vboHandle = GLCompat.genBuffers();
+            GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, data.vboHandle);
+            GLCompat.bufferData(GLCompat.GL_ARRAY_BUFFER, vBuf, GLCompat.GL_STATIC_DRAW);
+            GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, 0);
 
-            FloatBuffer buffer = BufferUtils.createFloatBuffer(combinedData.length);
-            buffer.put(combinedData);
-            buffer.flip();
+            data.eboHandle = GLCompat.genBuffers();
+            GLCompat.bindBuffer(GLCompat.GL_ELEMENT_ARRAY_BUFFER, data.eboHandle);
+            GLCompat.bufferData(GLCompat.GL_ELEMENT_ARRAY_BUFFER, iBuf, GLCompat.GL_STATIC_DRAW);
+            GLCompat.bindBuffer(GLCompat.GL_ELEMENT_ARRAY_BUFFER, 0);
 
-
-            data.vboHandle = glGenBuffers();
-            glBindBuffer(GL_ARRAY_BUFFER, data.vboHandle);
-            glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+            data.indexCount = indexCursor;
             groups.add(data);
         }
         allVBOs.add(this);
     }
 
     public void uploadModels() {
-
         for (VBOBufferData data : groups) {
             data.vaoHandle = GLCompat.genVertexArrays();
             GLCompat.bindVertexArray(data.vaoHandle);
 
-            glBindBuffer(GL_ARRAY_BUFFER, data.vboHandle);
+            GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, data.vboHandle);
+            GLCompat.bindBuffer(GLCompat.GL_ELEMENT_ARRAY_BUFFER, data.eboHandle);
 
             glVertexPointer(3, GL_FLOAT, STRIDE, 0L);
             glEnableClientState(GL_VERTEX_ARRAY);
@@ -113,7 +139,8 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
             glEnableClientState(GL_NORMAL_ARRAY);
 
             GLCompat.bindVertexArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, 0);
+            GLCompat.bindBuffer(GLCompat.GL_ELEMENT_ARRAY_BUFFER, 0);
         }
     }
 
@@ -122,10 +149,10 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     // so logically, if we want to get rid of this, we need to blow the data up
     // documentation on GL15 functions seems nonexistant so fuck it we ball i guess
     public void destroy() {
-        for(VBOBufferData data : groups) {
-            glDeleteBuffers(data.vboHandle);
-            glDeleteBuffers(data.vaoHandle);
-            glDeleteBuffers(data.vertices);
+        for (VBOBufferData data : groups) {
+            GLCompat.deleteBuffers(data.vboHandle);
+            GLCompat.deleteBuffers(data.eboHandle);
+            GLCompat.deleteVertexArray(data.vaoHandle);
         }
         groups.clear();
     }
@@ -135,16 +162,10 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         return "obj_vao";
     }
 
-    private void renderVAO(VBOBufferData data) {
-        GLCompat.bindVertexArray(data.vaoHandle);
-        GlStateManager.glDrawArrays(GL_TRIANGLES, 0, data.vertices);
-        GLCompat.bindVertexArray(0);
-    }
-
     @Override
     public void renderAll() {
         for (VBOBufferData data : groups) {
-            renderVAO(data);
+            data.render();
         }
     }
 
@@ -153,7 +174,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         for (VBOBufferData data : groups) {
             for (String name : groupNames) {
                 if (data.name.equalsIgnoreCase(name)) {
-                    renderVAO(data);
+                    data.render();
                 }
             }
         }
@@ -163,7 +184,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     public void renderPart(String partName) {
         for (VBOBufferData data : groups) {
             if (data.name.equalsIgnoreCase(partName)) {
-                renderVAO(data);
+                data.render();
             }
         }
     }
@@ -179,7 +200,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
                 }
             }
             if (!skip) {
-                renderVAO(data);
+                data.render();
             }
         }
     }
@@ -193,12 +214,63 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         return names;
     }
 
-    static class VBOBufferData {
+    static final class VBOBufferData {
         String name;
-        int vertices = 0;
+        int indexCount = 0;
         int vboHandle = -1;
+        int eboHandle = -1;
         int vaoHandle = -1;
+
+        void render() {
+            GLCompat.bindVertexArray(vaoHandle);
+            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0L);
+            GLCompat.bindVertexArray(0);
+        }
     }
 
+    @SuppressCheckedExceptions
+    private static final class VertexKey implements Cloneable {
+        int px, py, pz, u, v, w, nx, ny, nz;
+        int hash;
 
+        void set(float px, float py, float pz, float u, float v, float w, float nx, float ny, float nz) {
+            this.px = Float.floatToRawIntBits(px);
+            this.py = Float.floatToRawIntBits(py);
+            this.pz = Float.floatToRawIntBits(pz);
+            this.u = Float.floatToRawIntBits(u);
+            this.v = Float.floatToRawIntBits(v);
+            this.w = Float.floatToRawIntBits(w);
+            this.nx = Float.floatToRawIntBits(nx);
+            this.ny = Float.floatToRawIntBits(ny);
+            this.nz = Float.floatToRawIntBits(nz);
+            int h = 1;
+            h = 31 * h + this.px;
+            h = 31 * h + this.py;
+            h = 31 * h + this.pz;
+            h = 31 * h + this.u;
+            h = 31 * h + this.v;
+            h = 31 * h + this.w;
+            h = 31 * h + this.nx;
+            h = 31 * h + this.ny;
+            h = 31 * h + this.nz;
+            this.hash = h;
+        }
+
+        @Override
+        public VertexKey clone() {
+            return (VertexKey) super.clone();
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof VertexKey)) return false;
+            VertexKey k = (VertexKey) o;
+            return px == k.px && py == k.py && pz == k.pz && u == k.u && v == k.v && w == k.w && nx == k.nx && ny == k.ny && nz == k.nz;
+        }
+    }
 }

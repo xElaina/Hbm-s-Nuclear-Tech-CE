@@ -285,6 +285,7 @@ public class ResourceManager {
     //Trinkets
     public static final IModelCustom snowglobe = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/snowglobe.obj")).asVBO();
     public static final IModelCustom bobble = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/bobble.obj")).asVBO();
+    public static final IModelCustom bobble_leafia = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/leafia.obj")).asVBO();
     public static final IModelCustom plushie_yomi = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/yomi.obj")).asVBO();
     public static final IModelCustom plushie_hundun = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/hundun.obj")).asVBO();
     public static final IModelCustom plushie_derg = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/derg.obj")).asVBO();

@@ -8,7 +8,10 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
+import com.hbm.render.skinlayer.BobbleSkinModel;
+import com.hbm.render.skinlayer.MojangSkinLoader;
 import com.hbm.util.RenderUtil;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -22,6 +25,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Map;
+import java.util.UUID;
 
 @AutoRegister
 public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> implements IItemRendererProvider {
@@ -52,6 +58,9 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
     public static final ResourceLocation bobble_mellow_glow = new ResourceLocation(Tags.MODID, "textures/models/trinkets/mellowrpg8_glow.png");
     public static final ResourceLocation bobble_abel = new ResourceLocation(Tags.MODID, "textures/models/trinkets/abel.png");
     public static final ResourceLocation bobble_abel_glow = new ResourceLocation(Tags.MODID, "textures/models/trinkets/abel_glow.png");
+    public static final ResourceLocation bobble_leafia = new ResourceLocation(Tags.MODID, "textures/models/trinkets/leafia.png");
+
+    private final Map<UUID, BobbleSkinModel> skinModelCache = new Object2ObjectOpenHashMap<>();
 
     private long time;
 
@@ -76,52 +85,69 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
     }
 
     public void renderBobble(BobbleType type) {
-        boolean prevBlend = RenderUtil.isBlendEnabled();
-        int prevSrc = RenderUtil.getBlendSrcFactor();
-        int prevDst = RenderUtil.getBlendDstFactor();
-        int prevSrcAlpha = RenderUtil.getBlendSrcAlphaFactor();
-        int prevDstAlpha = RenderUtil.getBlendDstAlphaFactor();
-
+        //mlbv: somehow it is leaking shading state which i currently do not want to deal with; this fixes it for now
+        RenderUtil.pushAllAttribs();
         GlStateManager.enableLighting();
         GlStateManager.enableRescaleNormal();
 
         bindTexture(socket);
         ResourceManager.bobble.renderPart("Socket");
 
-        switch (type) {
-            case STRENGTH:
-            case PERCEPTION:
-            case ENDURANCE:
-            case CHARISMA:
-            case INTELLIGENCE:
-            case AGILITY:
-            case LUCK:
-                bindTexture(bobble_vaultboy); break;
-            case BOB: bindTexture(bobble_hbm); break;
-            case PU238: bindTexture(bobble_pu238); break;
-            case FRIZZLE: bindTexture(bobble_frizzle); break;
-            case VT: bindTexture(bobble_vt); break;
-            case DOC: bindTexture(bobble_doc); break;
-            case BLUEHAT: bindTexture(bobble_blue); break;
-            case PHEO: bindTexture(bobble_pheo); break;
-            case CIRNO: bindTexture(bobble_cirno); break;
-            case ADAM29: bindTexture(bobble_adam); break;
-            case UFFR: bindTexture(bobble_uffr); break;
-            case VAER: bindTexture(bobble_vaer); break;
-            case NOS: bindTexture(bobble_nos); break;
-            case DRILLGON: bindTexture(bobble_drillgon); break;
-            case MICROWAVE: bindTexture(bobble_microwave); break;
-            case PEEP: bindTexture(bobble_peep); break;
-            case MELLOW: bindTexture(bobble_mellow); break;
-            case ABEL: bindTexture(bobble_abel); break;
-            default: bindTexture(ResourceManager.universal);
-        }
+        if (type.skinUuid != null) {
+            MojangSkinLoader.Result result = MojangSkinLoader.get(type.skinUuid);
+            BobbleSkinModel model;
+            ResourceLocation tex;
+            if (result != null) {
+                model = skinModelCache.get(type.skinUuid);
+                if (model == null) {
+                    model = new BobbleSkinModel(result.image);
+                    skinModelCache.put(type.skinUuid, model);
+                }
+                tex = result.texture;
+            } else {
+                model = BobbleSkinModel.gray();
+                tex = BobbleSkinModel.grayTexture();
+            }
+            bindTexture(tex);
+            renderSkinGuy(type, model);
+        } else {
+            switch (type) {
+                case STRENGTH:
+                case PERCEPTION:
+                case ENDURANCE:
+                case CHARISMA:
+                case INTELLIGENCE:
+                case AGILITY:
+                case LUCK:
+                    bindTexture(bobble_vaultboy); break;
+                case BOB: bindTexture(bobble_hbm); break;
+                case PU238: bindTexture(bobble_pu238); break;
+                case FRIZZLE: bindTexture(bobble_frizzle); break;
+                case VT: bindTexture(bobble_vt); break;
+                case DOC: bindTexture(bobble_doc); break;
+                case BLUEHAT: bindTexture(bobble_blue); break;
+                case PHEO: bindTexture(bobble_pheo); break;
+                case CIRNO: bindTexture(bobble_cirno); break;
+                case ADAM29: bindTexture(bobble_adam); break;
+                case UFFR: bindTexture(bobble_uffr); break;
+                case VAER: bindTexture(bobble_vaer); break;
+                case NOS: bindTexture(bobble_nos); break;
+                case DRILLGON: bindTexture(bobble_drillgon); break;
+                case MICROWAVE: bindTexture(bobble_microwave); break;
+                case PEEP: bindTexture(bobble_peep); break;
+                case MELLOW: bindTexture(bobble_mellow); break;
+                case ABEL: bindTexture(bobble_abel); break;
+                case LEAFIA: bindTexture(bobble_leafia); break;
+                default: bindTexture(ResourceManager.universal);
+            }
 
-        switch (type) {
-            case PU238: renderPellet(type); break;
-            case UFFR: renderFumo(type); break;
-            case DRILLGON: renderDrillgon(type); break;
-            default: renderGuy(type);
+            switch (type) {
+                case PU238: renderPellet(type); break;
+                case UFFR: renderFumo(type); break;
+                case DRILLGON: renderDrillgon(type); break;
+                case LEAFIA: renderLeafia(type); break;
+                default: renderGuy(type);
+            }
         }
 
         GlStateManager.pushMatrix();
@@ -130,12 +156,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
         renderSocket(type);
 
-        GlStateManager.tryBlendFuncSeparate(prevSrc, prevDst, prevSrcAlpha, prevDstAlpha);
-        if (prevBlend) {
-            GlStateManager.enableBlend();
-        } else {
-            GlStateManager.disableBlend();
-        }
+        RenderUtil.popAttrib();
     }
 
     /* RENDER STANDARD PLAYER MODEL */
@@ -395,6 +416,18 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
     public void renderDrillgon(BobbleType type) {
         ResourceManager.bobble.renderPart("Drillgon");
+    }
+
+    public void renderLeafia(BobbleType type) {
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        ResourceManager.bobble_leafia.renderPart("thislooksbad");
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+    }
+
+    public void renderSkinGuy(BobbleType type, BobbleSkinModel model) {
+        resetFigurineRotation();
+        setupFigurineRotation(type);
+        model.render(time, rotLeftArm, rotRightArm, rotLeftLeg, rotRightLeg, rotBody, rotHead);
     }
 
     private final ResourceLocation shot_tex = new ResourceLocation(Tags.MODID + ":textures/models/ModelUboinik.png");
