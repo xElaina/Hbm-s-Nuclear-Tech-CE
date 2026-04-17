@@ -246,10 +246,14 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 
     public void nextMode(int index) {
         this.pattern.nextMode(world, inventory.getStackInSlot(index), index);
+        this.dataChanged();
+        this.markDirty();
     }
 
     public void initPattern(ItemStack stack, int index) {
         this.pattern.initPatternSmart(world, stack, index);
+        this.dataChanged();
+        this.markDirty();
     }
 
     @Override

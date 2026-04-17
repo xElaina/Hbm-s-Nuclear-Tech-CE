@@ -115,7 +115,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
         @Override
         public void onLoad() {
             super.onLoad();
-            if(!world.isRemote) isIndirectlyPowered = world.isBlockPowered(pos);
+            isIndirectlyPowered = world.isBlockPowered(pos);
         }
 
         @Override

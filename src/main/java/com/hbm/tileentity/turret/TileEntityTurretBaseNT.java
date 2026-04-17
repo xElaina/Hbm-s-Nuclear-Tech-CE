@@ -415,7 +415,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 			if(array == null)
 				return null;
 
-			return cachedWhitelist = Arrays.asList(array);
+			return cachedWhitelist = new ArrayList<>(Arrays.asList(array));
 		}
 
 		return null;
