@@ -3,12 +3,14 @@ package com.hbm.render.loader;
 import com.hbm.interfaces.SuppressCheckedExceptions;
 import com.hbm.render.GLCompat;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -21,6 +23,7 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     public static boolean uploaded = false;
 
     final List<VBOBufferData> groups = new ArrayList<>();
+    private final Object2ObjectOpenHashMap<String, VBOBufferData> groupsByName = new Object2ObjectOpenHashMap<>();
 
     public WaveFrontObjectVAO(HFRWavefrontObject obj) {
         if (uploaded) throw new UnsupportedOperationException(
@@ -117,8 +120,14 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
 
             data.indexCount = indexCursor;
             groups.add(data);
+            groupsByName.put(g.name.toLowerCase(Locale.ROOT), data);
         }
         allVBOs.add(this);
+    }
+
+    @SuppressWarnings("unused")
+    public GroupHandle resolve(String name) {
+        return groupsByName.get(name.toLowerCase(Locale.ROOT));
     }
 
     public void uploadModels() {
@@ -165,8 +174,9 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
     @Override
     public void renderAll() {
         for (VBOBufferData data : groups) {
-            data.render();
+            data.bindAndDraw();
         }
+        GroupHandle.unbind();
     }
 
     @Override
@@ -174,19 +184,21 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         for (VBOBufferData data : groups) {
             for (String name : groupNames) {
                 if (data.name.equalsIgnoreCase(name)) {
-                    data.render();
+                    data.bindAndDraw();
                 }
             }
         }
+        GroupHandle.unbind();
     }
 
     @Override
     public void renderPart(String partName) {
         for (VBOBufferData data : groups) {
             if (data.name.equalsIgnoreCase(partName)) {
-                data.render();
+                data.bindAndDraw();
             }
         }
+        GroupHandle.unbind();
     }
 
     @Override
@@ -200,9 +212,10 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
                 }
             }
             if (!skip) {
-                data.render();
+                data.bindAndDraw();
             }
         }
+        GroupHandle.unbind();
     }
 
     @Override
@@ -214,18 +227,10 @@ public class WaveFrontObjectVAO implements IModelCustomNamed {
         return names;
     }
 
-    static final class VBOBufferData {
+    static final class VBOBufferData extends GroupHandle {
         String name;
-        int indexCount = 0;
         int vboHandle = -1;
         int eboHandle = -1;
-        int vaoHandle = -1;
-
-        void render() {
-            GLCompat.bindVertexArray(vaoHandle);
-            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_SHORT, 0L);
-            GLCompat.bindVertexArray(0);
-        }
     }
 
     @SuppressCheckedExceptions

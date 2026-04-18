@@ -34,7 +34,16 @@ public abstract class MixinRenderPlayerManly extends RenderLivingBase<EntityLivi
     public abstract ModelPlayer getMainModel();
 
     @Unique
-    private final ModelMan hbm$manlyModel = new ModelMan();
+    private static ModelMan hbm$manlyModel;
+
+    @Unique
+    private static ModelMan hbm$manlyModel() {
+        ModelMan model = hbm$manlyModel;
+        if (model == null) {
+            model = hbm$manlyModel = new ModelMan();
+        }
+        return model;
+    }
 
     protected MixinRenderPlayerManly(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn) {
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
@@ -59,7 +68,7 @@ public abstract class MixinRenderPlayerManly extends RenderLivingBase<EntityLivi
             GlStateManager.enableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL);
         }
 
-        hbm$manlyModel.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+        hbm$manlyModel().render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
 
         if (translucent) {
             GlStateManager.disableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL);
@@ -101,7 +110,7 @@ public abstract class MixinRenderPlayerManly extends RenderLivingBase<EntityLivi
         modelPlayer.swingProgress = 0.0F;
         modelPlayer.isSneak = false;
         modelPlayer.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, clientPlayer);
-        hbm$manlyModel.renderRightArm(clientPlayer, 0.0625F);
+        hbm$manlyModel().renderRightArm(clientPlayer, 0.0625F);
         GlStateManager.disableBlend();
         ci.cancel();
     }
@@ -117,7 +126,7 @@ public abstract class MixinRenderPlayerManly extends RenderLivingBase<EntityLivi
         modelPlayer.swingProgress = 0.0F;
         modelPlayer.isSneak = false;
         modelPlayer.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, clientPlayer);
-        hbm$manlyModel.renderLeftArm(clientPlayer, 0.0625F);
+        hbm$manlyModel().renderLeftArm(clientPlayer, 0.0625F);
         GlStateManager.disableBlend();
         ci.cancel();
     }
