@@ -240,7 +240,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack) {
-        return stack != ItemStack.EMPTY && i == 0 && inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(2).isEmpty() && getOutput(stack) != ItemStack.EMPTY;
+        return !stack.isEmpty() && i == 0 && inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(2).isEmpty() && !getOutput(stack).isEmpty();
     }
 
     @Override
@@ -253,9 +253,25 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
         return new int[]{0, 1, 2};
     }
 
+    private ItemStack cachedInput = ItemStack.EMPTY;
+    private ItemStack cachedOutput = ItemStack.EMPTY;
+
     public ItemStack getOutput(ItemStack input) {
 
         if (input.isEmpty()) return ItemStack.EMPTY;
+
+        if (!cachedInput.isEmpty()
+                && ItemStack.areItemsEqual(cachedInput, input)
+                && ItemStack.areItemStackTagsEqual(cachedInput, input)) {
+            return cachedOutput.isEmpty() ? ItemStack.EMPTY : cachedOutput.copy();
+        }
+
+        cachedOutput = computeOutput(input);
+        cachedInput = input.copy();
+        return cachedOutput.isEmpty() ? ItemStack.EMPTY : cachedOutput.copy();
+    }
+
+    private ItemStack computeOutput(ItemStack input) {
 
         craftingInventory.setInventorySlotContents(0, input);
 
