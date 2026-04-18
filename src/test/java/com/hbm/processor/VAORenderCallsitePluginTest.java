@@ -4,6 +4,10 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.lang.classfile.Annotation;
+import java.lang.classfile.AnnotationElement;
+import java.lang.classfile.AnnotationValue;
+import java.lang.classfile.Attributes;
 import java.lang.classfile.ClassFile;
 import java.lang.classfile.ClassModel;
 import java.lang.classfile.FieldModel;
@@ -62,13 +66,29 @@ class VAORenderCallsitePluginTest {
         assertNotNull(finalHandle);
         assertTrue(finalHandle.flags().has(AccessFlag.PRIVATE));
         assertTrue(finalHandle.flags().has(AccessFlag.STATIC));
-        assertTrue(finalHandle.flags().has(AccessFlag.FINAL));
+        assertTrue(finalHandle.flags().has(AccessFlag.FINAL),
+                "synth handle should still be ACC_FINAL after the post-flow symbol flip");
+        assertTrue(hasSideOnlyAnnotation(finalHandle, "CLIENT"),
+                "synth handle should carry @SideOnly(Side.CLIENT) so Forge strips it on the dedicated server");
 
         List<Instruction> finalRun = instructions(findMethod(finalClass, "run", "()V"));
         assertTrue(hasFieldAccess(finalRun, Opcode.GETSTATIC, "testcases/UsesFinal", "$VAO_MODEL_Body"));
         assertTrue(hasInvoke(finalRun, Opcode.INVOKEVIRTUAL, "com/hbm/render/loader/GroupHandle", "render"));
         assertFalse(hasInvoke(finalRun, Opcode.INVOKEVIRTUAL, "com/hbm/render/loader/WaveFrontObjectVAO", "renderPart"));
         assertFalse(hasStringConstant(finalRun, "Body"));
+
+        List<Instruction> finalClinit = instructions(findMethod(finalClass, "<clinit>", "()V"));
+        assertTrue(hasInvoke(finalClinit, Opcode.INVOKESTATIC,
+                "net/minecraftforge/fml/common/FMLCommonHandler", "instance"));
+        assertTrue(hasInvoke(finalClinit, Opcode.INVOKEVIRTUAL,
+                "net/minecraftforge/fml/common/FMLCommonHandler", "getSide"));
+        assertTrue(hasFieldAccess(finalClinit, Opcode.GETSTATIC,
+                "net/minecraftforge/fml/relauncher/Side", "CLIENT"));
+        assertTrue(hasFieldAccess(finalClinit, Opcode.GETSTATIC, "testcases/FinalRegistry", "MODEL"));
+        assertTrue(hasInvoke(finalClinit, Opcode.INVOKEVIRTUAL,
+                "com/hbm/render/loader/WaveFrontObjectVAO", "resolve"));
+        assertTrue(hasFieldAccess(finalClinit, Opcode.PUTSTATIC, "testcases/UsesFinal", "$VAO_MODEL_Body"));
+        assertTrue(hasStringConstant(finalClinit, "Body"));
 
         LinkedHashMap<String, String> mutableSources = baseSources();
         mutableSources.put("testcases.MutableRegistry", """
@@ -215,6 +235,10 @@ class VAORenderCallsitePluginTest {
         assertNotNull(handle);
 
         List<Instruction> clinit = instructions(findMethod(classModel, "<clinit>", "()V"));
+        assertTrue(hasInvoke(clinit, Opcode.INVOKESTATIC,
+                "net/minecraftforge/fml/common/FMLCommonHandler", "instance"));
+        assertTrue(hasFieldAccess(clinit, Opcode.GETSTATIC,
+                "net/minecraftforge/fml/relauncher/Side", "CLIENT"));
         assertTrue(hasFieldAccess(clinit, Opcode.GETSTATIC, "alpha/ModelRegistry", "MODEL"));
         assertFalse(hasFieldAccess(clinit, Opcode.GETSTATIC, "beta/ModelRegistry", "MODEL"));
         assertTrue(hasInvoke(clinit, Opcode.INVOKEVIRTUAL, "com/hbm/render/loader/WaveFrontObjectVAO", "resolve"));
@@ -274,6 +298,36 @@ class VAORenderCallsitePluginTest {
 
                     public WaveFrontObjectVAO asVBO() {
                         return new WaveFrontObjectVAO();
+                    }
+                }
+                """);
+        sources.put("net.minecraftforge.fml.relauncher.Side", """
+                package net.minecraftforge.fml.relauncher;
+
+                public enum Side {
+                    CLIENT, SERVER
+                }
+                """);
+        sources.put("net.minecraftforge.fml.relauncher.SideOnly", """
+                package net.minecraftforge.fml.relauncher;
+
+                @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+                public @interface SideOnly {
+                    Side value();
+                }
+                """);
+        sources.put("net.minecraftforge.fml.common.FMLCommonHandler", """
+                package net.minecraftforge.fml.common;
+
+                import net.minecraftforge.fml.relauncher.Side;
+
+                public class FMLCommonHandler {
+                    private static final FMLCommonHandler INSTANCE = new FMLCommonHandler();
+                    public static FMLCommonHandler instance() {
+                        return INSTANCE;
+                    }
+                    public Side getSide() {
+                        return Side.SERVER;
                     }
                 }
                 """);
@@ -403,6 +457,21 @@ class VAORenderCallsitePluginTest {
         for (Instruction instruction : instructions) {
             if (!(instruction instanceof ConstantInstruction constantInstruction)) continue;
             if (value.equals(constantInstruction.constantValue())) return true;
+        }
+        return false;
+    }
+
+    private static boolean hasSideOnlyAnnotation(FieldModel field, String sideConstantName) {
+        var attr = field.findAttribute(Attributes.runtimeVisibleAnnotations());
+        if (attr.isEmpty()) return false;
+        for (Annotation annotation : attr.get().annotations()) {
+            if (!annotation.className().equalsString("Lnet/minecraftforge/fml/relauncher/SideOnly;")) continue;
+            for (AnnotationElement element : annotation.elements()) {
+                if (!element.name().equalsString("value")) continue;
+                if (!(element.value() instanceof AnnotationValue.OfEnum enumValue)) continue;
+                if (!enumValue.className().equalsString("Lnet/minecraftforge/fml/relauncher/Side;")) continue;
+                if (enumValue.constantName().equalsString(sideConstantName)) return true;
+            }
         }
         return false;
     }

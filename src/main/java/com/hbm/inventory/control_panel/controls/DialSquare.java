@@ -114,6 +114,7 @@ public class DialSquare extends Control {
 
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IModelCustom getModel() {
         return ResourceManager.ctrl_dial_square;
     }

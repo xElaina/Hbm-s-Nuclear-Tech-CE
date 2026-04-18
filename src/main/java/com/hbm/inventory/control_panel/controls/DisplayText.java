@@ -151,6 +151,7 @@ public class DisplayText extends Control {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IModelCustom getModel() {
         return ResourceManager.ctrl_display_seven_seg;
     }

@@ -2,13 +2,9 @@ package com.hbm.blocks.machine.rbmk;
 
 import com.hbm.api.block.IToolable;
 import com.hbm.main.MainRegistry;
-import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKKeyPad;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,8 +12,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RBMKKeyPad extends RBMKMiniPanelBase implements IToolable {
 
@@ -63,7 +57,7 @@ public class RBMKKeyPad extends RBMKMiniPanelBase implements IToolable {
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	public void renderInventoryBlock(Block block, int meta, int modelId) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, -0.5, 0);
@@ -84,5 +78,5 @@ public class RBMKKeyPad extends RBMKMiniPanelBase implements IToolable {
 
 		GlStateManager.color(1F, 1F, 1F);
 		GlStateManager.popMatrix();
-	}
+	}*/
 }

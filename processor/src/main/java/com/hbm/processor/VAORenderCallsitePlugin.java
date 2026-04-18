@@ -55,6 +55,9 @@ public final class VAORenderCallsitePlugin implements Plugin {
     private static final String HFR_TYPE_SIMPLE = "HFRWavefrontObject";
     private static final String RL_TYPE_SIMPLE = "ResourceLocation";
     private static final String HANDLE_FQN = "com.hbm.render.loader.GroupHandle";
+    private static final String SIDE_ONLY_FQN = "net.minecraftforge.fml.relauncher.SideOnly";
+    private static final String SIDE_FQN = "net.minecraftforge.fml.relauncher.Side";
+    private static final String FML_COMMON_HANDLER_FQN = "net.minecraftforge.fml.common.FMLCommonHandler";
 
     private static final String METHOD_RENDER_PART = "renderPart";
     private static final String METHOD_RENDER_ONLY = "renderOnly";
@@ -63,6 +66,7 @@ public final class VAORenderCallsitePlugin implements Plugin {
     private final ArrayList<JCCompilationUnit> units = new ArrayList<>(1024);
     private final Map<String, LinkedHashMap<String, String>> objPathsByOwner = new HashMap<>(256);
     private final Map<String, LinkedHashSet<String>> groupsByObjPath = new HashMap<>(128);
+    private final Map<JCClassDecl, ArrayList<JCVariableDecl>> synthDeclsByHost = new IdentityHashMap<>();
 
     private Path resourceRoot;
 
@@ -101,6 +105,8 @@ public final class VAORenderCallsitePlugin implements Plugin {
                 if (e.getKind() == TaskEvent.Kind.ENTER && !transformed) {
                     transformed = true;
                     transform(treeMaker, names, log);
+                } else if (e.getKind() == TaskEvent.Kind.GENERATE) {
+                    promoteSynthFieldsToFinal(e);
                 }
             }
         });
@@ -257,9 +263,13 @@ public final class VAORenderCallsitePlugin implements Plugin {
         // Append synthesized fields + methods to each host class.
         for (var entry : fieldsByHost.entrySet()) {
             JCClassDecl host = entry.getKey();
+            ArrayList<JCVariableDecl> tracked = synthDeclsByHost.computeIfAbsent(host, k -> new ArrayList<>());
             for (SynthField sf : entry.getValue().values()) {
-                host.defs = host.defs.append(buildHandleDecl(m, n, sf));
+                JCVariableDecl decl = buildHandleDecl(m, n, sf);
+                tracked.add(decl);
+                host.defs = host.defs.append(decl);
             }
+            host.defs = host.defs.append(buildClientSideInitBlock(m, n, entry.getValue().values()));
         }
         for (var entry : methodsByHost.entrySet()) {
             JCClassDecl host = entry.getKey();
@@ -431,16 +441,84 @@ public final class VAORenderCallsitePlugin implements Plugin {
         throw pluginFailure("ambiguous star-import owner '" + ownerText + "' while resolving VAO receiver");
     }
 
-    /** {@code private static final GroupHandle $VAO_field_group = ReceiverClass.field.resolve("group");} */
+    /**
+     * {@code @SideOnly(Side.CLIENT) private static GroupHandle $VAO_field_group;}
+     * <p>
+     * Declared without an initializer so {@code <clinit>} contains no {@code PUTSTATIC} to this
+     * field outside the client-guarded block built by {@link #buildClientSideInitBlock}; Forge
+     * strips {@code @SideOnly(Side.CLIENT)} members on the dedicated server, and an unguarded
+     * {@code PUTSTATIC} to a stripped field would throw {@link NoSuchFieldError} during class
+     * init.
+     * <p>
+     * {@link Flags#FINAL} is intentionally absent from the tree modifiers so javac's Flow pass
+     * does not enforce blank-final definite-assignment on the conditional write. The flag is
+     * OR'd onto the {@code VarSymbol} before code generation by {@link #promoteSynthFieldsToFinal},
+     * so the emitted classfile still carries {@code ACC_FINAL} and lets the JIT constant-fold
+     * reads once {@code <clinit>} has completed.
+     */
     private JCVariableDecl buildHandleDecl(TreeMaker m, Names n, SynthField sf) {
         JCExpression handleType = qualIdent(m, n, HANDLE_FQN);
-        JCExpression receiver = m.Select(qualIdent(m, n, sf.receiverOwner), n.fromString(sf.receiverField));
-        JCExpression init = m.Apply(
+        JCAnnotation sideOnly = m.Annotation(
+                qualIdent(m, n, SIDE_ONLY_FQN),
+                List.of(m.Select(qualIdent(m, n, SIDE_FQN), n.fromString("CLIENT"))));
+        JCModifiers mods = m.Modifiers(Flags.PRIVATE | Flags.STATIC, List.of(sideOnly));
+        return m.VarDef(mods, n.fromString(sf.fieldName), handleType, null);
+    }
+
+    /**
+     * Stamps {@link Flags#FINAL} onto each tracked synth field's {@code VarSymbol} right before
+     * its declaring class goes through code generation. At this point Flow has already accepted
+     * the non-final declaration (so blank-final DA never fired), but {@code Gen} has not yet
+     * read the symbol's flags into the classfile, so the ACC_FINAL bit still lands in bytecode.
+     */
+    private void promoteSynthFieldsToFinal(TaskEvent e) {
+        Object target = e.getTypeElement();
+        if (target == null) return;
+        for (var entry : synthDeclsByHost.entrySet()) {
+            if (entry.getKey().sym != target) continue;
+            for (JCVariableDecl decl : entry.getValue()) {
+                if (decl.sym != null) decl.sym.flags_field |= Flags.FINAL;
+            }
+            return;
+        }
+    }
+
+    /**
+     * <pre>
+     * static {
+     *     if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+     *         $VAO_foo = Owner.field.resolve("foo");
+     *         ...
+     *     }
+     * }
+     * </pre>
+     * The guarded {@code PUTSTATIC}s never execute on the dedicated server, so field stripping
+     * does not trigger {@link NoSuchFieldError}.
+     */
+    private JCBlock buildClientSideInitBlock(TreeMaker m, Names n, Iterable<SynthField> fields) {
+        JCExpression fmlInstance = m.Apply(
                 List.nil(),
-                m.Select(receiver, n.fromString("resolve")),
-                List.of(m.Literal(sf.literal)));
-        JCModifiers mods = m.Modifiers(Flags.PRIVATE | Flags.STATIC | Flags.FINAL);
-        return m.VarDef(mods, n.fromString(sf.fieldName), handleType, init);
+                m.Select(qualIdent(m, n, FML_COMMON_HANDLER_FQN), n.fromString("instance")),
+                List.nil());
+        JCExpression currentSide = m.Apply(
+                List.nil(),
+                m.Select(fmlInstance, n.fromString("getSide")),
+                List.nil());
+        JCExpression sideClient = m.Select(qualIdent(m, n, SIDE_FQN), n.fromString("CLIENT"));
+        JCExpression isClient = m.Binary(JCTree.Tag.EQ, currentSide, sideClient);
+
+        ListBuffer<JCStatement> thenStmts = new ListBuffer<>();
+        for (SynthField sf : fields) {
+            JCExpression receiver = m.Select(qualIdent(m, n, sf.receiverOwner), n.fromString(sf.receiverField));
+            JCExpression resolveCall = m.Apply(
+                    List.nil(),
+                    m.Select(receiver, n.fromString("resolve")),
+                    List.of(m.Literal(sf.literal)));
+            thenStmts.append(m.Exec(m.Assign(m.Ident(n.fromString(sf.fieldName)), resolveCall)));
+        }
+        JCBlock thenBlock = m.Block(0L, thenStmts.toList());
+        JCStatement ifStmt = m.If(isClient, thenBlock, null);
+        return m.Block(Flags.STATIC, List.of(ifStmt));
     }
 
     /**
