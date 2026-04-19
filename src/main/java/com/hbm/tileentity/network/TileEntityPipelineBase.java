@@ -7,8 +7,6 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.uninos.UniNodespace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -154,22 +152,6 @@ public abstract class TileEntityPipelineBase extends TileEntityPipeBaseNT {
         for(int i = 0; i < count; i++) {
             connected.add(nbt.getIntArray("con" + i));
         }
-    }
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        writeToNBT(nbt);
-        return new SPacketUpdateTileEntity(pos, 0, nbt);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.getNbtCompound());
-        if (world != null) {
-            world.markBlockRangeForRenderUpdate(pos, pos);
-        }
-        this.lastType = this.type;
     }
 
     public enum ConnectionType {

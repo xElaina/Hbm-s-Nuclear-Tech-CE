@@ -14,6 +14,7 @@ import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartSize;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -22,6 +23,7 @@ import com.hbm.main.ModContext;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEMissileMultipartPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
@@ -53,7 +55,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityLaunchTable extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IBufPacketReceiver, IFluidStandardReceiver, SimpleComponent, IGUIProvider {
+public class TileEntityLaunchTable extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IBufPacketReceiver, IFluidStandardReceiver, SimpleComponent, IGUIProvider, IConnectionAnchors {
 
     public static final long maxPower = 100000;
     public static final int maxSolid = 100000;
@@ -76,8 +78,8 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
     public TileEntityLaunchTable() {
         super(8, true, true);
         tanks = new FluidTankNTM[2];
-        tanks[0] = new FluidTankNTM(Fluids.NONE, 100000);
-        tanks[1] = new FluidTankNTM(Fluids.NONE, 100000);
+        tanks[0] = new FluidTankNTM(Fluids.NONE, 100000).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.NONE, 100000).withOwner(this);
         padSize = PartSize.SIZE_10;
     }
 
@@ -186,6 +188,19 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
         clearingTimer = buf.readInt();
         tanks[0].deserialize(buf);
         tanks[1].deserialize(buf);
+    }
+
+    @Override
+    public DirPos[] getConPos() {
+        DirPos[] result = new DirPos[9 * 4];
+        int idx = 0;
+        for (int i = -4; i <= 4; i++) {
+            result[idx++] = new DirPos(pos.getX() + 5, pos.getY(), pos.getZ() + i, ForgeDirection.EAST);
+            result[idx++] = new DirPos(pos.getX() - 5, pos.getY(), pos.getZ() + i, ForgeDirection.WEST);
+            result[idx++] = new DirPos(pos.getX() + i, pos.getY(), pos.getZ() + 5, ForgeDirection.SOUTH);
+            result[idx++] = new DirPos(pos.getX() + i, pos.getY(), pos.getZ() - 5, ForgeDirection.NORTH);
+        }
+        return result;
     }
 
     private void updateConnections() {

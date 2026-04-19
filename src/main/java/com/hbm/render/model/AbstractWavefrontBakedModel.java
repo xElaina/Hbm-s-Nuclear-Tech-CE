@@ -34,7 +34,13 @@ public abstract class AbstractWavefrontBakedModel extends AbstractBakedModel {
 
     protected AbstractWavefrontBakedModel(HFRWavefrontObject model, VertexFormat format, float baseScale, float tx,
                                           float ty, float tz, ItemCameraTransforms transforms) {
-        super(false, true, false, transforms, ItemOverrideList.NONE);
+        this(false, model, format, baseScale, tx, ty, tz, transforms);
+    }
+
+    protected AbstractWavefrontBakedModel(boolean ambientOcclusion, HFRWavefrontObject model, VertexFormat format,
+                                          float baseScale, float tx, float ty, float tz,
+                                          ItemCameraTransforms transforms) {
+        super(ambientOcclusion, true, false, transforms, ItemOverrideList.NONE);
         this.model = model;
         this.format = format;
         this.baseScale = baseScale;

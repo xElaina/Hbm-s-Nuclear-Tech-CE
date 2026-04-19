@@ -26,13 +26,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,9 +57,56 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     public FluidTankNTM compair;
     protected PneumaticNode node;
 
+    private byte cachedConnMask;
+    private byte cachedConnectorMask;
+    private boolean cachedMasksValid;
+
     public TileEntityPneumoTube() {
         super(15);
-        this.compair = new FluidTankNTM(Fluids.AIR, 4_000).withPressure(1);
+        this.compair = new FluidTankNTM(Fluids.AIR, 4_000).withOwner(this).withPressure(1);
+    }
+
+    public byte getCachedConnMask(IBlockAccess access) {
+        ensureMasks(access);
+        return this.cachedConnMask;
+    }
+
+    public byte getCachedConnectorMask(IBlockAccess access) {
+        ensureMasks(access);
+        return this.cachedConnectorMask;
+    }
+
+    public void invalidateConnectionCache() {
+        this.cachedMasksValid = false;
+    }
+
+    private void ensureMasks(IBlockAccess access) {
+        if (world.isRemote || !this.cachedMasksValid) {
+            recomputeMasks(access);
+            if (!world.isRemote) this.cachedMasksValid = true;
+        }
+    }
+
+    private void recomputeMasks(IBlockAccess access) {
+        byte conn = 0;
+        byte connector = 0;
+        boolean compressor = this.isCompressor();
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            int bit = 1 << dir.ordinal();
+            int ax = pos.getX() + dir.offsetX;
+            int ay = pos.getY() + dir.offsetY;
+            int az = pos.getZ() + dir.offsetZ;
+            BlockPos adj = new BlockPos(ax, ay, az);
+            TileEntity tile = access.getTileEntity(adj);
+            if (tile instanceof TileEntityPneumoTube) {
+                conn |= (byte) bit;
+            } else if (compressor && this.insertionDir != dir && this.ejectionDir != dir
+                    && Library.canConnectFluid(access, ax, ay, az, dir, Fluids.AIR)) {
+                connector |= (byte) bit;
+            }
+        }
+        this.cachedConnMask = conn;
+        this.cachedConnectorMask = connector;
     }
 
     @Override
@@ -244,6 +290,20 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
         compair.deserialize(buf);
     }
 
+    @Override
+    public void serializeInitial(ByteBuf buf) {
+        super.serializeInitial(buf);
+        buf.writeByte(insertionDir.ordinal());
+        buf.writeByte(ejectionDir.ordinal());
+    }
+
+    @Override
+    public void deserializeInitial(ByteBuf buf) {
+        super.deserializeInitial(buf);
+        this.insertionDir = EnumUtil.grabEnumSafely(ForgeDirection.VALUES, buf.readByte());
+        this.ejectionDir = EnumUtil.grabEnumSafely(ForgeDirection.VALUES, buf.readByte());
+    }
+
     public void nextMode(int index) {
         this.pattern.nextMode(world, inventory.getStackInSlot(index), index);
         this.dataChanged();
@@ -254,38 +314,6 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
         this.pattern.initPatternSmart(world, stack, index);
         this.dataChanged();
         this.markDirty();
-    }
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setByte("insertionDir", (byte) insertionDir.ordinal());
-        nbt.setByte("ejectionDir", (byte) ejectionDir.ordinal());
-        return new SPacketUpdateTileEntity(this.pos, 0, nbt);
-    }
-
-    @Override
-    public void onDataPacket(@NotNull NetworkManager net, SPacketUpdateTileEntity pkt) {
-        NBTTagCompound nbt = pkt.getNbtCompound();
-        this.insertionDir = EnumUtil.grabEnumSafely(ForgeDirection.VALUES, nbt.getByte("insertionDir"));
-        this.ejectionDir = EnumUtil.grabEnumSafely(ForgeDirection.VALUES, nbt.getByte("ejectionDir"));
-        world.markBlockRangeForRenderUpdate(pos, pos);
-    }
-
-    @Override
-    public @NotNull NBTTagCompound getUpdateTag() {
-        NBTTagCompound nbt = super.getUpdateTag();
-        nbt.setByte("insertionDir", (byte) insertionDir.ordinal());
-        nbt.setByte("ejectionDir", (byte) ejectionDir.ordinal());
-        return nbt;
-    }
-
-    @Override
-    public void handleUpdateTag(@NotNull NBTTagCompound nbt) {
-        super.handleUpdateTag(nbt);
-        this.insertionDir = EnumUtil.grabEnumSafely(ForgeDirection.VALUES, nbt.getByte("insertionDir"));
-        this.ejectionDir = EnumUtil.grabEnumSafely(ForgeDirection.VALUES, nbt.getByte("ejectionDir"));
-        world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     @Override

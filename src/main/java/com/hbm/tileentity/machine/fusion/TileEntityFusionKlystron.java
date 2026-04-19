@@ -14,6 +14,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.uninos.UniNodespace;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 @AutoRegister
-public class TileEntityFusionKlystron extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider {
+public class TileEntityFusionKlystron extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider, IConnectionAnchors {
 
     protected KlystronNetwork.KlystronNode klystronNode;
     public static final long MAX_OUTPUT = 1_000_000;
@@ -60,7 +61,7 @@ public class TileEntityFusionKlystron extends TileEntityMachineBase implements I
     public TileEntityFusionKlystron() {
         super(1, true, true);
 
-        compair = new FluidTankNTM(Fluids.AIR, AIR_CONSUMPTION * 60);
+        compair = new FluidTankNTM(Fluids.AIR, AIR_CONSUMPTION * 60).withOwner(this);
     }
 
     @Override

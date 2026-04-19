@@ -18,6 +18,7 @@ import com.hbm.inventory.gui.GUIRBMKOutgasser;
 import com.hbm.inventory.recipes.OutgasserRecipes;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.RBMKColumn.ColumnType;
 import com.hbm.util.ContaminationUtil;
@@ -44,7 +45,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, SimpleComponent, CompatHandler.OCComponent, IRBMKLoadable, IGUIProvider {
+public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, SimpleComponent, CompatHandler.OCComponent, IRBMKLoadable, IGUIProvider, IConnectionAnchors {
 
 	public FluidTankNTM gas;
 	public double progress = 0;
@@ -55,7 +56,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 
 	public TileEntityRBMKOutgasser() {
 		super(2);
-		gas = new FluidTankNTM(Fluids.TRITIUM, 64000);
+		gas = new FluidTankNTM(Fluids.TRITIUM, 64000).withOwner(this);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 				this.progress = 0;
 			}
 
-			for(DirPos pos : getOutputPos()) {
+			for(DirPos pos : getConPos()) {
 				if(this.gas.getFill() > 0) this.sendFluid(gas, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 			}
 			previousStack = inventory.getStackInSlot(0).copy();
@@ -84,7 +85,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		super.update();
 	}
 
-	protected DirPos[] getOutputPos() {
+	public DirPos[] getConPos() {
 
 		if(world.getBlockState(pos.add(0, -1, 0)).getBlock() == ModBlocks.rbmk_loader) {
 			return new DirPos[] {

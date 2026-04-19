@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Queue;
 
-public abstract class TileEntityOilDrillBase extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver, IConfigurableMachine, IPersistentNBT, IGUIProvider, IFluidCopiable, IUpgradeInfoProvider {
+public abstract class TileEntityOilDrillBase extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver, IConfigurableMachine, IPersistentNBT, IGUIProvider, IFluidCopiable, IUpgradeInfoProvider, IConnectionAnchors {
     private final UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
     public long power;
     public int indicator = 0;
@@ -58,8 +58,8 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
         };
 
         tanks = new FluidTankNTM[2];
-        tanks[0] = new FluidTankNTM(Fluids.OIL, 64_000);
-        tanks[1] = new FluidTankNTM(Fluids.GAS, 64_000);
+        tanks[0] = new FluidTankNTM(Fluids.OIL, 64_000).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.GAS, 64_000).withOwner(this);
     }
 
     @Override

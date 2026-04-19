@@ -63,8 +63,8 @@ public class TileEntityMachineIndustrialTurbine extends TileEntityTurbineBase im
 
     public TileEntityMachineIndustrialTurbine() {
         tanks = new FluidTankNTM[2];
-        tanks[0] = new FluidTankNTM(Fluids.STEAM, inputTankSize);
-        tanks[1] = new FluidTankNTM(Fluids.SPENTSTEAM, outputTankSize);
+        tanks[0] = new FluidTankNTM(Fluids.STEAM, inputTankSize).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.SPENTSTEAM, outputTankSize).withOwner(this);
 
         Random rand = new Random();
         audioDesync = rand.nextFloat() * 0.05F;

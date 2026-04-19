@@ -28,9 +28,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -42,6 +41,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
@@ -324,30 +324,21 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
             return nbt;
         }
 
+        // insertionDir/ejectionDir ride TileEntityPneumoTube's own serializeInitial; we only add paint.
         @Override
-        public SPacketUpdateTileEntity getUpdatePacket() {
-            NBTTagCompound nbt = new NBTTagCompound();
-            this.writeToNBT(nbt);
-            nbt.setInteger("insertionDir", this.insertionDir != ForgeDirection.UNKNOWN ? this.insertionDir.ordinal() : -1);
-            nbt.setInteger("ejectionDir", this.ejectionDir != ForgeDirection.UNKNOWN ? this.ejectionDir.ordinal() : -1);
-            return new SPacketUpdateTileEntity(this.pos, 0, nbt);
+        public void serializeInitial(ByteBuf buf) {
+            super.serializeInitial(buf);
+            ResourceLocation key = block != null ? ForgeRegistries.BLOCKS.getKey(block) : null;
+            ByteBufUtils.writeUTF8String(buf, key != null ? key.toString() : "");
+            buf.writeInt(meta);
         }
 
         @Override
-        public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-            NBTTagCompound nbt = pkt.getNbtCompound();
-            this.readFromNBT(nbt);
-            int insertion = nbt.getInteger("insertionDir");
-            int ejection = nbt.getInteger("ejectionDir");
-            this.insertionDir = insertion >= 0 ? ForgeDirection.getOrientation(insertion) : ForgeDirection.UNKNOWN;
-            this.ejectionDir = ejection >= 0 ? ForgeDirection.getOrientation(ejection) : ForgeDirection.UNKNOWN;
-        }
-
-        @Override
-        public NBTTagCompound getUpdateTag() {
-            NBTTagCompound nbt = super.getUpdateTag();
-            this.writeToNBT(nbt);
-            return nbt;
+        public void deserializeInitial(ByteBuf buf) {
+            super.deserializeInitial(buf);
+            String id = ByteBufUtils.readUTF8String(buf);
+            this.block = id.isEmpty() ? null : ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
+            this.meta = buf.readInt();
         }
 
         @Override

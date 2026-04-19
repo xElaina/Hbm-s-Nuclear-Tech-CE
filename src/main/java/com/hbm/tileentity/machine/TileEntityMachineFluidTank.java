@@ -67,7 +67,7 @@ import java.util.*;
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")
 @AutoRegister
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements SimpleComponent, CompatHandler.OCComponent, ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFluidCopiable, IClimbable, IRORValueProvider, IRORInteractive {
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements SimpleComponent, CompatHandler.OCComponent, ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFluidCopiable, IClimbable, IRORValueProvider, IRORInteractive, IConnectionAnchors {
     private AxisAlignedBB bb;
     protected FluidNode node;
     protected FluidType lastType;
@@ -87,7 +87,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
     public TileEntityMachineFluidTank() {
         super(6, true, false);
-        tank = new FluidTankNTM(Fluids.NONE, 256000);
+        tank = new FluidTankNTM(Fluids.NONE, 256000).withOwner(this);
     }
 
     public String getDefaultName() {
@@ -384,7 +384,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
         }
     }
 
-    protected DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         return new DirPos[]{new DirPos(pos.getX() + 2, pos.getY(), pos.getZ() - 1, Library.POS_X), new DirPos(pos.getX() + 2, pos.getY(), pos.getZ() + 1, Library.POS_X), new DirPos(pos.getX() - 2, pos.getY(), pos.getZ() - 1, Library.NEG_X), new DirPos(pos.getX() - 2, pos.getY(), pos.getZ() + 1, Library.NEG_X), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ() + 2, Library.POS_Z), new DirPos(pos.getX() + 1, pos.getY(), pos.getZ() + 2, Library.POS_Z), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z), new DirPos(pos.getX() + 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z)};
     }
 

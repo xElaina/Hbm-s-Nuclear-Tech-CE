@@ -3,6 +3,7 @@ package com.hbm.explosion;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.config.CompatibilityConfig;
+import com.hbm.entity.particle.EntityModFXShadow;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.threading.PacketThreading;
@@ -276,21 +277,31 @@ public class ExplosionChaos {
 
 	public static void spawnChlorine(World world, double x, double y, double z, int count, double speed, int type) {
         if(!CompatibilityConfig.isWarDim(world)) return;
+        EntityModFXShadow.Type shadowType = switch (type) {
+            case 0 -> EntityModFXShadow.Type.CHLORINE;
+            case 1 -> EntityModFXShadow.Type.CLOUD;
+            case 2 -> EntityModFXShadow.Type.PINK_CLOUD;
+            default -> EntityModFXShadow.Type.ORANGE;
+        };
+        String particleType = switch (type) {
+            case 0 -> "chlorinefx";
+            case 1 -> "cloudfx";
+            case 2 -> "pinkcloudfx";
+            default -> "orangefx";
+        };
         for(int i = 0; i < count; i++) {
+            double mx = rand.nextGaussian() * speed;
+            double my = rand.nextGaussian() * speed;
+            double mz = rand.nextGaussian() * speed;
+
             NBTTagCompound data = new NBTTagCompound();
-            data.setDouble("moX", rand.nextGaussian() * speed);
-            data.setDouble("moY", rand.nextGaussian() * speed);
-            data.setDouble("moZ", rand.nextGaussian() * speed);
-            
-            String particleType = switch (type) {
-                case 0 -> "chlorinefx";
-                case 1 -> "cloudfx";
-                case 2 -> "pinkcloudfx";
-                default -> "orangefx";
-            };
-            
+            data.setDouble("moX", mx);
+            data.setDouble("moY", my);
+            data.setDouble("moZ", mz);
             data.setString("type", particleType);
             PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
+
+            EntityModFXShadow.spawn(world, shadowType, x, y, z, mx, my, mz);
         }
     }
 	
@@ -714,14 +725,18 @@ public class ExplosionChaos {
 			return;
 		}
 		for(int i = 0; i < count; i++) {
+			double mx = rand.nextGaussian() * speed;
+			double my = rand.nextGaussian() * speed * 7.5D;
+			double mz = rand.nextGaussian() * speed;
 
 			NBTTagCompound data = new NBTTagCompound();
-			data.setDouble("moX", rand.nextGaussian() * speed);
-			data.setDouble("moY", rand.nextGaussian() * speed * 7.5D);
-			data.setDouble("moZ", rand.nextGaussian() * speed);
-
+			data.setDouble("moX", mx);
+			data.setDouble("moY", my);
+			data.setDouble("moZ", mz);
 			data.setString("type", "orangefx");
 			PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 50));
+
+			EntityModFXShadow.spawn(world, EntityModFXShadow.Type.ORANGE, x, y, z, mx, my, mz);
 		}
 	}
 

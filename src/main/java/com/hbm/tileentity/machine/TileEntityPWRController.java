@@ -17,10 +17,12 @@ import com.hbm.inventory.fluid.trait.FT_Heatable.HeatingType;
 import com.hbm.inventory.fluid.trait.FT_PWRModerator;
 import com.hbm.inventory.gui.GUIPWR;
 import com.hbm.items.ModItems;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.EnumUtil;
@@ -56,7 +58,7 @@ import static com.hbm.items.machine.ItemPWRFuel.EnumPWRFuel;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityPWRController extends TileEntityMachineBase implements ITickable, IGUIProvider, IControlReceiver, SimpleComponent, IFluidStandardTransceiver, IRORValueProvider, IRORInteractive, CompatHandler.OCComponent {
+public class TileEntityPWRController extends TileEntityMachineBase implements ITickable, IGUIProvider, IControlReceiver, SimpleComponent, IFluidStandardTransceiver, IRORValueProvider, IRORInteractive, CompatHandler.OCComponent, IConnectionAnchors {
 
     public static final long coreHeatCapacityBase = 10_000_000;
     public static final long hullHeatCapacityBase = 10_000_000;
@@ -92,8 +94,8 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
         super(3, true, false);
 
         this.tanks = new FluidTankNTM[2];
-        this.tanks[0] = new FluidTankNTM(Fluids.COOLANT, 128_000);
-        this.tanks[1] = new FluidTankNTM(Fluids.COOLANT_HOT, 128_000);
+        this.tanks[0] = new FluidTankNTM(Fluids.COOLANT, 128_000).withOwner(this);
+        this.tanks[1] = new FluidTankNTM(Fluids.COOLANT_HOT, 128_000).withOwner(this);
     }
 
     /**
@@ -297,6 +299,20 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
                 }
             }
         }
+    }
+
+    @Override
+    public DirPos[] getConPos() {
+        if (!this.assembled || ports.isEmpty()) return new DirPos[0];
+        DirPos[] result = new DirPos[ports.size() * 6];
+        int idx = 0;
+        for (BlockPos portPos : ports) {
+            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                BlockPos t = portPos.offset(dir.toEnumFacing());
+                result[idx++] = new DirPos(t.getX(), t.getY(), t.getZ(), dir);
+            }
+        }
+        return result;
     }
 
     protected void meltDown() {

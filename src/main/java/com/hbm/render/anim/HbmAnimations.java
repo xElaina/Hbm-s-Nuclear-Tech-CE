@@ -75,7 +75,7 @@ public class HbmAnimations {
 			slot = 9;
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(stack == ItemStack.EMPTY)
+		if(stack.isEmpty())
 			return null;
 
 		if(hotbar[slot] == null)

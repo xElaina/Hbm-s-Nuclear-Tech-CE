@@ -16,6 +16,7 @@ import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.inventory.gui.GUIRBMKHeater;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.RBMKColumn.ColumnType;
 import io.netty.buffer.ByteBuf;
@@ -40,15 +41,15 @@ import javax.annotation.Nullable;
 import java.util.Map;
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements IFluidStandardTransceiverMK2, IGUIProvider, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements IFluidStandardTransceiverMK2, IGUIProvider, SimpleComponent, CompatHandler.OCComponent, IConnectionAnchors {
 
 	public FluidTankNTM feed;
 	public FluidTankNTM steam;
 	
 	public TileEntityRBMKHeater() {
 		super(1);
-		this.feed = new FluidTankNTM(Fluids.COOLANT, 16_000);
-		this.steam = new FluidTankNTM(Fluids.COOLANT_HOT, 16_000);
+		this.feed = new FluidTankNTM(Fluids.COOLANT, 16_000).withOwner(this);
+		this.steam = new FluidTankNTM(Fluids.COOLANT_HOT, 16_000).withOwner(this);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 			}
 
 			this.trySubscribe(feed.getTankType(), world, pos.getX(), pos.getY() - 1, pos.getZ(), Library.NEG_Y);
-			for(DirPos pos : getOutputPos()) {
+			for(DirPos pos : getConPos()) {
 				if(this.steam.getFill() > 0) this.tryProvide(steam, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 			}
 		}
@@ -101,7 +102,7 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 		super.update();
 	}
 
-	protected DirPos[] getOutputPos() {
+	public DirPos[] getConPos() {
 
 		if(world.getBlockState(pos.add(0, -1, 0)).getBlock() == ModBlocks.rbmk_loader) {
 			return new DirPos[] {

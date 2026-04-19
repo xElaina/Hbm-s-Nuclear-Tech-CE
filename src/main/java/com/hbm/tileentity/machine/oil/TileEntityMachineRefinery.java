@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Random;
 
 @AutoRegister
-public class TileEntityMachineRefinery extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IOverpressurable, IPersistentNBT, IRepairable, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable {
+public class TileEntityMachineRefinery extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IOverpressurable, IPersistentNBT, IRepairable, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, IConnectionAnchors {
 
     public static final int maxSulfur = 100;
     public static final long maxPower = 1000;
@@ -67,11 +67,11 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
     public TileEntityMachineRefinery() {
         super(13, true, true);
         tanks = new FluidTankNTM[5];
-        tanks[0] = new FluidTankNTM(Fluids.HOTOIL, 64_000);
-        tanks[1] = new FluidTankNTM(Fluids.HEAVYOIL, 24_000);
-        tanks[2] = new FluidTankNTM(Fluids.NAPHTHA, 24_000);
-        tanks[3] = new FluidTankNTM(Fluids.LIGHTOIL, 24_000);
-        tanks[4] = new FluidTankNTM(Fluids.PETROLEUM, 24_000);
+        tanks[0] = new FluidTankNTM(Fluids.HOTOIL, 64_000).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.HEAVYOIL, 24_000).withOwner(this);
+        tanks[2] = new FluidTankNTM(Fluids.NAPHTHA, 24_000).withOwner(this);
+        tanks[3] = new FluidTankNTM(Fluids.LIGHTOIL, 24_000).withOwner(this);
+        tanks[4] = new FluidTankNTM(Fluids.PETROLEUM, 24_000).withOwner(this);
     }
 
     public String getDefaultName() {

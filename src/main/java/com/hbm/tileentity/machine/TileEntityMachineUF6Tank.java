@@ -31,7 +31,7 @@ public class TileEntityMachineUF6Tank extends TileEntityMachineBase implements I
 
 	public TileEntityMachineUF6Tank() {
 		super(4, true, false);
-		tank = new FluidTankNTM(Fluids.UF6, 64000);
+		tank = new FluidTankNTM(Fluids.UF6, 64000).withOwner(this);
 	}
 
 	@Override

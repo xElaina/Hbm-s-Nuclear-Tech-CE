@@ -17,6 +17,7 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.util.Compat;
+import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
@@ -267,6 +268,29 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
         if(Compat.isOpenComputersLoaded())
             compound.setString("ocname", componentName);
         return super.writeToNBT(compound);
+    }
+
+    @Override
+    public void serializeInitial(ByteBuf buf) {
+        byte flags = 0;
+        if (inventory)   flags |= 1;
+        if (power)       flags |= 2;
+        if (fluid)       flags |= 4;
+        if (conductor)   flags |= 8;
+        if (heat)        flags |= 16;
+        if (moltenMetal) flags |= 32;
+        buf.writeByte(flags);
+    }
+
+    @Override
+    public void deserializeInitial(ByteBuf buf) {
+        byte flags = buf.readByte();
+        inventory   = (flags & 1)  != 0;
+        power       = (flags & 2)  != 0;
+        fluid       = (flags & 4)  != 0;
+        conductor   = (flags & 8)  != 0;
+        heat        = (flags & 16) != 0;
+        moltenMetal = (flags & 32) != 0;
     }
 
     @Override

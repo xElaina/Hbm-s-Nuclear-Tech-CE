@@ -27,6 +27,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.EnumUtil;
@@ -61,7 +62,7 @@ import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent, IRORValueProvider {
+public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent, IRORValueProvider, IConnectionAnchors {
 
     private AxisAlignedBB bb;
     public static final int maxHeat = 100000;
@@ -94,9 +95,9 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
 
     public TileEntityReactorZirnox() {
         super(28, true, false);
-        steam = new FluidTankNTM(Fluids.SUPERHOTSTEAM, 8000);
-        carbonDioxide = new FluidTankNTM(Fluids.CARBONDIOXIDE, 16000);
-        water = new FluidTankNTM(Fluids.WATER, 32000);
+        steam = new FluidTankNTM(Fluids.SUPERHOTSTEAM, 8000).withOwner(this);
+        carbonDioxide = new FluidTankNTM(Fluids.CARBONDIOXIDE, 16000).withOwner(this);
+        water = new FluidTankNTM(Fluids.WATER, 32000).withOwner(this);
     }
     public void setRedstonePowered(boolean powered) {
         if (!powered && this.redstonePowered) {
@@ -429,7 +430,7 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
         }
     }
 
-    private DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
         ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 

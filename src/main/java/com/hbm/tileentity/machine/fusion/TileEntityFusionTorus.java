@@ -78,10 +78,10 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
 
         this.tanks = new FluidTankNTM[4];
 
-        this.tanks[0] = new FluidTankNTM(Fluids.NONE, 4_000);
-        this.tanks[1] = new FluidTankNTM(Fluids.NONE, 4_000);
-        this.tanks[2] = new FluidTankNTM(Fluids.NONE, 4_000);
-        this.tanks[3] = new FluidTankNTM(Fluids.NONE, 4_000);
+        this.tanks[0] = new FluidTankNTM(Fluids.NONE, 4_000).withOwner(this);
+        this.tanks[1] = new FluidTankNTM(Fluids.NONE, 4_000).withOwner(this);
+        this.tanks[2] = new FluidTankNTM(Fluids.NONE, 4_000).withOwner(this);
+        this.tanks[3] = new FluidTankNTM(Fluids.NONE, 4_000).withOwner(this);
 
         this.fusionModule = new ModuleMachineFusion(0, this, inventory)
                 .fluidInput(tanks[0], tanks[1], tanks[2])

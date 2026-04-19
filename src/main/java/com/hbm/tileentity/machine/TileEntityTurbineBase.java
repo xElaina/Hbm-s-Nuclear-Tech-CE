@@ -10,6 +10,7 @@ import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.inventory.fluid.trait.FT_Coolable.CoolingType;
 import com.hbm.lib.DirPos;
 import com.hbm.tileentity.IBufPacketReceiver;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TileEntityTurbineBase extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiverMK2, IBufPacketReceiver, IFluidCopiable, IRORValueProvider {
+public abstract class TileEntityTurbineBase extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiverMK2, IBufPacketReceiver, IFluidCopiable, IRORValueProvider, IConnectionAnchors {
 
     protected ByteBuf buf;
     public long powerBuffer;

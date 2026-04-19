@@ -19,10 +19,7 @@ import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.IFluidCopiable;
-import com.hbm.tileentity.IGUIProvider;
-import com.hbm.tileentity.IPersistentNBT;
-import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.*;
 import com.hbm.uninos.UniNodespace;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
@@ -60,7 +57,7 @@ import java.util.HashSet;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityBarrel extends TileEntityMachineBase implements ITickable, IPersistentNBT, IFluidCopiable, IFluidStandardTransceiverMK2, SimpleComponent, CompatHandler.OCComponent, IFFtoNTMF, IGUIProvider, IRORValueProvider, IRORInteractive {
+public class TileEntityBarrel extends TileEntityMachineBase implements ITickable, IPersistentNBT, IFluidCopiable, IFluidStandardTransceiverMK2, SimpleComponent, CompatHandler.OCComponent, IFFtoNTMF, IGUIProvider, IRORValueProvider, IRORInteractive, IConnectionAnchors {
 
     public static final short modes = 4;
     private static final int[] slots_top = new int[]{2};
@@ -83,14 +80,14 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
     public TileEntityBarrel() {
         super(6, true, false);
         tank = new FluidTank(-1);
-        tankNew = new FluidTankNTM(Fluids.NONE, 0);
+        tankNew = new FluidTankNTM(Fluids.NONE, 0).withOwner(this);
         converted = true;
     }
 
     public TileEntityBarrel(int cap) {
         super(6, true, false);
         tank = new FluidTank(cap);
-        tankNew = new FluidTankNTM(Fluids.NONE, cap);
+        tankNew = new FluidTankNTM(Fluids.NONE, cap).withOwner(this);
     }
 
     @Override
@@ -288,7 +285,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
         }
     }
 
-    protected DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         return new DirPos[]{new DirPos(pos.getX() + 1, pos.getY(), pos.getZ(), Library.POS_X), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ(), Library.NEG_X), new DirPos(pos.getX(), pos.getY() + 1, pos.getZ(), Library.POS_Y), new DirPos(pos.getX(), pos.getY() - 1, pos.getZ(), Library.NEG_Y), new DirPos(pos.getX(), pos.getY(), pos.getZ() + 1, Library.POS_Z), new DirPos(pos.getX(), pos.getY(), pos.getZ() - 1, Library.NEG_Z)};
     }
 

@@ -107,7 +107,7 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
         super.deserialize(buf);
         shouldUseBB = buf.readBoolean();
 
-        DoorState newState = DoorState.values()[buf.readByte()];
+        DoorState newState = DoorState.VALUES[buf.readByte()];
         handleNewState(newState);
         if (buf.readableBytes() > 0)
             texture = buf.readByte();
@@ -254,7 +254,7 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        state = DoorState.values()[compound.getByte("state")];
+        state = DoorState.VALUES[compound.getByte("state")];
         sysTime = compound.getLong("sysTime");
         timer = compound.getInteger("timer");
         wasPowered = compound.getBoolean("wasPowered");

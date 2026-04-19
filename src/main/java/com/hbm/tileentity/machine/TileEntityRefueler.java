@@ -37,7 +37,7 @@ public class TileEntityRefueler extends TileEntityLoadedBase implements IFluidSt
 
     public TileEntityRefueler() {
         super();
-        tank = new FluidTankNTM(Fluids.KEROSENE, 100);
+        tank = new FluidTankNTM(Fluids.KEROSENE, 100).withOwner(this);
     }
 
     @Override

@@ -24,9 +24,8 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -38,6 +37,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -267,22 +267,19 @@ public class BlockCablePaintable extends BlockBakeBase implements IToolable {
         }
 
         @Override
-        public SPacketUpdateTileEntity getUpdatePacket() {
-            NBTTagCompound nbt = new NBTTagCompound();
-            this.writeToNBT(nbt);
-            return new SPacketUpdateTileEntity(this.pos, 0, nbt);
+        public void serializeInitial(ByteBuf buf) {
+            super.serializeInitial(buf);
+            ResourceLocation key = block != null ? ForgeRegistries.BLOCKS.getKey(block) : null;
+            ByteBufUtils.writeUTF8String(buf, key != null ? key.toString() : "");
+            buf.writeInt(meta);
         }
 
         @Override
-        public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-            this.readFromNBT(pkt.getNbtCompound());
-        }
-
-        @Override
-        public NBTTagCompound getUpdateTag() {
-            NBTTagCompound nbt = super.getUpdateTag();
-            this.writeToNBT(nbt);
-            return nbt;
+        public void deserializeInitial(ByteBuf buf) {
+            super.deserializeInitial(buf);
+            String id = ByteBufUtils.readUTF8String(buf);
+            this.block = id.isEmpty() ? null : ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
+            this.meta = buf.readInt();
         }
 
         @Override

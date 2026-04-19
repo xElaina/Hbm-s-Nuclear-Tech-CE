@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBufPacketReceiver {
+    private static final ByteBuf UPDATE_TAG_SCRATCH = Unpooled.buffer(64);
 
     public boolean isLoaded = true;
     public boolean muffled = false;
@@ -89,37 +90,33 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
+    public final NBTTagCompound getUpdateTag() {
         NBTTagCompound tag = super.getUpdateTag();
-        ByteBuf buf = Unpooled.buffer();
-        try {
-            serialize(buf);
-            byte[] bytes = new byte[buf.readableBytes()];
-            buf.readBytes(bytes);
-            tag.setByteArray("hbmSync", bytes);
-        } finally {
-            buf.release();
-        }
+        UPDATE_TAG_SCRATCH.clear();
+        serializeInitial(UPDATE_TAG_SCRATCH);
+        byte[] bytes = new byte[UPDATE_TAG_SCRATCH.readableBytes()];
+        UPDATE_TAG_SCRATCH.readBytes(bytes);
+        tag.setByteArray("hbmSync", bytes);
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(@NotNull NBTTagCompound tag) {
+    public final void handleUpdateTag(@NotNull NBTTagCompound tag) {
         super.handleUpdateTag(tag);
         if (tag.hasKey("hbmSync")) {
             ByteBuf buf = Unpooled.wrappedBuffer(tag.getByteArray("hbmSync"));
-            deserialize(buf);
+            deserializeInitial(buf);
         }
     }
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public final SPacketUpdateTileEntity getUpdatePacket() {
         return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         handleUpdateTag(pkt.getNbtCompound());
     }
 
@@ -144,6 +141,25 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
     @Override
     public void deserialize(ByteBuf buf) {
         muffled = buf.readBoolean();
+    }
+
+    /**
+     * Payload emitted once per chunk-load sync via {@link #getUpdateTag()}. Defaults to the
+     * per-tick {@link #serialize(ByteBuf)} payload so TEs that sync everything per-tick need no
+     * extra work.
+     */
+    public void serializeInitial(ByteBuf buf) {
+        serialize(buf);
+    }
+
+    /**
+     * Symmetric counterpart to {@link #serializeInitial(ByteBuf)}. Invoked from
+     * {@link #handleUpdateTag(NBTTagCompound)} on the main client thread during chunk data
+     * resolution, after the standard NBT path has zeroed subclass fields, so it must not depend
+     * on pre-existing field values.
+     */
+    public void deserializeInitial(ByteBuf buf) {
+        deserialize(buf);
     }
 
     /**

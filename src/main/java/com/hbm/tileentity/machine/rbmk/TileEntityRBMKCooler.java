@@ -36,8 +36,8 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 	public TileEntityRBMKCooler() {
 		super();
 		tanks = new FluidTankNTM[2];
-		tanks[0] = new FluidTankNTM(Fluids.PERFLUOROMETHYL_COLD, 4_000);
-		tanks[1] = new FluidTankNTM(Fluids.PERFLUOROMETHYL, 4_000);
+		tanks[0] = new FluidTankNTM(Fluids.PERFLUOROMETHYL_COLD, 4_000).withOwner(this);
+		tanks[1] = new FluidTankNTM(Fluids.PERFLUOROMETHYL, 4_000).withOwner(this);
 	}
 
 	public void getDiagData(NBTTagCompound nbt) {
