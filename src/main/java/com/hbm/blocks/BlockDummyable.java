@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving.SpawnPlacementType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -495,6 +496,17 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
                     coreZ - dZ + 0.5), 0, 0, 0, 1.0F);
         ICustomBlockHighlight.cleanup();
     }
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	/// crappers spawning on large machines pmo
+	@Override
+	public boolean canCreatureSpawn(IBlockState state,IBlockAccess world,BlockPos pos,SpawnPlacementType type) {
+		return false;
+	}
 
 	@Override
 	public @NotNull AxisAlignedBB getBoundingBox(@NotNull IBlockState state, @NotNull IBlockAccess source, @NotNull BlockPos pos) {

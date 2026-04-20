@@ -2,7 +2,9 @@ package com.hbm.handler;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.Library;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -51,9 +53,11 @@ public class MultiblockHandlerXR {
 			}
 		}
 
-        return world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
-                x - rot[4], y - rot[1], z - rot[2],
-                x + rot[5] + 1, y + rot[0] + 1, z + rot[3] + 1)).isEmpty();
+		AxisAlignedBB aabb = new AxisAlignedBB(
+				x - rot[4], y - rot[1], z - rot[2],
+				x + rot[5] + 1, y + rot[0] + 1, z + rot[3] + 1);
+
+        return Library.checkForPlayerEyePositions(world,aabb);
     }
 
 	public static void fillSpace(World world, int x, int y, int z, int[] dim, Block block, ForgeDirection dir) {

@@ -3,6 +3,7 @@ package com.hbm.blocks;
 import com.hbm.handler.MultiblockBBHandler;
 import com.hbm.handler.MultiblockBBHandler.MultiblockBounds;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.Library;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -68,9 +69,10 @@ public abstract class BlockDummyableMBB extends BlockDummyable {
 			maxY = Math.max(maxY, pos.getY());
 			maxZ = Math.max(maxZ, pos.getZ());
 		}
-        return world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
-                minX + xx, minY + yy, minZ + zz,
-                maxX + xx + 1, maxY + yy + 1, maxZ + zz + 1)).isEmpty();
+		AxisAlignedBB aabb = new AxisAlignedBB(
+				minX + xx, minY + yy, minZ + zz,
+				maxX + xx + 1, maxY + yy + 1, maxZ + zz + 1);
+        return Library.checkForPlayerEyePositions(world,aabb);
     }
 	
 	@Override
