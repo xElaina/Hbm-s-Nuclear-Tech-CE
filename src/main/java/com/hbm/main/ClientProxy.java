@@ -14,7 +14,9 @@ import com.hbm.blocks.machine.BlockSeal;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.command.CommandRadVisClient;
 import com.hbm.config.GeneralConfig;
-import com.hbm.entity.grenade.*;
+import com.hbm.entity.grenade.EntityDisperserCanister;
+import com.hbm.entity.grenade.EntityGrenadeBouncyGeneric;
+import com.hbm.entity.grenade.EntityGrenadeImpactGeneric;
 import com.hbm.entity.particle.*;
 import com.hbm.entity.projectile.EntityAcidBomb;
 import com.hbm.entity.projectile.EntityDischarge;
@@ -55,7 +57,6 @@ import com.hbm.render.item.ItemRenderMissileGeneric.RenderMissileType;
 import com.hbm.render.item.ItemRenderMissilePart;
 import com.hbm.render.item.weapon.ItemRenderGunAnim;
 import com.hbm.render.item.weapon.sedna.*;
-import com.hbm.render.loader.HFRModelReloader;
 import com.hbm.render.misc.MissilePart;
 import com.hbm.render.modelrenderer.EgonBackpackRenderer;
 import com.hbm.render.tileentity.ItemRendererProviderRegistry;
@@ -195,7 +196,7 @@ public class ClientProxy extends ServerProxy {
         Jars.initJars();
 
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new QMAWLoader());
-        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new HFRModelReloader());
+//        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new HFRModelReloader());
 
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssembler.class, new RenderAssembler());
         // TODO: replace it with EntityCombineBallNT
