@@ -34,6 +34,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -64,7 +65,7 @@ public class BlockDecoModel<E extends Enum<E>> extends BlockEnumMeta<E> implemen
 
     //FIXME: This is a hack, the mapping for items should be flat (first model occupies 0-3, seconds occupies 3-7, etc)
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+    public @NotNull ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         if(state.getBlock() == ModBlocks.filing_cabinet)
             return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(META)%2);
         if(state.getBlock() == ModBlocks.deco_computer)
@@ -84,17 +85,17 @@ public class BlockDecoModel<E extends Enum<E>> extends BlockEnumMeta<E> implemen
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public @NotNull BlockFaceShape getBlockFaceShape(@NotNull IBlockAccess worldIn, @NotNull IBlockState state, @NotNull BlockPos pos, @NotNull EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@NotNull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@NotNull IBlockState state) {
         return false;
     }
 
@@ -108,8 +109,8 @@ public class BlockDecoModel<E extends Enum<E>> extends BlockEnumMeta<E> implemen
     }
 
     @Override
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
-                                            float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+    public @NotNull IBlockState getStateForPlacement(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull EnumFacing facing,
+                                                     float hitX, float hitY, float hitZ, int meta, @NotNull EntityLivingBase placer, @NotNull EnumHand hand) {
         int orient = orientationFromYaw(placer) & 3;
         int finalMeta = ((orient << 2) | (meta & 3)) & 15;
         return this.getDefaultState().withProperty(META, finalMeta);
@@ -130,22 +131,22 @@ public class BlockDecoModel<E extends Enum<E>> extends BlockEnumMeta<E> implemen
     }
 
     @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    public @NotNull AxisAlignedBB getBoundingBox(IBlockState state, @NotNull IBlockAccess source, @NotNull BlockPos pos) {
         int meta = state.getValue(META);
         int orient = (meta >> 2) & 3;
         return getBoxFor(orient);
     }
 
     @Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos,
-                                      AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
+    public void addCollisionBoxToList(@NotNull IBlockState state, @NotNull World worldIn, @NotNull BlockPos pos,
+                                      @NotNull AxisAlignedBB entityBox, @NotNull List<AxisAlignedBB> collidingBoxes,
                                       @Nullable Entity entityIn, boolean isActualState) {
         AxisAlignedBB bb = getBoundingBox(state, worldIn, pos);
         Block.addCollisionBoxToList(pos, entityBox, collidingBoxes, bb);
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public @NotNull List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         int meta = state.getValue(META) & 3;
         return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
     }
@@ -158,8 +159,6 @@ public class BlockDecoModel<E extends Enum<E>> extends BlockEnumMeta<E> implemen
         int type = meta & 3;
 
         switch (coordBaseMode) {
-            default -> {
-            } //South
             case 1 -> { //West
                 if ((rot & 3) < 2) //N & S can just have bits toggled
                     rot = rot ^ 3;
@@ -174,6 +173,8 @@ public class BlockDecoModel<E extends Enum<E>> extends BlockEnumMeta<E> implemen
                 else //W & E can just have bits toggled
                     rot = rot ^ 3;
             }
+            default -> {
+            } //South
         }
         //genuinely like. why did i do that
         return (rot << 2) | type; //To accommodate for BlockDecoModel's shift in the rotation bits; otherwise, simply bit-shift right and or any non-rotation meta after
@@ -203,7 +204,7 @@ public class BlockDecoModel<E extends Enum<E>> extends BlockEnumMeta<E> implemen
     public StateMapperBase getStateMapper(ResourceLocation loc) {
         return new StateMapperBase() {
             @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+            protected @NotNull ModelResourceLocation getModelResourceLocation(@NotNull IBlockState state) {
                 int meta = state.getValue(META) & 3;
                 return new ModelResourceLocation(loc, "meta=" + meta);
             }

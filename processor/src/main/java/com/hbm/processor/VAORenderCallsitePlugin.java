@@ -77,11 +77,18 @@ public final class VAORenderCallsitePlugin implements Plugin {
 
     @Override
     public void init(JavacTask task, String... args) {
-        if (args.length < 1 || args[0].isBlank()) {
+        if (args.length < 1) {
             throw new IllegalStateException(
                     "VAORenderCallsitePlugin: missing resourceRoot arg (expected '-Xplugin:" + PLUGIN_NAME + " <resourceRoot>')");
         }
-        this.resourceRoot = Paths.get(args[0]);
+
+        String joinedPath = String.join(" ", args).trim();
+
+        if (joinedPath.isEmpty()) {
+            throw new IllegalStateException("VAORenderCallsitePlugin: resourceRoot path is empty");
+        }
+
+        this.resourceRoot = Paths.get(joinedPath);
 
         BasicJavacTask basic = (BasicJavacTask) task;
         Context context = basic.getContext();

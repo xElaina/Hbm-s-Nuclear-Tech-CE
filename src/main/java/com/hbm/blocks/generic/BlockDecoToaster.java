@@ -20,6 +20,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockDecoToaster extends BlockDecoModel<BlockEnums.DecoToasterEnum> {
 
@@ -57,7 +58,7 @@ public class BlockDecoToaster extends BlockDecoModel<BlockEnums.DecoToasterEnum>
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, net.minecraft.util.math.RayTraceResult target, net.minecraft.world.World world, net.minecraft.util.math.BlockPos pos, net.minecraft.entity.player.EntityPlayer player) {
+    public @NotNull ItemStack getPickBlock(IBlockState state, net.minecraft.util.math.RayTraceResult target, net.minecraft.world.World world, net.minecraft.util.math.BlockPos pos, net.minecraft.entity.player.EntityPlayer player) {
         return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(META) & 3);
     }
 

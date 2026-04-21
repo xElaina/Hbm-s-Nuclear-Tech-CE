@@ -4,6 +4,7 @@ import com.hbm.Tags;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.render.model.BlockDecoBakedModel;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -24,6 +25,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockDecoCRT extends BlockDecoModel<BlockEnums.DecoCRTEnum> {
 
@@ -65,7 +67,7 @@ public class BlockDecoCRT extends BlockDecoModel<BlockEnums.DecoCRTEnum> {
     public StateMapperBase getStateMapper(ResourceLocation loc) {
         return new StateMapperBase() {
             @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+            protected @NotNull ModelResourceLocation getModelResourceLocation(@NotNull IBlockState state) {
                 int meta = state.getValue(META) & 3;
                 return new ModelResourceLocation(loc, "meta=" + meta);
             }
@@ -73,7 +75,7 @@ public class BlockDecoCRT extends BlockDecoModel<BlockEnums.DecoCRTEnum> {
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+    public @NotNull ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return new ItemStack(Item.getItemFromBlock(this), 1, state.getValue(META) & 3);
     }
 
@@ -86,6 +88,11 @@ public class BlockDecoCRT extends BlockDecoModel<BlockEnums.DecoCRTEnum> {
             ModelResourceLocation inv = new ModelResourceLocation(new ResourceLocation(Tags.MODID, getRegistryName().getPath() + "_item_" + m), "inventory");
             ModelLoader.setCustomModelResourceLocation(item, m, inv);
         }
+    }
+
+    @Override
+    public int transformMeta(int meta, int coordBaseMode) {
+        return INBTBlockTransformable.transformMetaDecoModel(meta, coordBaseMode);
     }
 }
 
