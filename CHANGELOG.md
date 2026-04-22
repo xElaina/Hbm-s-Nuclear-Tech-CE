@@ -32,6 +32,7 @@
 - Fixed multiblock placement being blocked when the player's head merely clipped the build area, and fixed large flare-tower blocks suffocating players and allowing hostile mob spawns
 - Fixed decoration blocks (CRT, toaster, satellite-dish pole, tape recorder, misc. deco) losing their stored state when pushed/pulled by block-movers
 - Fixed control-panel composite data values retaining stale entries after reload
+- Fixed crash with low-radius contaminating drops
 ### Changes
 - On-screen info messages now render in a stable, deterministic order instead of being reordered by timing
 ### New Features

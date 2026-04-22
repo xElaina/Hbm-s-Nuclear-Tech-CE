@@ -268,6 +268,9 @@ public class ExplosionNukeGeneric {
         int r = radius;
         int r2 = r * r;
         int r22 = r2 / 2;
+        //mlbv: we use it in com.hbm.hazard.type.HazardTypeContaminating which may have a very low radius
+        int bound = r22 / 5;
+        if (bound == 0) return;
         for (int xx = -r; xx < r; xx++) {
             int X = xx + x;
             int XX = xx * xx;
@@ -277,7 +280,7 @@ public class ExplosionNukeGeneric {
                 for (int zz = -r; zz < r; zz++) {
                     int Z = zz + z;
                     int ZZ = YY + zz * zz;
-                    if (ZZ < r22 + world.rand.nextInt(r22 / 5)) {
+                    if (ZZ < r22 + world.rand.nextInt(bound)) {
                         if (world.getBlockState(pos.setPos(X, Y, Z)).getBlock() != Blocks.AIR) wasteDest(world, pos);
                     }
                 }
