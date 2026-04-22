@@ -33,6 +33,7 @@
 - Fixed decoration blocks (CRT, toaster, satellite-dish pole, tape recorder, misc. deco) losing their stored state when pushed/pulled by block-movers
 - Fixed control-panel composite data values retaining stale entries after reload
 - Fixed crash with low-radius contaminating drops
+- Fixed crash and incredible log spam when a node queries a te in a not-yet-loaded chunk during world load
 ### Changes
 - On-screen info messages now render in a stable, deterministic order instead of being reordered by timing
 ### New Features

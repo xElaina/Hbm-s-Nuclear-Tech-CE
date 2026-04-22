@@ -7,8 +7,7 @@ import com.hbm.inventory.control_panel.types.DataValueFloat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Map;
+import net.minecraft.world.World;
 
 public class NodeQueryBlock extends Node {
 
@@ -60,14 +59,13 @@ public class NodeQueryBlock extends Node {
 
     private void setDataSelector() {
         dataSelector.list.itemNames.clear();
-        if (tag != null && !tag.isEmpty()) {
-            TileEntity tile = ctrl.panel.parent.getControlWorld().getTileEntity(ctrl.taggedLinks.get(tag));
-            if (tile instanceof IControllable) {
-                IControllable te = (IControllable) tile;
-                for (Map.Entry<String,DataValue> var : te.getQueryData().entrySet()) {
-                    dataSelector.list.addItems(var.getKey());
-                }
-            }
+        if (tag == null || tag.isEmpty()) return;
+        BlockPos pos = ctrl.taggedLinks.get(tag);
+        World world = ctrl.panel.parent.getControlWorld();
+        if (!world.isBlockLoaded(pos)) return;
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof IControllable te) {
+            dataSelector.list.addItems(te.getQueryData().keySet());
         }
     }
 
