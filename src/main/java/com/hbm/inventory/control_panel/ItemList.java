@@ -41,7 +41,18 @@ public class ItemList {
 		this.action = a;
 		isClosed = false;
 	}
-	
+
+    public ItemList addItems(String item) {
+        itemNames.add(item);
+        return this;
+    }
+
+    public ItemList addItems(String item1, String item2) {
+        itemNames.add(item1);
+        itemNames.add(item2);
+        return this;
+    }
+
 	public ItemList addItems(String... items){
         Collections.addAll(itemNames, items);
 		return this;

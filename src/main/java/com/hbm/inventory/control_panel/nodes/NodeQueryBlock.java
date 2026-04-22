@@ -90,16 +90,13 @@ public class NodeQueryBlock extends Node {
     @Override
     public DataValue evaluate(int inx) {
         if (!dataName.isEmpty() && ctrl.taggedLinks.containsKey(tag)) {
-            TileEntity tile = ctrl.panel.parent.getControlWorld().getTileEntity(ctrl.taggedLinks.get(tag));
-
-            if (tile instanceof IControllable) {
-                IControllable te = (IControllable) tile;
-                if (te.getQueryData().containsKey(dataName)) {
-                    return te.getQueryData().get(dataName);
-                }
+            BlockPos pos = ctrl.taggedLinks.get(tag);
+            World world = ctrl.panel.parent.getControlWorld();
+            if (world.isBlockLoaded(pos) && world.getTileEntity(pos) instanceof IControllable te) {
+                DataValue v = te.getQueryData().get(dataName);
+                if (v != null) return v;
             }
             setDataSelector();
-
         }
         return new DataValueFloat(0);
     }
