@@ -66,6 +66,7 @@
 - Added OpenComputers integration for the RBMK Gauge, Graph, KeyPad, and Numitron
 - Added a `HEALTHBAR_HUD` client config to toggle the VATS-style entity healthbar overlay (#1447)
 - Added a `mobWeaponSootReduction` server config to lower the soot threshold for skeletons spawning with guns
+- Ported Foundry Spill Outlets
 ### Performance
 - Reduced per-tick work and network traffic. For developers: this is a substantial API change for TileEntityLoadedBase! You are now required to override (de)serializeInitial instead of vanilla updateTag methods for the correct first sync on chunk load. 
 - Sawmills now cache their recipe lookup
