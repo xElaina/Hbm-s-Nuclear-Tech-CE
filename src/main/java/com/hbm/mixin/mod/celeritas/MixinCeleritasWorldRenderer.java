@@ -1,6 +1,7 @@
 package com.hbm.mixin.mod.celeritas;
 
 import com.hbm.render.chunk.ChunkSpanningTesrHelper;
+import com.hbm.render.chunk.IRenderFrameStamp;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -25,20 +26,26 @@ import org.taumc.celeritas.impl.render.terrain.VintageRenderSectionManager;
 public abstract class MixinCeleritasWorldRenderer extends SimpleWorldRenderer<WorldClient, VintageRenderSectionManager, BlockRenderLayer, TileEntity, CeleritasWorldRenderer.TileEntityRenderContext> {
 
     @Unique
-    private final ReferenceOpenHashSet<TileEntity> hbm$renderedTileEntities = new ReferenceOpenHashSet<>();
+    private int hbm$currentRenderFrame;
 
     @Dynamic
     @Inject(method = "renderBlockEntities", at = @At("HEAD"), require = 1)
     private void hbm$beginTileEntityFrame(CeleritasWorldRenderer.TileEntityRenderContext context,
                                           CallbackInfoReturnable<Integer> cir) {
-        hbm$renderedTileEntities.clear();
+        hbm$currentRenderFrame++;
     }
 
     @Dynamic
     @Redirect(method = "renderBlockEntityList", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher;render(Lnet/minecraft/tileentity/TileEntity;FI)V"), remap = true, require = 1)
     private void hbm$renderTileEntityOnce(TileEntityRendererDispatcher dispatcher, TileEntity tileEntity,
                                           float partialTicks, int destroyStage) {
-        if (destroyStage >= 0 || hbm$renderedTileEntities.add(tileEntity)) {
+        if (destroyStage >= 0) {
+            dispatcher.render(tileEntity, partialTicks, destroyStage);
+            return;
+        }
+        IRenderFrameStamp stamp = (IRenderFrameStamp) tileEntity;
+        if (stamp.hbm$getFrameStamp() != hbm$currentRenderFrame) {
+            stamp.hbm$setFrameStamp(hbm$currentRenderFrame);
             dispatcher.render(tileEntity, partialTicks, destroyStage);
         }
     }
@@ -47,15 +54,19 @@ public abstract class MixinCeleritasWorldRenderer extends SimpleWorldRenderer<Wo
     @Inject(method = "renderBlockEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/TileEntityRendererDispatcher;drawBatch(I)V", shift = At.Shift.BEFORE), require = 1)
     private void hbm$renderChunkSpanningTesrs(CeleritasWorldRenderer.TileEntityRenderContext context,
                                               CallbackInfoReturnable<Integer> cir) {
+        if (ChunkSpanningTesrHelper.isEmpty()) return;
         int pass = MinecraftForgeClient.getRenderPass();
         float partialTicks = context.partialTicks();
         RenderSectionManager mgr = renderSectionManager;
+        int frame = hbm$currentRenderFrame;
 
         for (TileEntity tileEntity : ChunkSpanningTesrHelper.getChunkSpanningTesrs()) {
             if (tileEntity.isInvalid()) continue;
             if (!tileEntity.shouldRenderInPass(pass)) continue;
             if (!hbm$isTesrVisibleInSections(mgr, tileEntity)) continue;
-            if (!hbm$renderedTileEntities.add(tileEntity)) continue;
+            IRenderFrameStamp stamp = (IRenderFrameStamp) tileEntity;
+            if (stamp.hbm$getFrameStamp() == frame) continue;
+            stamp.hbm$setFrameStamp(frame);
             TileEntityRendererDispatcher.instance.render(tileEntity, partialTicks, -1);
         }
     }
@@ -69,9 +80,9 @@ public abstract class MixinCeleritasWorldRenderer extends SimpleWorldRenderer<Wo
         int minSx = MathHelper.floor(bb.minX) >> 4;
         int minSy = MathHelper.floor(bb.minY) >> 4;
         int minSz = MathHelper.floor(bb.minZ) >> 4;
-        int maxSx = MathHelper.floor(Math.nextAfter(bb.maxX, Double.NEGATIVE_INFINITY)) >> 4;
-        int maxSy = MathHelper.floor(Math.nextAfter(bb.maxY, Double.NEGATIVE_INFINITY)) >> 4;
-        int maxSz = MathHelper.floor(Math.nextAfter(bb.maxZ, Double.NEGATIVE_INFINITY)) >> 4;
+        int maxSx = (MathHelper.ceil(bb.maxX) - 1) >> 4;
+        int maxSy = (MathHelper.ceil(bb.maxY) - 1) >> 4;
+        int maxSz = (MathHelper.ceil(bb.maxZ) - 1) >> 4;
         for (int sx = minSx; sx <= maxSx; sx++) {
             for (int sy = minSy; sy <= maxSy; sy++) {
                 for (int sz = minSz; sz <= maxSz; sz++) {

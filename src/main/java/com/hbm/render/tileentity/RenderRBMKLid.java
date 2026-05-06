@@ -52,12 +52,12 @@ public class RenderRBMKLid extends TileEntitySpecialRenderer<TileEntityRBMKRod> 
         NTMBufferBuilder buf = NTMImmediate.INSTANCE.beginPositionColorQuads(layerCount);
         int packedColor = NTMBufferBuilder.packColor(r, g, b, a);
 
-		for (double j = 0; j <= height; j += 0.25) {
+		for (float j = 0.0F; j <= height; j += 0.25F) {
             buf.appendPositionColorQuadUnchecked(
-                    -0.5, j, -0.5,
-                    -0.5, j, 0.5,
-                    0.5, j, 0.5,
-                    0.5, j, -0.5,
+                    -0.5F, j, -0.5F,
+                    -0.5F, j, 0.5F,
+                    0.5F, j, 0.5F,
+                    0.5F, j, -0.5F,
                     packedColor);
 		}
         NTMImmediate.INSTANCE.draw();

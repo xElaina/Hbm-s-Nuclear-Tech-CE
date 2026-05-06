@@ -4,9 +4,9 @@ import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.inventory.control_panel.DataValue;
-import com.hbm.inventory.control_panel.DataValueFloat;
-import com.hbm.inventory.control_panel.DataValueString;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
+import com.hbm.inventory.control_panel.types.DataValueString;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
@@ -36,8 +36,8 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 	public TileEntityRBMKCooler() {
 		super();
 		tanks = new FluidTankNTM[2];
-		tanks[0] = new FluidTankNTM(Fluids.PERFLUOROMETHYL_COLD, 4_000);
-		tanks[1] = new FluidTankNTM(Fluids.PERFLUOROMETHYL, 4_000);
+		tanks[0] = new FluidTankNTM(Fluids.PERFLUOROMETHYL_COLD, 4_000).withOwner(this);
+		tanks[1] = new FluidTankNTM(Fluids.PERFLUOROMETHYL, 4_000).withOwner(this);
 	}
 
 	public void getDiagData(NBTTagCompound nbt) {

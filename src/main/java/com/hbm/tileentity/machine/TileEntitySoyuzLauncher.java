@@ -58,8 +58,8 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
     public TileEntitySoyuzLauncher() {
         super(27, true, true);
         tanks = new FluidTankNTM[2];
-        tanks[0] = new FluidTankNTM(Fluids.KEROSENE, 128000);
-        tanks[1] = new FluidTankNTM(Fluids.OXYGEN, 128000);
+        tanks[0] = new FluidTankNTM(Fluids.KEROSENE, 128000).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.OXYGEN, 128000).withOwner(this);
     }
 
     @Override

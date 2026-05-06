@@ -19,10 +19,7 @@ import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.IFluidCopiable;
-import com.hbm.tileentity.IGUIProvider;
-import com.hbm.tileentity.IPersistentNBT;
-import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.tileentity.*;
 import com.hbm.uninos.UniNodespace;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
@@ -30,6 +27,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -59,7 +57,7 @@ import java.util.HashSet;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityBarrel extends TileEntityMachineBase implements ITickable, IPersistentNBT, IFluidCopiable, IFluidStandardTransceiverMK2, SimpleComponent, CompatHandler.OCComponent, IFFtoNTMF, IGUIProvider, IRORValueProvider, IRORInteractive {
+public class TileEntityBarrel extends TileEntityMachineBase implements ITickable, IPersistentNBT, IFluidCopiable, IFluidStandardTransceiverMK2, SimpleComponent, CompatHandler.OCComponent, IFFtoNTMF, IGUIProvider, IRORValueProvider, IRORInteractive, IConnectionAnchors {
 
     public static final short modes = 4;
     private static final int[] slots_top = new int[]{2};
@@ -68,6 +66,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
     private static boolean converted = false;
     private AxisAlignedBB bb;
     protected FluidNode node;
+    public byte lastRedstone = 0;
     protected FluidType lastType;
     public FluidTank tank;
     public FluidTankNTM tankNew;
@@ -82,14 +81,14 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
     public TileEntityBarrel() {
         super(6, true, false);
         tank = new FluidTank(-1);
-        tankNew = new FluidTankNTM(Fluids.NONE, 0);
+        tankNew = new FluidTankNTM(Fluids.NONE, 0).withOwner(this);
         converted = true;
     }
 
     public TileEntityBarrel(int cap) {
         super(6, true, false);
         tank = new FluidTank(cap);
-        tankNew = new FluidTankNTM(Fluids.NONE, cap);
+        tankNew = new FluidTankNTM(Fluids.NONE, cap).withOwner(this);
     }
 
     @Override
@@ -207,6 +206,14 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
             tankNew.loadTank(2, 3, inventory);
             tankNew.unloadTank(4, 5, inventory);
 
+            // Redstone Comparator Check
+            byte comp = tankNew.getRedstoneComparatorPower();
+            if(comp != this.lastRedstone) {
+                this.markDirty();
+                for(DirPos pos : getConPos()) this.updateRedstoneComparatorConnection(pos);
+            }
+            this.lastRedstone = comp;
+
             // In buffer mode, acts like a pipe block, providing fluid to its own node
             // otherwise, it is a regular providing/receiving machine, blocking further propagation
             if (mode == 1) {
@@ -278,12 +285,16 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
 
     @Override
     public void deserialize(ByteBuf buf) {
+        FluidType prevType = tankNew.getTankType();
         super.deserialize(buf);
         mode = buf.readShort();
         tankNew.deserialize(buf);
+        if (prevType != tankNew.getTankType()) {
+            Minecraft.getMinecraft().addScheduledTask(() -> world.markBlockRangeForRenderUpdate(pos, pos));
+        }
     }
 
-    protected DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         return new DirPos[]{new DirPos(pos.getX() + 1, pos.getY(), pos.getZ(), Library.POS_X), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ(), Library.NEG_X), new DirPos(pos.getX(), pos.getY() + 1, pos.getZ(), Library.POS_Y), new DirPos(pos.getX(), pos.getY() - 1, pos.getZ(), Library.NEG_Y), new DirPos(pos.getX(), pos.getY(), pos.getZ() + 1, Library.POS_Z), new DirPos(pos.getX(), pos.getY(), pos.getZ() - 1, Library.NEG_Z)};
     }
 

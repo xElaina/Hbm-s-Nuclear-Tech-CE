@@ -19,6 +19,7 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
@@ -54,7 +55,7 @@ import java.util.List;
 public class TileEntityMachineGasFlare extends TileEntityMachineBase
         implements ITickable, IEnergyProviderMK2,
         IFluidStandardReceiver, IGUIProvider,
-        IControlReceiver, IFluidCopiable, IUpgradeInfoProvider {
+        IControlReceiver, IFluidCopiable, IUpgradeInfoProvider, IConnectionAnchors {
     public static final long maxPower = 1000000;
     private final UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
     public long power;
@@ -84,7 +85,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase
         };
 
         tankType = Fluids.GAS.getFF();
-        tank = new FluidTankNTM(Fluids.GAS, 64000);
+        tank = new FluidTankNTM(Fluids.GAS, 64000).withOwner(this);
     }
 
     @Override

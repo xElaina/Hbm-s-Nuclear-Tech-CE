@@ -17,6 +17,9 @@ import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerMachineFluidTank;
 import com.hbm.inventory.control_panel.*;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
+import com.hbm.inventory.control_panel.types.DataValueString;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -43,7 +46,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -65,7 +67,7 @@ import java.util.*;
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")
 @AutoRegister
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements SimpleComponent, CompatHandler.OCComponent, ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFluidCopiable, IClimbable, IRORValueProvider, IRORInteractive {
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements SimpleComponent, CompatHandler.OCComponent, ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFluidCopiable, IClimbable, IRORValueProvider, IRORInteractive, IConnectionAnchors {
     private AxisAlignedBB bb;
     protected FluidNode node;
     protected FluidType lastType;
@@ -85,7 +87,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
     public TileEntityMachineFluidTank() {
         super(6, true, false);
-        tank = new FluidTankNTM(Fluids.NONE, 256000);
+        tank = new FluidTankNTM(Fluids.NONE, 256000).withOwner(this);
     }
 
     public String getDefaultName() {
@@ -149,12 +151,6 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
             });
         }
         return super.getCapability(capability, facing);
-    }
-
-    public byte getComparatorPower() {
-        if (tank.getFill() == 0) return 0;
-        double frac = (double) tank.getFill() / (double) tank.getMaxFill() * 15D;
-        return (byte) (MathHelper.clamp((int) frac + 1, 0, 15));
     }
 
     @Override
@@ -233,12 +229,13 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
                 this.node = null;
             }
 
-            byte comp = this.getComparatorPower(); //comparator shit
-            if (comp != this.lastRedstone) {
-                this.markDirty();
-                for (DirPos pos : getConPos()) this.updateRedstoneConnection(pos);
-            }
-            this.lastRedstone = comp;
+			// Redstone Comparator Check
+			byte comp = tank.getRedstoneComparatorPower();
+			if(comp != this.lastRedstone) {
+				this.markDirty();
+				for(DirPos pos : getConPos()) this.updateRedstoneComparatorConnection(pos);
+			}
+			this.lastRedstone = comp;
 
             if (tank.getFill() > 0) {
                 if (tank.getTankType().isAntimatter()) {
@@ -382,7 +379,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
         }
     }
 
-    protected DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         return new DirPos[]{new DirPos(pos.getX() + 2, pos.getY(), pos.getZ() - 1, Library.POS_X), new DirPos(pos.getX() + 2, pos.getY(), pos.getZ() + 1, Library.POS_X), new DirPos(pos.getX() - 2, pos.getY(), pos.getZ() - 1, Library.NEG_X), new DirPos(pos.getX() - 2, pos.getY(), pos.getZ() + 1, Library.NEG_X), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ() + 2, Library.POS_Z), new DirPos(pos.getX() + 1, pos.getY(), pos.getZ() + 2, Library.POS_Z), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z), new DirPos(pos.getX() + 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z)};
     }
 
@@ -512,7 +509,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
     @Override
     public Map<String, DataValue> getQueryData() {
-        Map<String, DataValue> data = new HashMap<>();
+        Map<String,DataValue> data = new HashMap<>();
 
         if (tank.getTankType() != Fluids.NONE) {
             data.put("t0_fluidType", new DataValueString(tank.getTankType().getLocalizedName()));

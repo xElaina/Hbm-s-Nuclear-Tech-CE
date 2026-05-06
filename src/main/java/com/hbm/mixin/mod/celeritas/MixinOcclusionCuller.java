@@ -1,6 +1,9 @@
 package com.hbm.mixin.mod.celeritas;
 
+import com.hbm.render.chunk.CeleritasCameraTransformAccess;
 import com.hbm.render.chunk.IExtraExtentsHolder;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.embeddedt.embeddium.impl.render.chunk.RenderSection;
 import org.embeddedt.embeddium.impl.render.chunk.data.BuiltRenderSectionData;
 import org.embeddedt.embeddium.impl.render.chunk.occlusion.OcclusionCuller;
@@ -11,8 +14,6 @@ import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = OcclusionCuller.class, remap = false)
 public abstract class MixinOcclusionCuller {
@@ -31,16 +32,21 @@ public abstract class MixinOcclusionCuller {
      * chunk compilation in {@link MixinChunkBuilderMeshingTask}.
      */
     @Dynamic
-    @Inject(method = "isWithinFrustum", at = @At("HEAD"), cancellable = true, require = 1)
-    private static void hbm$expandFrustumForOversizedModels(Viewport viewport, OcclusionNode section,
-                                                            CallbackInfoReturnable<Boolean> cir) {
+    @SuppressWarnings("UnreachableCode")
+    @WrapOperation(
+            method = {"isSectionVisible", "tryVisitNode"},
+            at = @At(value = "INVOKE",
+                    target = "Lorg/embeddedt/embeddium/impl/render/chunk/occlusion/OcclusionCuller;isWithinFrustum(Lorg/embeddedt/embeddium/impl/render/viewport/Viewport;Lorg/embeddedt/embeddium/impl/render/chunk/occlusion/OcclusionNode;)Z"),
+            require = 2)
+    private static boolean hbm$wrapIsWithinFrustum(Viewport viewport, OcclusionNode section,
+                                                   Operation<Boolean> original) {
         RenderSection rs = section.getRenderSection();
         if (rs == null) {
-            return;
+            return original.call(viewport, section);
         }
         BuiltRenderSectionData info = rs.getBuiltContext();
         if (info == null) {
-            return;
+            return original.call(viewport, section);
         }
         IExtraExtentsHolder holder = (IExtraExtentsHolder) info;
         int negX = holder.hbm$getNegX();
@@ -50,7 +56,7 @@ public abstract class MixinOcclusionCuller {
         int negZ = holder.hbm$getNegZ();
         int posZ = holder.hbm$getPosZ();
         if ((negX | posX | negY | posY | negZ | posZ) == 0) {
-            return;
+            return original.call(viewport, section);
         }
         double minX = section.getOriginX() - negX - HBM$STOCK_SIDE_MARGIN;
         double minY = section.getOriginY() - negY - HBM$STOCK_SIDE_MARGIN;
@@ -58,7 +64,7 @@ public abstract class MixinOcclusionCuller {
         double maxX = section.getOriginX() + 16.0D + posX + HBM$STOCK_SIDE_MARGIN;
         double maxY = section.getOriginY() + 16.0D + posY + HBM$STOCK_SIDE_MARGIN;
         double maxZ = section.getOriginZ() + 16.0D + posZ + HBM$STOCK_SIDE_MARGIN;
-        cir.setReturnValue(viewport.isBoxVisible(minX, minY, minZ, maxX, maxY, maxZ));
+        return viewport.isBoxVisible(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     /**
@@ -68,35 +74,40 @@ public abstract class MixinOcclusionCuller {
      * upstream "closest point on box" logic with the extents applied on each side.
      */
     @Dynamic
-    @Inject(method = "isWithinRenderDistance", at = @At("HEAD"), cancellable = true, require = 1)
-    private static void hbm$expandDistanceForOversizedModels(CameraTransform camera, OcclusionNode section,
-                                                             float maxDistance,
-                                                             CallbackInfoReturnable<Boolean> cir) {
+    @SuppressWarnings("UnreachableCode")
+    @WrapOperation(
+            method = "isSectionVisible",
+            at = @At(value = "INVOKE",
+                    target = "Lorg/embeddedt/embeddium/impl/render/chunk/occlusion/OcclusionCuller;isWithinRenderDistance(Lorg/embeddedt/embeddium/impl/render/viewport/CameraTransform;Lorg/embeddedt/embeddium/impl/render/chunk/occlusion/OcclusionNode;F)Z"),
+            require = 1)
+    private static boolean hbm$wrapIsWithinRenderDistance(CameraTransform camera, OcclusionNode section,
+                                                          float maxDistance, Operation<Boolean> original) {
+        int negX = 0;
+        int posX = 0;
+        int negY = 0;
+        int posY = 0;
+        int negZ = 0;
+        int posZ = 0;
         RenderSection rs = section.getRenderSection();
-        if (rs == null) {
-            return;
+        if (rs != null) {
+            BuiltRenderSectionData info = rs.getBuiltContext();
+            if (info != null) {
+                IExtraExtentsHolder holder = (IExtraExtentsHolder) info;
+                negX = holder.hbm$getNegX();
+                posX = holder.hbm$getPosX();
+                negY = holder.hbm$getNegY();
+                posY = holder.hbm$getPosY();
+                negZ = holder.hbm$getNegZ();
+                posZ = holder.hbm$getPosZ();
+            }
         }
-        BuiltRenderSectionData info = rs.getBuiltContext();
-        if (info == null) {
-            return;
-        }
-        IExtraExtentsHolder holder = (IExtraExtentsHolder) info;
-        int negX = holder.hbm$getNegX();
-        int posX = holder.hbm$getPosX();
-        int negY = holder.hbm$getNegY();
-        int posY = holder.hbm$getPosY();
-        int negZ = holder.hbm$getNegZ();
-        int posZ = holder.hbm$getPosZ();
-        if ((negX | posX | negY | posY | negZ | posZ) == 0) {
-            return;
-        }
-        int ox = section.getOriginX() - camera.intX;
-        int oy = section.getOriginY() - camera.intY;
-        int oz = section.getOriginZ() - camera.intZ;
-        float dx = hbm$nearestToZero(ox - negX, ox + 16 + posX) - camera.fracX;
-        float dy = hbm$nearestToZero(oy - negY, oy + 16 + posY) - camera.fracY;
-        float dz = hbm$nearestToZero(oz - negZ, oz + 16 + posZ) - camera.fracZ;
-        cir.setReturnValue((((dx * dx) + (dz * dz)) < (maxDistance * maxDistance)) && (Math.abs(dy) < maxDistance));
+        int ox = section.getOriginX() - CeleritasCameraTransformAccess.getIntX(camera);
+        int oy = section.getOriginY() - CeleritasCameraTransformAccess.getIntY(camera);
+        int oz = section.getOriginZ() - CeleritasCameraTransformAccess.getIntZ(camera);
+        float dx = hbm$nearestToZero(ox - negX, ox + 16 + posX) - CeleritasCameraTransformAccess.getFracX(camera);
+        float dy = hbm$nearestToZero(oy - negY, oy + 16 + posY) - CeleritasCameraTransformAccess.getFracY(camera);
+        float dz = hbm$nearestToZero(oz - negZ, oz + 16 + posZ) - CeleritasCameraTransformAccess.getFracZ(camera);
+        return (((dx * dx) + (dz * dz)) < (maxDistance * maxDistance)) && (Math.abs(dy) < maxDistance);
     }
 
     @Unique

@@ -60,7 +60,7 @@ public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITic
 	
 	public TileEntityCoreEmitter() {
 		super(0, true, true);
-		tank = new FluidTankNTM(Fluids.CRYOGEL,64000);
+		tank = new FluidTankNTM(Fluids.CRYOGEL,64000).withOwner(this);
 	}
 
 	@Override

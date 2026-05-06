@@ -12,8 +12,6 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.LoopedSoundPacket;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -206,7 +204,6 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 								break;
 						}
 					}
-					PacketDispatcher.wrapper.sendToAll(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()));
 				}
 			}
 

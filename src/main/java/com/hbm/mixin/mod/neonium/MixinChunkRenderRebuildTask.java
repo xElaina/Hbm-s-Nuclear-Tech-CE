@@ -2,28 +2,22 @@ package com.hbm.mixin.mod.neonium;
 
 import com.hbm.main.client.StaticTesrBakedModels;
 import com.hbm.render.chunk.IExtraExtentsHolder;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers;
-import me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildResult;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import me.jellysquid.mods.sodium.client.render.chunk.data.ChunkRenderBounds;
 import me.jellysquid.mods.sodium.client.render.chunk.data.ChunkRenderData;
 import me.jellysquid.mods.sodium.client.render.chunk.tasks.ChunkRenderRebuildTask;
-import me.jellysquid.mods.sodium.client.render.pipeline.context.ChunkRenderCacheLocal;
-import me.jellysquid.mods.sodium.client.util.task.CancellationSource;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.chunk.SetVisibility;
 import net.minecraft.client.renderer.chunk.VisGraph;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.ArrayList;
 
 @Mixin(value = ChunkRenderRebuildTask.class, remap = false)
 public abstract class MixinChunkRenderRebuildTask {
@@ -31,58 +25,25 @@ public abstract class MixinChunkRenderRebuildTask {
     @Unique
     private int hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ;
     @Unique
-    private final ArrayList<TileEntity> hbm$spanningTesrs = new ArrayList<>();
+    private TileEntity[] hbm$spanningTesrs;
     @Unique
-    private int hbm$currentNorth, hbm$currentSouth, hbm$currentWest, hbm$currentEast, hbm$currentUp, hbm$currentDown;
-    @Unique
-    private boolean hbm$shouldTrackCurrentBlock;
+    private int hbm$spanningTesrCount;
 
     @Dynamic
-    @Inject(method = "performBuild", at = @At("HEAD"), require = 1)
-    private void hbm$resetOversizedExtents(ChunkRenderCacheLocal cache, ChunkBuildBuffers buffers,
-                                           CancellationSource cancellationSource,
-                                           CallbackInfoReturnable<ChunkBuildResult<?>> cir) {
-        hbm$negX = 0;
-        hbm$posX = 0;
-        hbm$negY = 0;
-        hbm$posY = 0;
-        hbm$negZ = 0;
-        hbm$posZ = 0;
-        hbm$shouldTrackCurrentBlock = false;
-        hbm$spanningTesrs.clear();
-    }
-
-    @Dynamic
-    @Redirect(method = "performBuild", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/state/IBlockState;getRenderType()Lnet/minecraft/util/EnumBlockRenderType;"), remap = true, require = 1)
-    private EnumBlockRenderType hbm$trackCurrentBlock(IBlockState state) {
-        int[] extents = StaticTesrBakedModels.getManagedRenderExtents(state);
-        if (extents == null) {
-            hbm$shouldTrackCurrentBlock = false;
-            return state.getRenderType();
+    @WrapOperation(method = "performBuild", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/data/ChunkRenderBounds$Builder;addBlock(III)V"), remap = false, require = 3)
+    private void hbm$trackRenderedBlock(ChunkRenderBounds.Builder bounds, int relX, int relY, int relZ,
+                                        Operation<Void> original,
+                                        @Local IBlockState blockState) {
+        int[] extents = StaticTesrBakedModels.getManagedRenderExtents(blockState);
+        if (extents != null) {
+            hbm$negX = Math.max(hbm$negX, extents[4] - relX);
+            hbm$posX = Math.max(hbm$posX, relX + extents[5] - 15);
+            hbm$negY = Math.max(hbm$negY, extents[1] - relY);
+            hbm$posY = Math.max(hbm$posY, relY + extents[0] - 15);
+            hbm$negZ = Math.max(hbm$negZ, extents[2] - relZ);
+            hbm$posZ = Math.max(hbm$posZ, relZ + extents[3] - 15);
         }
-
-        hbm$currentNorth = extents[2];
-        hbm$currentSouth = extents[3];
-        hbm$currentWest = extents[4];
-        hbm$currentEast = extents[5];
-        hbm$currentUp = extents[0];
-        hbm$currentDown = extents[1];
-        hbm$shouldTrackCurrentBlock = true;
-        return state.getRenderType();
-    }
-
-    @Dynamic
-    @Redirect(method = "performBuild", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/data/ChunkRenderBounds$Builder;addBlock(III)V"), remap = false, require = 1)
-    private void hbm$trackRenderedBlock(ChunkRenderBounds.Builder bounds, int relX, int relY, int relZ) {
-        if (hbm$shouldTrackCurrentBlock) {
-            hbm$negX = Math.max(hbm$negX, hbm$currentWest - relX);
-            hbm$posX = Math.max(hbm$posX, relX + hbm$currentEast - 15);
-            hbm$negY = Math.max(hbm$negY, hbm$currentDown - relY);
-            hbm$posY = Math.max(hbm$posY, relY + hbm$currentUp - 15);
-            hbm$negZ = Math.max(hbm$negZ, hbm$currentNorth - relZ);
-            hbm$posZ = Math.max(hbm$posZ, relZ + hbm$currentSouth - 15);
-        }
-        bounds.addBlock(relX, relY, relZ);
+        original.call(bounds, relX, relY, relZ);
     }
 
     @Dynamic
@@ -91,8 +52,16 @@ public abstract class MixinChunkRenderRebuildTask {
         SetVisibility visibility = occluder.computeVisibility();
         IExtraExtentsHolder holder = (IExtraExtentsHolder) visibility;
         holder.hbm$setOversizedModelExtents(hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ);
-        if (!hbm$spanningTesrs.isEmpty()) {
-            holder.hbm$setChunkSpanningTesrs(hbm$spanningTesrs.toArray(new TileEntity[0]));
+        int count = hbm$spanningTesrCount;
+        if (count != 0) {
+            TileEntity[] compact;
+            if (count == hbm$spanningTesrs.length) {
+                compact = hbm$spanningTesrs;
+            } else {
+                compact = new TileEntity[count];
+                System.arraycopy(hbm$spanningTesrs, 0, compact, 0, count);
+            }
+            holder.hbm$setChunkSpanningTesrs(compact);
         }
         return visibility;
     }
@@ -114,18 +83,35 @@ public abstract class MixinChunkRenderRebuildTask {
                 int posY = (int) Math.ceil(Math.max(0.0D, bb.maxY - (sy + 16.0D)));
                 int negZ = (int) Math.ceil(Math.max(0.0D, sz - bb.minZ));
                 int posZ = (int) Math.ceil(Math.max(0.0D, bb.maxZ - (sz + 16.0D)));
-                hbm$negX = Math.max(hbm$negX, negX);
-                hbm$posX = Math.max(hbm$posX, posX);
-                hbm$negY = Math.max(hbm$negY, negY);
-                hbm$posY = Math.max(hbm$posY, posY);
-                hbm$negZ = Math.max(hbm$negZ, negZ);
-                hbm$posZ = Math.max(hbm$posZ, posZ);
                 if ((negX | posX | negY | posY | negZ | posZ) != 0) {
-                    hbm$spanningTesrs.add(te);
+                    hbm$negX = Math.max(hbm$negX, negX);
+                    hbm$posX = Math.max(hbm$posX, posX);
+                    hbm$negY = Math.max(hbm$negY, negY);
+                    hbm$posY = Math.max(hbm$posY, posY);
+                    hbm$negZ = Math.max(hbm$negZ, negZ);
+                    hbm$posZ = Math.max(hbm$posZ, posZ);
+                    hbm$addSpanningTesr(te);
                 }
             }
         }
         renderData.addBlockEntity(te, cull);
+    }
+
+    @Unique
+    private void hbm$addSpanningTesr(TileEntity te) {
+        TileEntity[] arr = hbm$spanningTesrs;
+        int count = hbm$spanningTesrCount;
+        if (arr == null) {
+            arr = new TileEntity[4];
+            hbm$spanningTesrs = arr;
+        } else if (count == arr.length) {
+            TileEntity[] grown = new TileEntity[count << 1];
+            System.arraycopy(arr, 0, grown, 0, count);
+            arr = grown;
+            hbm$spanningTesrs = arr;
+        }
+        arr[count] = te;
+        hbm$spanningTesrCount = count + 1;
     }
 
     @Dynamic

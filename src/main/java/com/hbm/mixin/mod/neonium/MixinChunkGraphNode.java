@@ -14,6 +14,8 @@ public abstract class MixinChunkGraphNode {
 
     @Unique
     private int hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ;
+    @Unique
+    private int hbm$extentMask;
 
     @Shadow
     public abstract int getOriginX();
@@ -43,6 +45,7 @@ public abstract class MixinChunkGraphNode {
             hbm$negZ = 0;
             hbm$posZ = 0;
         }
+        hbm$extentMask = hbm$negX | hbm$posX | hbm$negY | hbm$posY | hbm$negZ | hbm$posZ;
     }
 
     /**
@@ -55,6 +58,12 @@ public abstract class MixinChunkGraphNode {
         float y = getOriginY();
         float z = getOriginZ();
         float epsilon = 1.125f;
+
+        if (hbm$extentMask == 0) {
+            return !frustum.fastAabbTest(
+                    x - epsilon, y - epsilon, z - epsilon,
+                    x + 16.0f + epsilon, y + 16.0f + epsilon, z + 16.0f + epsilon);
+        }
 
         return !frustum.fastAabbTest(
                 x - epsilon - hbm$negX, y - epsilon - hbm$negY, z - epsilon - hbm$negZ,

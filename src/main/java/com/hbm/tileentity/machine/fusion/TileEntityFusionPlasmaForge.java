@@ -19,6 +19,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.machine.ModuleMachinePlasma;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.uninos.UniNodespace;
@@ -48,7 +49,7 @@ import java.util.function.Consumer;
 import static com.hbm.inventory.OreDictManager.*;
 
 @AutoRegister
-public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implements ITickable, IFusionPowerReceiver, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider {
+public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implements ITickable, IFusionPowerReceiver, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider, IConnectionAnchors {
 
     public FluidTankNTM inputTank;
 
@@ -108,7 +109,7 @@ public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implement
 
     public TileEntityFusionPlasmaForge() {
         super(16, true, true);
-        this.inputTank = new FluidTankNTM(Fluids.NONE, 16_000);
+        this.inputTank = new FluidTankNTM(Fluids.NONE, 16_000).withOwner(this);
         this.plasmaModule = new ModuleMachinePlasma(0, this, inventory).itemInput(3).itemOutput(15).fluidInput(inputTank);
         this.armStriker = new ForgeArm(ForgeArmType.STRIKER);
         this.armJet = new ForgeArm(ForgeArmType.JET);
@@ -378,7 +379,7 @@ public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implement
 
     @Override
     public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        return new ContainerMachinePlasmaForge(player.inventory, this.inventory);
+        return new ContainerMachinePlasmaForge(player.inventory, this);
     }
 
     @Override

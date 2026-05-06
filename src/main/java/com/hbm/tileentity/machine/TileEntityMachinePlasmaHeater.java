@@ -11,8 +11,10 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachinePlasmaHeater;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
@@ -32,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AutoRegister
-public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IEnergyReceiverMK2, IGUIProvider {
+public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IEnergyReceiverMK2, IGUIProvider, IConnectionAnchors {
 
 	public long power;
 	public static final long maxPower = 100000000;
@@ -43,9 +45,9 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 	public TileEntityMachinePlasmaHeater() {
 		super(5, true, true);
 		tanks = new FluidTankNTM[2];
-		tanks[0] = new FluidTankNTM(Fluids.DEUTERIUM, 16000);
-		tanks[1] = new FluidTankNTM(Fluids.TRITIUM, 16000);
-		plasma = new FluidTankNTM(Fluids.PLASMA_DT, 64000);
+		tanks[0] = new FluidTankNTM(Fluids.DEUTERIUM, 16000).withOwner(this);
+		tanks[1] = new FluidTankNTM(Fluids.TRITIUM, 16000).withOwner(this);
+		plasma = new FluidTankNTM(Fluids.PLASMA_DT, 64000).withOwner(this);
 	}
 
 	@Override
@@ -146,17 +148,29 @@ public class TileEntityMachinePlasmaHeater extends TileEntityMachineBase impleme
 	}
 
 	private void updateConnections()  {
+		for (DirPos p : getConPos()) {
+			this.trySubscribe(world, p.getPos().getX(), p.getPos().getY(), p.getPos().getZ(), p.getDir());
+			this.trySubscribe(tanks[0].getTankType(), world, p.getPos().getX(), p.getPos().getY(), p.getPos().getZ(), p.getDir());
+			this.trySubscribe(tanks[1].getTankType(), world, p.getPos().getX(), p.getPos().getY(), p.getPos().getZ(), p.getDir());
+		}
+	}
 
+	@Override
+	public DirPos[] getConPos() {
 		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
 		ForgeDirection side = dir.getRotation(ForgeDirection.UP);
-
-		for(int i = 1; i < 4; i++) {
-			for(int j = -1; j < 2; j++) {
-				this.trySubscribe(world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
-				this.trySubscribe(tanks[0].getTankType(), world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
-				this.trySubscribe(tanks[1].getTankType(), world, pos.getX() + side.offsetX * j + dir.offsetX * 2, pos.getY() + i, pos.getZ() + side.offsetZ * j + dir.offsetZ * 2, j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
+		DirPos[] result = new DirPos[9];
+		int idx = 0;
+		for (int i = 1; i < 4; i++) {
+			for (int j = -1; j < 2; j++) {
+				result[idx++] = new DirPos(
+						pos.getX() + side.offsetX * j + dir.offsetX * 2,
+						pos.getY() + i,
+						pos.getZ() + side.offsetZ * j + dir.offsetZ * 2,
+						j < 0 ? ForgeDirection.DOWN : ForgeDirection.UP);
 			}
 		}
+		return result;
 	}
 
 	private void updateType() {

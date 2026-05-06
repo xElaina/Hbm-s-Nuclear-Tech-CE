@@ -26,6 +26,7 @@ import com.hbm.items.special.ItemBedrockOreBase;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
@@ -64,7 +65,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 @AutoRegister
-public class TileEntityMachineExcavator extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardReceiver, ITickable, IControlReceiver, IGUIProvider, IUpgradeInfoProvider, IFluidCopiable {
+public class TileEntityMachineExcavator extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardReceiver, ITickable, IControlReceiver, IGUIProvider, IUpgradeInfoProvider, IFluidCopiable, IConnectionAnchors {
 
     public static final long maxPower = 10_000_000;
     private final long baseConsumption = 10_000L;
@@ -96,7 +97,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 
     public TileEntityMachineExcavator() {
         super(14, true, true);
-        this.tank = new FluidTankNTM(Fluids.NONE, 16_000);
+        this.tank = new FluidTankNTM(Fluids.NONE, 16_000).withOwner(this);
     }
 
     // 1.7 = isOre(int x ,int y, int z, Block b)
@@ -222,7 +223,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
         }
     }
 
-    protected DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
         ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
