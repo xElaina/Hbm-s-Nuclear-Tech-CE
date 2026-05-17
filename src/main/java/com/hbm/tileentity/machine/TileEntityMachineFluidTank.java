@@ -16,7 +16,12 @@ import com.hbm.interfaces.IClimbable;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerMachineFluidTank;
-import com.hbm.inventory.control_panel.*;
+import com.hbm.inventory.control_panel.ControlEvent;
+import com.hbm.inventory.control_panel.ControlEventSystem;
+import com.hbm.inventory.control_panel.IControllable;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
+import com.hbm.inventory.control_panel.types.DataValueString;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -27,6 +32,7 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.tileentity.*;
 import com.hbm.uninos.UniNodespace;
 import com.hbm.util.ParticleUtil;
@@ -43,12 +49,10 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -65,7 +69,7 @@ import java.util.*;
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")
 @AutoRegister
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements SimpleComponent, CompatHandler.OCComponent, ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFluidCopiable, IClimbable, IRORValueProvider, IRORInteractive {
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements SimpleComponent, CompatHandler.OCComponent, ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFluidCopiable, IClimbable, IRORValueProvider, IRORInteractive, IConnectionAnchors {
     private AxisAlignedBB bb;
     protected FluidNode node;
     protected FluidType lastType;
@@ -85,7 +89,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
     public TileEntityMachineFluidTank() {
         super(6, true, false);
-        tank = new FluidTankNTM(Fluids.NONE, 256000);
+        tank = new FluidTankNTM(Fluids.NONE, 256000).withOwner(this);
     }
 
     public String getDefaultName() {
@@ -149,12 +153,6 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
             });
         }
         return super.getCapability(capability, facing);
-    }
-
-    public byte getComparatorPower() {
-        if (tank.getFill() == 0) return 0;
-        double frac = (double) tank.getFill() / (double) tank.getMaxFill() * 15D;
-        return (byte) (MathHelper.clamp((int) frac + 1, 0, 15));
     }
 
     @Override
@@ -233,12 +231,13 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
                 this.node = null;
             }
 
-            byte comp = this.getComparatorPower(); //comparator shit
-            if (comp != this.lastRedstone) {
-                this.markDirty();
-                for (DirPos pos : getConPos()) this.updateRedstoneConnection(pos);
-            }
-            this.lastRedstone = comp;
+			// Redstone Comparator Check
+			byte comp = tank.getRedstoneComparatorPower();
+			if(comp != this.lastRedstone) {
+				this.markDirty();
+				for(DirPos pos : getConPos()) this.updateRedstoneComparatorConnection(pos);
+			}
+			this.lastRedstone = comp;
 
             if (tank.getFill() > 0) {
                 if (tank.getTankType().isAntimatter()) {
@@ -347,13 +346,12 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
             if (world.getTotalWorldTime() % 5 == 0) {
                 NBTTagCompound data = new NBTTagCompound();
-                data.setString("type", "tower");
                 data.setFloat("lift", 1F);
                 data.setFloat("base", 1F);
                 data.setFloat("max", 5F);
                 data.setInteger("life", 100 + world.rand.nextInt(20));
                 data.setInteger("color", tank.getTankType().getColor());
-                PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
+                PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(HbmEffectNT.Tower, data, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
             }
 
             if (world.getTotalWorldTime() % 5 == 0) {
@@ -382,7 +380,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
         }
     }
 
-    protected DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         return new DirPos[]{new DirPos(pos.getX() + 2, pos.getY(), pos.getZ() - 1, Library.POS_X), new DirPos(pos.getX() + 2, pos.getY(), pos.getZ() + 1, Library.POS_X), new DirPos(pos.getX() - 2, pos.getY(), pos.getZ() - 1, Library.NEG_X), new DirPos(pos.getX() - 2, pos.getY(), pos.getZ() + 1, Library.NEG_X), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ() + 2, Library.POS_Z), new DirPos(pos.getX() + 1, pos.getY(), pos.getZ() + 2, Library.POS_Z), new DirPos(pos.getX() - 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z), new DirPos(pos.getX() + 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z)};
     }
 
@@ -512,7 +510,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
     @Override
     public Map<String, DataValue> getQueryData() {
-        Map<String, DataValue> data = new HashMap<>();
+        Map<String,DataValue> data = new HashMap<>();
 
         if (tank.getTankType() != Fluids.NONE) {
             data.put("t0_fluidType", new DataValueString(tank.getTankType().getLocalizedName()));
@@ -642,7 +640,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
     @Override
     public String[] getFunctionInfo() {
-        return new String[]{PREFIX_VALUE + "type", PREFIX_VALUE + "fill", PREFIX_VALUE + "fillpercent", PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode", PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode" + PARAM_SEPARATOR + "fallback",};
+        return new String[]{PREFIX_VALUE + "type", PREFIX_VALUE + "fill", PREFIX_VALUE + "fillpercent", PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode (0-3)", PREFIX_FUNCTION + "setmode" + NAME_SEPARATOR + "mode" + PARAM_SEPARATOR + "fallback (0-3)",};
     }
 
     @Override

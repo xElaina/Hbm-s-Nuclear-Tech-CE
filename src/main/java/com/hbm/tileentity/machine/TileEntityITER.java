@@ -27,6 +27,7 @@ import com.hbm.lib.Library;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IFluidCopiable;
@@ -82,9 +83,9 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
     public TileEntityITER() {
         super(5, true, true);
         tanks = new FluidTankNTM[2];
-        tanks[0] = new FluidTankNTM(Fluids.WATER, 1280000);
-        tanks[1] = new FluidTankNTM(Fluids.ULTRAHOTSTEAM, 128000);
-        plasma = new FluidTankNTM(Fluids.PLASMA_DT, 16000);
+        tanks[0] = new FluidTankNTM(Fluids.WATER, 1280000).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.ULTRAHOTSTEAM, 128000).withOwner(this);
+        plasma = new FluidTankNTM(Fluids.PLASMA_DT, 16000).withOwner(this);
     }
 
     @Override
@@ -242,9 +243,8 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
             exp.doExplosionB(false);
 
             NBTTagCompound data = new NBTTagCompound();
-            data.setString("type", "muke");
             data.setBoolean("balefire", true);
-            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), xCoord, yCoord, zCoord, 250));
+            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(HbmEffectNT.Muke, data, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), xCoord, yCoord, zCoord, 250));
 
         } else {
             Vec3 vec = Vec3.createVectorHelper(5.5, 0, 0);

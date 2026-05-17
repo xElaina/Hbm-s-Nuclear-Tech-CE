@@ -19,6 +19,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
@@ -43,7 +44,7 @@ import java.util.Random;
 
 @AutoRegister
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
-public class TileEntityMachineLargeTurbine extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IFFtoNTMF {
+public class TileEntityMachineLargeTurbine extends TileEntityMachineBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IFFtoNTMF, IConnectionAnchors {
 
     private AxisAlignedBB bb;
     public static final long maxPower = 100000000;
@@ -64,8 +65,8 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
     public TileEntityMachineLargeTurbine() {
         super(7, true, true);
         tanksNew = new FluidTankNTM[2];
-        tanksNew[0] = new FluidTankNTM(Fluids.STEAM, 512000, 0);
-        tanksNew[1] = new FluidTankNTM(Fluids.SPENTSTEAM, 10240000, 1);
+        tanksNew[0] = new FluidTankNTM(Fluids.STEAM, 512000, 0).withOwner(this);
+        tanksNew[1] = new FluidTankNTM(Fluids.SPENTSTEAM, 10240000, 1).withOwner(this);
 
         tanks = new FluidTank[2];
         tanks[0] = new FluidTank(512000);
@@ -166,7 +167,7 @@ public class TileEntityMachineLargeTurbine extends TileEntityMachineBase impleme
         }
     }
 
-    protected DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
         ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
         return new DirPos[]{

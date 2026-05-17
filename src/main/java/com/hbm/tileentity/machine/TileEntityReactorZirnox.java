@@ -1,6 +1,8 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.MobConfig;
@@ -26,6 +28,8 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.particle.helper.HbmEffectNT;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.EnumUtil;
@@ -60,7 +64,7 @@ import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent {
+public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent, IRORValueProvider, IRORInteractive, IConnectionAnchors {
 
     private AxisAlignedBB bb;
     public static final int maxHeat = 100000;
@@ -93,9 +97,9 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
 
     public TileEntityReactorZirnox() {
         super(28, true, false);
-        steam = new FluidTankNTM(Fluids.SUPERHOTSTEAM, 8000);
-        carbonDioxide = new FluidTankNTM(Fluids.CARBONDIOXIDE, 16000);
-        water = new FluidTankNTM(Fluids.WATER, 32000);
+        steam = new FluidTankNTM(Fluids.SUPERHOTSTEAM, 8000).withOwner(this);
+        carbonDioxide = new FluidTankNTM(Fluids.CARBONDIOXIDE, 16000).withOwner(this);
+        water = new FluidTankNTM(Fluids.WATER, 32000).withOwner(this);
     }
     public void setRedstonePowered(boolean powered) {
         if (!powered && this.redstonePowered) {
@@ -386,10 +390,9 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
             this.inventory.setStackInSlot(i, ItemStack.EMPTY);
         }
         NBTTagCompound data = new NBTTagCompound();
-        data.setString("type", "rbmkmush");
         data.setFloat("scale", 4);
-        PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 250));
-        MainRegistry.proxy.effectNT(data);
+        PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(HbmEffectNT.RBMKMush, data, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 250));
+        MainRegistry.proxy.effectNT(HbmEffectNT.RBMKMush, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, data);
 
         int meta = this.getBlockMetadata();
         for (int ox = -2; ox <= 2; ox++) {
@@ -428,7 +431,7 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
         }
     }
 
-    private DirPos[] getConPos() {
+    public DirPos[] getConPos() {
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
         ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
@@ -602,5 +605,46 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIReactorZirnox(player.inventory, this);
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "heat",
+                PREFIX_VALUE + "pressure",
+                PREFIX_VALUE + "water",
+                PREFIX_VALUE + "steam",
+                PREFIX_VALUE + "co2",
+                PREFIX_VALUE + "state",
+                PREFIX_FUNCTION + "setState" + NAME_SEPARATOR + "active (0 or 1)",
+                PREFIX_FUNCTION + "ventCO2"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if ((PREFIX_VALUE + "heat").equals(name))     return "" + (int) Math.round(heat * 1.0E-5D * 780.0D + 20.0D);
+        if ((PREFIX_VALUE + "pressure").equals(name)) return "" + (int) Math.round(pressure * 1.0E-5D * 30.0D);
+        if ((PREFIX_VALUE + "water").equals(name))    return "" + water.getFill();
+        if ((PREFIX_VALUE + "steam").equals(name))    return "" + steam.getFill();
+        if ((PREFIX_VALUE + "co2").equals(name))      return "" + carbonDioxide.getFill();
+        if ((PREFIX_VALUE + "state").equals(name))    return isOn ? "1" : "0";
+        return null;
+    }
+
+    @Override
+    public String runRORFunction(String name, String[] params) {
+        if((PREFIX_FUNCTION + "setState").equals(name) && params.length > 0) {
+            if(redstonePowered) return null;
+            this.isOn = IRORInteractive.parseInt(params[0], 0, 1) == 1;
+            this.markDirty();
+            return null;
+        }
+        if((PREFIX_FUNCTION + "ventCO2").equals(name)) {
+            carbonDioxide.setFill(Math.max(carbonDioxide.getFill() - 1000, 0));
+            this.markDirty();
+            return null;
+        }
+        return null;
     }
 }

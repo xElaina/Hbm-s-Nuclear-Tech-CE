@@ -160,22 +160,6 @@ public abstract class TileEntityFoundryCastingBase extends TileEntityFoundryBase
 			inventory.deserializeNBT(nbt.getCompoundTag("inventory"));
 	}
 
-	@NotNull
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = super.getUpdateTag();
-		tag.setTag("inventory", inventory.serializeNBT());
-		return tag;
-	}
-
-	@Override
-	public void handleUpdateTag(@NotNull NBTTagCompound tag)
-	{
-		super.handleUpdateTag(tag);
-		if(tag.hasKey("inventory"))
-			inventory.deserializeNBT(tag.getCompoundTag("inventory"));
-	}
-
 	public boolean isUseableByPlayer(EntityPlayer player) {
 		return false;
 	}

@@ -44,7 +44,7 @@ public class TileEntityCoreReceiver extends TileEntityMachineBase implements ITi
 
     public TileEntityCoreReceiver() {
         super(0, true, true);
-        tank = new FluidTankNTM(Fluids.CRYOGEL, 64000);
+        tank = new FluidTankNTM(Fluids.CRYOGEL, 64000).withOwner(this);
     }
 
     @Override

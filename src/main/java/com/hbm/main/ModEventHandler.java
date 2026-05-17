@@ -10,23 +10,22 @@ import com.hbm.capability.HbmLivingCapability;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.*;
 import com.hbm.core.BlockMetaAir;
-import com.hbm.explosion.vanillant.ExplosionVNT;
-import com.hbm.explosion.vanillant.standard.EntityProcessorCrossSmooth;
-import com.hbm.explosion.vanillant.standard.ExplosionEffectWeapon;
-import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
-import com.hbm.util.CompatBlockReplacer;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityCyberCrab;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
-import com.hbm.handler.threading.BombForkJoinPool;
 import com.hbm.events.CheckLadderEvent;
 import com.hbm.events.InventoryChangedEvent;
+import com.hbm.explosion.vanillant.ExplosionVNT;
+import com.hbm.explosion.vanillant.standard.EntityProcessorCrossSmooth;
+import com.hbm.explosion.vanillant.standard.ExplosionEffectWeapon;
+import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
 import com.hbm.handler.*;
 import com.hbm.handler.neutron.NeutronHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.handler.threading.BombForkJoinPool;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
@@ -37,11 +36,10 @@ import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.*;
 import com.hbm.items.food.ItemConserve;
-import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.gear.ArmorFSB;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.special.ItemHot;
 import com.hbm.items.tool.ItemDigammaDiagnostic;
-import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -54,6 +52,7 @@ import com.hbm.packet.threading.ThreadedPacket;
 import com.hbm.packet.toclient.*;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.particle.helper.BlackPowderCreator;
+import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
@@ -91,6 +90,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.*;
@@ -103,12 +103,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.BlockStateContainer;
-import net.minecraft.world.chunk.BlockStatePaletteHashMap;
-import net.minecraft.world.chunk.BlockStatePaletteLinear;
-
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IBlockStatePalette;
+import net.minecraft.world.chunk.*;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
@@ -142,6 +137,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.registries.DataSerializerEntry;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
@@ -162,11 +158,6 @@ public class ModEventHandler {
 
     static {
         RBMK_COL_HEIGHT_MAP.defaultReturnValue((int) RBMKDials.RBMKKeys.KEY_COLUMN_HEIGHT.defValue);
-    }
-
-    public static boolean doesArrayContain(Object[] array, Object objectCheck) {
-        System.out.println("On Recipe Register");
-        return false;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -229,7 +220,7 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void soundRegistering(RegistryEvent.Register<SoundEvent> evt) {
-        for (SoundEvent e : HBMSoundHandler.ALL_SOUNDS) {
+        for (SoundEvent e : HBMSoundHandler.ALL_SOUNDS.values()) {
             evt.getRegistry().register(e);
         }
     }
@@ -291,11 +282,15 @@ public class ModEventHandler {
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_VILLAGE_BLACKSMITH, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.bathwater), 1, 1, 1));
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.bathwater), 1, 1, 1));
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.serum), 1, 1, 5));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.no9), 1, 1, 5));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.key_red_cracked), 1, 1, 5));
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_SIMPLE_DUNGEON, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.heart_piece), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_SIMPLE_DUNGEON, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.key_red_cracked), 1, 1, 5));
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_DESERT_PYRAMID, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.heart_piece), 1, 1, 1));
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_JUNGLE_TEMPLE, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.heart_piece), 1, 1, 1));
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_SIMPLE_DUNGEON, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.scrumpy), 1, 1, 1));
             addWeightedRandomToLootTable(e, LootTableList.CHESTS_DESERT_PYRAMID, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.scrumpy), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_SPAWN_BONUS_CHEST, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.no9), 1, 1, 7));
         }
     }
 
@@ -355,10 +350,9 @@ public class ModEventHandler {
             EntityLivingBase entity = event.getEntityLiving();
             World world = event.getWorld();
 
-            if (entity instanceof EntityLiving && canWear(entity)) {
+            if (entity instanceof EntityLiving mob && canWear(entity)) {
                 int randomArmorNumber = rand.nextInt(2 << 16);
                 int randomHandNumber = rand.nextInt(256);
-                EntityLiving mob = (EntityLiving) entity;
                 boolean hasMainHand = !mob.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND).isEmpty();
                 boolean hasOffHand = !mob.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).isEmpty();
                 boolean hasHat = !mob.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty();
@@ -500,6 +494,8 @@ public class ModEventHandler {
 
     private static ItemStack getSkelegun(float soot, Random rand) {
         if (!MobConfig.enableMobWeapons) return null;
+
+        soot -= (float) MobConfig.mobWeaponSootReduction;
         if (rand.nextDouble() > Math.log(soot) * 0.25) return null;
 
         ArrayList<WeightedRandomObject> pool = new ArrayList<>();
@@ -722,12 +718,10 @@ public class ModEventHandler {
             EntityPlayer attacker = (EntityPlayer) event.getSource().getImmediateSource();
 
             NBTTagCompound data = new NBTTagCompound();
-            data.setString("type", "vanillaburst");
             data.setInteger("count", (int) Math.min(e.getMaxHealth() / 2F, 250));
             data.setDouble("motion", 0.1D);
-            data.setString("mode", "blockdust");
             data.setInteger("block", Block.getIdFromBlock(Blocks.REDSTONE_BLOCK));
-            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, e.posX, e.posY + e.height * 0.5, e.posZ), new TargetPoint(e.dimension, e.posX, e.posY, e.posZ, 50));
+            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(HbmEffectNT.VanillaBurst_BlockDust, data, e.posX, e.posY + e.height * 0.5, e.posZ), new TargetPoint(e.dimension, e.posX, e.posY, e.posZ, 50));
 
             if (attacker.getDistanceSq(e) < 25) {
                 attacker.heal(event.getAmount() * 0.5F);
@@ -1029,31 +1023,39 @@ public class ModEventHandler {
             }
         }
 
-        if (!event.getEntityLiving().world.isRemote) {
+        if (!event.getEntityLiving().world.isRemote && event.getEntityLiving().world.getGameRules().getBoolean("doMobLoot")) {
 
             if (event.getSource() instanceof EntityDamageSource && ((EntityDamageSource) event.getSource()).getTrueSource() instanceof EntityPlayer
                     && !(((EntityDamageSource) event.getSource()).getTrueSource() instanceof FakePlayer)) {
 
-                if (event.getEntityLiving() instanceof EntitySpider && event.getEntityLiving().getRNG().nextInt(500) == 0) {
+                Random rng = event.getEntityLiving().getRNG();
+
+                if (event.getEntityLiving() instanceof EntitySpider && rng.nextInt(500) == 0) {
                     event.getEntityLiving().dropItem(ModItems.spider_milk, 1);
                 }
 
-                if (event.getEntityLiving() instanceof EntityCaveSpider && event.getEntityLiving().getRNG().nextInt(100) == 0) {
+                if (event.getEntityLiving() instanceof EntityCaveSpider && rng.nextInt(100) == 0) {
                     event.getEntityLiving().dropItem(ModItems.serum, 1);
                 }
 
-                if (event.getEntityLiving() instanceof EntityAnimal && event.getEntityLiving().getRNG().nextInt(500) == 0) {
+                if (event.getEntityLiving() instanceof EntityAnimal && rng.nextInt(500) == 0) {
                     event.getEntityLiving().dropItem(ModItems.bandaid, 1);
                 }
 
-                if (event.getEntityLiving() instanceof IMob && event.getEntityLiving().getRNG().nextInt(1000) == 0) {
-                    event.getEntityLiving().dropItem(ModItems.heart_piece, 1);
-                    if(event.getEntityLiving().getRNG().nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.key_red_cracked, 1);
-                    if(event.getEntityLiving().getRNG().nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.launch_code_piece, 1);
+                if (event.getEntityLiving() instanceof IMob) {
+                    if(rng.nextInt(1000) == 0) event.getEntityLiving().dropItem(ModItems.heart_piece, 1);
+                    if(rng.nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.key_red_cracked, 1);
+                    if(rng.nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.launch_code_piece, 1);
                 }
 
-                if (event.getEntityLiving() instanceof EntityCyberCrab && event.getEntityLiving().getRNG().nextInt(500) == 0) {
+                if (event.getEntityLiving() instanceof EntityCyberCrab && rng.nextInt(500) == 0) {
                     event.getEntityLiving().dropItem(ModItems.wd40, 1);
+                }
+
+                if (event.getEntityLiving() instanceof EntityZombie) {
+                    if (rng.nextInt(200) == 0) event.getEntityLiving().dropItem(ModItems.ingot_copper, 1);
+                    if (rng.nextInt(200) == 0) event.getEntityLiving().dropItem(ModItems.ingot_aluminium, 1);
+                    if (rng.nextInt(200) == 0) event.getEntityLiving().dropItem(ModItems.ingot_titanium, 1);
                 }
             }
         }
@@ -1115,9 +1117,8 @@ public class ModEventHandler {
         if (EntityDamageUtil.wasAttackedByV1(event.getSource())) {
 
             NBTTagCompound vdat = new NBTTagCompound();
-            vdat.setString("type", "giblets");
             vdat.setInteger("ent", entity.getEntityId());
-            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(vdat, entity.posX, entity.posY + entity.height * 0.5, entity.posZ), new TargetPoint(entity.dimension, entity.posX, entity.posY + entity.height * 0.5, entity.posZ, 150));
+            PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(HbmEffectNT.Giblets, vdat, entity.posX, entity.posY + entity.height * 0.5, entity.posZ), new TargetPoint(entity.dimension, entity.posX, entity.posY + entity.height * 0.5, entity.posZ, 150));
 
             entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, SoundCategory.HOSTILE, 2.0F, 0.95F + entity.world.rand.nextFloat() * 0.2F);
 
@@ -1305,7 +1306,7 @@ public class ModEventHandler {
                 }
             }
 
-            if(GeneralConfig.enableGuideBook) {
+            /*if(GeneralConfig.enableGuideBook) {
                 IHBMData props = HbmCapability.getData(player);
 
                 if(!props.hasReceivedBook()) {
@@ -1314,7 +1315,7 @@ public class ModEventHandler {
                         props.setReceivedBook(true);
                     }
                 }
-            }
+            }*/
 
             if(GeneralConfig.enableServerRecipeSync) {
                 File recDir = new File(MainRegistry.configDir.getAbsolutePath() + File.separatorChar + "hbmRecipes");
@@ -1508,17 +1509,22 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void onItemRegister(RegistryEvent.Register<Item> evt) {
+        ModItems.registerItems();
     }
 
     @SubscribeEvent
     public void onBlockRegister(RegistryEvent.Register<Block> evt) {
+        ModBlocks.registerBlocks();
     }
 
     @SubscribeEvent
-    public void onRecipeRegister(RegistryEvent.Register<IRecipe> evt) {
-        IRecipe[] recipes = new IRecipe[12];
-        IRecipe recipe = null;
-        doesArrayContain(recipes, recipe);
+    public void onPotionRegister(RegistryEvent.Register<Potion> evt) {
+        HbmPotion.registerPotions(evt.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onEntityRegister(RegistryEvent.Register<EntityEntry> evt) {
+        AutoRegistry.registerEntities(0);
     }
 
     /**

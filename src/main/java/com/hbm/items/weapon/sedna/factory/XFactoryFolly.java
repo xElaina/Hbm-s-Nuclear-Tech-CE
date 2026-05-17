@@ -14,6 +14,7 @@ import com.hbm.items.weapon.sedna.mags.MagazineSingleReload;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.threading.ThreadedPacket;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.render.anim.sedna.AnimationEnums;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
@@ -25,6 +26,7 @@ import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.Vec3NT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -50,14 +52,13 @@ public class XFactoryFolly {
             double spacing = 10;
             double dist = beam.ticksExisted * spacing;
             NBTTagCompound data = new NBTTagCompound();
-            data.setString("type", "plasmablast");
             data.setFloat("r", 0.75F);
             data.setFloat("g", 0.75F);
             data.setFloat("b", 0.75F);
             data.setFloat("pitch", beam.rotationPitch + 90);
             data.setFloat("yaw", -beam.rotationYaw);
             data.setFloat("scale", 2F + beam.ticksExisted / (float)(beam.beamLength / spacing) * 3F);
-            ThreadedPacket message = new AuxParticlePacketNT(data, beam.posX + dir.x * dist, beam.posY + dir.y * dist, beam.posZ + dir.z * dist);
+            ThreadedPacket message = new AuxParticlePacketNT(HbmEffectNT.PlasmaBlast, data, beam.posX + dir.x * dist, beam.posY + dir.y * dist, beam.posZ + dir.z * dist);
             PacketThreading.createAllAroundThreadedPacket(message,
                     new NetworkRegistry.TargetPoint(beam.dimension, beam.posX, beam.posY, beam.posZ, 250));
         }
@@ -122,9 +123,11 @@ public class XFactoryFolly {
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_FIRE = (stack, ctx) -> Lego.doStandardFire(stack, ctx, AnimationEnums.GunAnimation.CYCLE, 0, false);
 
     public static BiFunction<ItemStack, ItemGunBaseNT.LambdaContext, Boolean> LAMBDA_CAN_FIRE = (stack, ctx) -> {
-        if(!ItemGunBaseNT.getIsAiming(stack)) return false;
-        if(ItemGunBaseNT.getLastAnim(stack, ctx.configIndex) != AnimationEnums.GunAnimation.SPINUP) return false;
-        if(ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex) < 100) return false;
+        if(ctx.entity instanceof EntityPlayer) {
+            if(!ItemGunBaseNT.getIsAiming(stack)) return false;
+            if(ItemGunBaseNT.getLastAnim(stack, ctx.configIndex) != AnimationEnums.GunAnimation.SPINUP) return false;
+            if(ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex) < 100) return false;
+        }
         return ctx.config.getReceivers(stack)[0].getMagazine(stack).getAmount(stack, ctx.inventory) > 0;
     };
 

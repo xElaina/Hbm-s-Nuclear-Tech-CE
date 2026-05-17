@@ -4,15 +4,15 @@ import com.hbm.api.energymk2.Nodespace;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.util.ColorUtil;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +49,7 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 	}
 
 	public boolean setColor(ItemStack stack) {
-		if(stack == ItemStack.EMPTY) return false;
+		if(stack.isEmpty()) return false;
 		int color = ColorUtil.getColorFromDye(stack);
 		if(color == 0 || color == this.color) return false;
 		stack.shrink(1);
@@ -163,29 +163,18 @@ public abstract class TileEntityPylonBase extends TileEntityCableBaseNT {
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
+	public void serializeInitial(ByteBuf buf) {
+		super.serializeInitial(buf);
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new SPacketUpdateTileEntity(this.pos, 0, nbt);
+		ByteBufUtils.writeTag(buf, nbt);
 	}
 
 	@Override
-	public @NotNull NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		return this.writeToNBT(nbt);
-	}
-
-	@Override
-	public void handleUpdateTag(@NotNull NBTTagCompound tag) {
-		this.readFromNBT(tag);
-	}
-	
-	@Override
-	public void onDataPacket(@NotNull NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
-		if (world != null) {
-			world.markBlockRangeForRenderUpdate(pos, pos);
-		}
+	public void deserializeInitial(ByteBuf buf) {
+		super.deserializeInitial(buf);
+		NBTTagCompound nbt = ByteBufUtils.readTag(buf);
+		if (nbt != null) this.readFromNBT(nbt);
 	}
 
 	public enum ConnectionType {

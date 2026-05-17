@@ -29,7 +29,7 @@ public class GUIMachinePlasmaForge extends GuiInfoContainer {
     private final TileEntityFusionPlasmaForge forge;
 
     public GUIMachinePlasmaForge(InventoryPlayer invPlayer, TileEntityFusionPlasmaForge forge) {
-        super(new ContainerMachinePlasmaForge(invPlayer, forge.inventory));
+        super(new ContainerMachinePlasmaForge(invPlayer, forge));
         this.forge = forge;
         this.xSize = 176;
         this.ySize = 244;

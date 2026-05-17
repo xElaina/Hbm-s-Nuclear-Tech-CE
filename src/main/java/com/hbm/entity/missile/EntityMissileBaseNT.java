@@ -8,6 +8,7 @@ import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.items.weapon.ItemMissileStandard;
 import com.hbm.main.MainRegistry;
+import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.TrackerUtil;
 import net.minecraft.entity.EntityTrackerEntry;
@@ -154,7 +155,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
                 if (motionY > -1.5) motionY -= 0.05;
             }
 
-            if (motionY < -velocity && this.isCluster) {
+            if (motionY < -1.5 && this.isCluster) {
                 cluster();
                 this.setDead();
                 return;
@@ -194,16 +195,12 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
         for (int i = 0; i < Math.max(Math.min(len, 10), 1); i++) {
             double j = i - len;
             NBTTagCompound data = new NBTTagCompound();
-            data.setDouble("posX", posX - vec.xCoord * j + offsetX);
-            data.setDouble("posY", posY - vec.yCoord * j + offsetY);
-            data.setDouble("posZ", posZ - vec.zCoord * j + offsetZ);
-            data.setString("type", "missileContrail");
             data.setFloat("scale", this.getContrailScale());
             data.setDouble("moX", -thrust.xCoord);
             data.setDouble("moY", -thrust.yCoord);
             data.setDouble("moZ", -thrust.zCoord);
             data.setInteger("maxAge", 60 + rand.nextInt(20));
-            MainRegistry.proxy.effectNT(data);
+            MainRegistry.proxy.effectNT(HbmEffectNT.MissileContrail, posX - vec.xCoord * j + offsetX, posY - vec.yCoord * j + offsetY, posZ - vec.zCoord * j + offsetZ, data);
         }
     }
 

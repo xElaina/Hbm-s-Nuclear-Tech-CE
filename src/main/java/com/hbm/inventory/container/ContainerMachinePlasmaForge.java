@@ -1,65 +1,57 @@
 package com.hbm.inventory.container;
 
-import com.hbm.api.energymk2.IBatteryItem;
+import com.hbm.inventory.RecipesCommon.AStack;
+import com.hbm.inventory.TransferStrategy;
+import com.hbm.inventory.recipes.PlasmaForgeRecipe;
+import com.hbm.inventory.recipes.PlasmaForgeRecipes;
 import com.hbm.inventory.slot.SlotBattery;
 import com.hbm.inventory.slot.SlotCraftingOutput;
 import com.hbm.inventory.slot.SlotNonRetarded;
 import com.hbm.items.ModItems;
+import com.hbm.lib.Library;
+import com.hbm.tileentity.machine.fusion.TileEntityFusionPlasmaForge;
 import com.hbm.util.InventoryUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerMachinePlasmaForge extends ContainerBase {
 
-    public ContainerMachinePlasmaForge(InventoryPlayer invPlayer, IItemHandler forge) {
-        super(invPlayer, forge);
+    private final TileEntityFusionPlasmaForge forge;
+    private final TransferStrategy plasmaTransfer;
 
-        this.addSlotToContainer(new SlotBattery(forge, 0, 152, 82));
-        this.addSlotToContainer(new SlotNonRetarded(forge, 1, 35, 81));
-        this.addSlotToContainer(new SlotNonRetarded(forge, 2, 98, 116));
-        this.addSlots(forge, 3, 8, 18, 3, 4);
-        this.addSlotToContainer(new SlotCraftingOutput(invPlayer.player, forge, 15, 116, 36));
+    public ContainerMachinePlasmaForge(InventoryPlayer invPlayer, TileEntityFusionPlasmaForge forge) {
+        super(invPlayer, forge.inventory);
+        this.forge = forge;
 
-        this.playerInv(invPlayer, 8, 162);
+        addSlotToContainer(new SlotBattery(forge.inventory, 0, 152, 82));
+        addSlotToContainer(new SlotNonRetarded(forge.inventory, 1, 35, 81));
+        addSlotToContainer(new SlotNonRetarded(forge.inventory, 2, 98, 116));
+        addSlots(forge.inventory, 3, 8, 18, 3, 4);
+        addSlotToContainer(new SlotCraftingOutput(invPlayer.player, forge.inventory, 15, 116, 36));
+
+        playerInv(invPlayer, 8, 162);
+        plasmaTransfer = TransferStrategy.builder(forge.inventory.getSlots())
+                .rule(0, 1, Library::isBattery)
+                .rule(1, 2, stack -> stack.getItem() == ModItems.blueprints)
+                .rule(3, 15, this::matchesRecipeInput)
+                .genericMachineRange(2, 15)
+                .ruleDispatchMode(TransferStrategy.RuleDispatchMode.FIRST_MATCH_WINS)
+                .build();
     }
 
     @Override
     public @NotNull ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack slotOriginal = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
+        return InventoryUtil.transferStack(inventorySlots, index, plasmaTransfer, player);
+    }
 
-        if(slot != null && slot.getHasStack()) {
-            ItemStack slotStack = slot.getStack();
-            slotOriginal = slotStack.copy();
-
-            if(index <= tile.getSlots() - 1) {
-                SlotCraftingOutput.checkAchievements(player, slotStack);
-                if(!this.mergeItemStack(slotStack, tile.getSlots(), this.inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else {
-                if(slotOriginal.getItem() instanceof IBatteryItem || slotOriginal.getItem() == ModItems.battery_creative) {
-                    if(!this.mergeItemStack(slotStack, 0, 1, false)) return ItemStack.EMPTY;
-                } else if(slotOriginal.getItem() == ModItems.blueprints) {
-                    if(!this.mergeItemStack(slotStack, 1, 2, false)) return ItemStack.EMPTY;
-                } else {
-                    if(!InventoryUtil.mergeItemStack(this.inventorySlots, slotStack, 2, 15, false)) return ItemStack.EMPTY;
-                }
-            }
-
-            if(slotStack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-
-            slot.onTake(player, slotStack);
+    private boolean matchesRecipeInput(ItemStack stack) {
+        PlasmaForgeRecipe recipe = PlasmaForgeRecipes.INSTANCE.recipeNameMap.get(forge.plasmaModule.recipe);
+        if(recipe == null || recipe.inputItem == null) return false;
+        for(AStack input : recipe.inputItem) {
+            if(input != null && input.matchesRecipe(stack, true)) return true;
         }
-
-        return slotOriginal;
+        return false;
     }
 }

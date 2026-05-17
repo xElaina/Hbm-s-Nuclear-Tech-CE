@@ -16,6 +16,7 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.BufPacket;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
@@ -47,7 +48,7 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
         IFluidStandardTransceiver,
         IFluidCopiable,
         IBufPacketReceiver,
-        IConfigurableMachine {
+        IConfigurableMachine, IConnectionAnchors {
   private AxisAlignedBB bb;
   public long powerBuffer;
 
@@ -68,8 +69,8 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
     super();
 
     tanks = new FluidTankNTM[2];
-    tanks[0] = new FluidTankNTM(Fluids.STEAM, steamCap);
-    tanks[1] = new FluidTankNTM(Fluids.SPENTSTEAM, ldsCap);
+    tanks[0] = new FluidTankNTM(Fluids.STEAM, steamCap).withOwner(this);
+    tanks[1] = new FluidTankNTM(Fluids.SPENTSTEAM, ldsCap).withOwner(this);
   }
 
   @Override
@@ -190,7 +191,7 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
     }
   }
 
-  protected DirPos[] getConPos() {
+  public DirPos[] getConPos() {
     ForgeDirection dir =
         ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
     ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
@@ -271,6 +272,14 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
   @Override
   public FluidTankNTM[] getAllTanks() {
     return tanks;
+  }
+
+  @Override
+  public void serializeInitial(ByteBuf buf) {
+    this.tanks[0].serialize(buf);
+    buf.writeLong(this.powerBuffer);
+    buf.writeFloat(this.rotor);
+    this.tanks[1].serialize(buf);
   }
 
   @Override

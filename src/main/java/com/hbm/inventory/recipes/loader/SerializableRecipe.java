@@ -52,7 +52,6 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new CokerRecipes());
         recipeHandlers.add(new CompressorRecipes());
         recipeHandlers.add(new CrackingRecipes());
-        recipeHandlers.add(new CrucibleRecipes());
         recipeHandlers.add(new CrystallizerRecipes());
         recipeHandlers.add(new CyclotronRecipes());
         recipeHandlers.add(new ElectrolyserFluidRecipes());
@@ -78,6 +77,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new WasteDrumRecipes());
 
         //GENERIC
+        recipeHandlers.add(CrucibleRecipes.INSTANCE);
         recipeHandlers.add(AssemblyMachineRecipes.INSTANCE);
         recipeHandlers.add(ChemicalPlantRecipes.INSTANCE);
         recipeHandlers.add(PUREXRecipes.INSTANCE);
@@ -230,7 +230,7 @@ public abstract class SerializableRecipe {
                 recipeList.addAll(((HashMap<?, ?>) recipeObject).entrySet());
             }
 
-            if (recipeList.isEmpty())
+            if (recipeList.isEmpty() && !allowEmptyRecipeList())
                 throw new IllegalStateException("Error while writing recipes for " + this.getClass().getSimpleName() + ": Recipe list is either " + "empty or in an unsupported format!");
 
             JsonWriter writer = new JsonWriter(new FileWriter(template));
@@ -256,6 +256,8 @@ public abstract class SerializableRecipe {
             ex.printStackTrace();
         }
     }
+
+    public boolean allowEmptyRecipeList() { return false; }
 
     private void readRecipeFile(File file) {
         try {

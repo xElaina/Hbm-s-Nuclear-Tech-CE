@@ -13,6 +13,8 @@ import com.hbm.inventory.recipes.CokerRecipes;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.particle.helper.HbmEffectNT;
+import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -33,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
-public class TileEntityMachineCoker extends TileEntityMachineBase implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, ITickable {
+public class TileEntityMachineCoker extends TileEntityMachineBase implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, ITickable, IConnectionAnchors {
 
     public boolean wasOn;
     public int progress;
@@ -48,8 +50,8 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
     public TileEntityMachineCoker() {
         super(2, true, false);
         tanks = new FluidTankNTM[2];
-        tanks[0] = new FluidTankNTM(Fluids.HEAVYOIL, 16_000);
-        tanks[1] = new FluidTankNTM(Fluids.OIL_COKER, 8_000);
+        tanks[0] = new FluidTankNTM(Fluids.HEAVYOIL, 16_000).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.OIL_COKER, 8_000).withOwner(this);
     }
 
     @Override
@@ -120,16 +122,12 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
 
                 if(world.getTotalWorldTime() % 2 == 0) {
                     NBTTagCompound fx = new NBTTagCompound();
-                    fx.setString("type", "tower");
                     fx.setFloat("lift", 10F);
                     fx.setFloat("base", 0.75F);
                     fx.setFloat("max", 3F);
                     fx.setInteger("life", 200 + world.rand.nextInt(50));
                     fx.setInteger("color",0x404040);
-                    fx.setDouble("posX", pos.getX() + 0.5);
-                    fx.setDouble("posY", pos.getY() + 22);
-                    fx.setDouble("posZ", pos.getZ() + 0.5);
-                    MainRegistry.proxy.effectNT(fx);
+                    MainRegistry.proxy.effectNT(HbmEffectNT.Tower, pos.getX() + .5, pos.getY() + 22, pos.getZ() + .5, fx);
                 }
             }
         }

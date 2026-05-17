@@ -5,6 +5,8 @@ import com.hbm.render.chunk.IExtraExtentsHolder;
 import meldexun.nothirium.mc.renderer.chunk.RenderChunk;
 import meldexun.nothirium.mc.renderer.chunk.RenderChunkTaskCompile;
 import meldexun.nothirium.renderer.chunk.AbstractRenderChunkTask;
+import meldexun.nothirium.util.VisibilityGraph;
+import meldexun.nothirium.util.VisibilitySet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -14,26 +16,13 @@ import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = RenderChunkTaskCompile.class, remap = false)
 public abstract class MixinRenderChunkTaskCompile extends AbstractRenderChunkTask<RenderChunk> {
 
     @Unique
     private int hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ;
-
-    @Dynamic
-    @Inject(method = "run", at = @At("HEAD"), require = 1)
-    private void hbm$resetOversizedExtents(CallbackInfoReturnable<?> cir) {
-        hbm$negX = 0;
-        hbm$posX = 0;
-        hbm$negY = 0;
-        hbm$posY = 0;
-        hbm$negZ = 0;
-        hbm$posZ = 0;
-    }
 
     @Dynamic
     @Redirect(method = "renderBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockRendererDispatcher;renderBlock(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/client/renderer/BufferBuilder;)Z"), remap = true, require = 1)
@@ -60,8 +49,8 @@ public abstract class MixinRenderChunkTaskCompile extends AbstractRenderChunkTas
 
     @Dynamic
     @Redirect(method = "compileSection(Lnet/minecraft/client/renderer/RegionRenderCacheBuilder;)Lmeldexun/nothirium/api/renderer/chunk/RenderChunkTaskResult;", at = @At(value = "INVOKE", target = "Lmeldexun/nothirium/util/VisibilityGraph;compute()Lmeldexun/nothirium/util/VisibilitySet;"), remap = false, require = 1)
-    private meldexun.nothirium.util.VisibilitySet hbm$publishOversizedExtents(meldexun.nothirium.util.VisibilityGraph visibilityGraph) {
-        meldexun.nothirium.util.VisibilitySet visibilitySet = visibilityGraph.compute();
+    private VisibilitySet hbm$publishOversizedExtents(VisibilityGraph visibilityGraph) {
+        VisibilitySet visibilitySet = visibilityGraph.compute();
         ((IExtraExtentsHolder) visibilitySet).hbm$setOversizedModelExtents(hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ);
         return visibilitySet;
     }

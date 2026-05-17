@@ -64,8 +64,8 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
     public TileEntityCore() {
         super(3);
         tanks = new FluidTankNTM[2];
-        tanks[0] = new FluidTankNTM(Fluids.DEUTERIUM, 128000);
-        tanks[1] = new FluidTankNTM(Fluids.TRITIUM, 128000);
+        tanks[0] = new FluidTankNTM(Fluids.DEUTERIUM, 128000).withOwner(this);
+        tanks[1] = new FluidTankNTM(Fluids.TRITIUM, 128000).withOwner(this);
     }
 
     @Override

@@ -18,6 +18,8 @@ public abstract class MixinAbstractRenderChunk implements IRenderChunk {
 
     @Unique
     private int hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ;
+    @Unique
+    private int hbm$extentMask;
 
     @Dynamic
     @Inject(method = "setVisibility", at = @At("RETURN"), require = 1)
@@ -38,6 +40,7 @@ public abstract class MixinAbstractRenderChunk implements IRenderChunk {
             hbm$negZ = 0;
             hbm$posZ = 0;
         }
+        hbm$extentMask = hbm$negX | hbm$posX | hbm$negY | hbm$posY | hbm$negZ | hbm$posZ;
     }
 
     /**
@@ -49,6 +52,9 @@ public abstract class MixinAbstractRenderChunk implements IRenderChunk {
         int x = getX();
         int y = getY();
         int z = getZ();
+        if (hbm$extentMask == 0) {
+            return !frustum.isAABBInFrustum(x, y, z, x + 16, y + 16, z + 16);
+        }
         return !frustum.isAABBInFrustum(
                 x - hbm$negX, y - hbm$negY, z - hbm$negZ,
                 x + 16 + hbm$posX, y + 16 + hbm$posY, z + 16 + hbm$posZ);
@@ -60,6 +66,12 @@ public abstract class MixinAbstractRenderChunk implements IRenderChunk {
      */
     @Overwrite
     public boolean isFogCulled(double cameraX, double cameraY, double cameraZ, double fogEndSqr) {
+        if (hbm$extentMask == 0) {
+            double x = hbm$clamp(cameraX, this.getX(), this.getX() + 16) - cameraX;
+            double y = hbm$clamp(cameraY, this.getY(), this.getY() + 16) - cameraY;
+            double z = hbm$clamp(cameraZ, this.getZ(), this.getZ() + 16) - cameraZ;
+            return Math.max(x * x + z * z, y * y) > fogEndSqr;
+        }
         int ox = getX();
         int oy = getY();
         int oz = getZ();
@@ -67,5 +79,10 @@ public abstract class MixinAbstractRenderChunk implements IRenderChunk {
         double y = Math.max(oy - hbm$negY, Math.min(cameraY, oy + 16 + hbm$posY)) - cameraY;
         double z = Math.max(oz - hbm$negZ, Math.min(cameraZ, oz + 16 + hbm$posZ)) - cameraZ;
         return Math.max(x * x + z * z, y * y) > fogEndSqr;
+    }
+
+    @Unique
+    private static double hbm$clamp(double value, double min, double max) {
+        return Math.max(min, Math.min(value, max));
     }
 }

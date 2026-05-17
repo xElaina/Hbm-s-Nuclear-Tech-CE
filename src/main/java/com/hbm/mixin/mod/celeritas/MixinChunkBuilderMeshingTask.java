@@ -2,6 +2,9 @@ package com.hbm.mixin.mod.celeritas;
 
 import com.hbm.main.client.StaticTesrBakedModels;
 import com.hbm.render.chunk.IExtraExtentsHolder;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -19,8 +22,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.taumc.celeritas.impl.render.terrain.compile.task.ChunkBuilderMeshingTask;
 
-import java.util.ArrayList;
-
 @Mixin(value = ChunkBuilderMeshingTask.class, remap = false)
 public abstract class MixinChunkBuilderMeshingTask {
 
@@ -31,41 +32,31 @@ public abstract class MixinChunkBuilderMeshingTask {
     @Unique
     private int hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ;
     @Unique
-    private final ArrayList<TileEntity> hbm$spanningTesrs = new ArrayList<>();
+    private TileEntity[] hbm$spanningTesrs;
     @Unique
-    private int hbm$currentWorldX, hbm$currentWorldY, hbm$currentWorldZ;
-
-    @Dynamic
-    @Inject(method = "execute", at = @At("HEAD"), require = 1)
-    private void hbm$resetOversizedExtents(ChunkBuildContext context, CancellationToken cancellationToken,
-                                           CallbackInfoReturnable<ChunkBuildOutput> cir) {
-        hbm$negX = 0;
-        hbm$posX = 0;
-        hbm$negY = 0;
-        hbm$posY = 0;
-        hbm$negZ = 0;
-        hbm$posZ = 0;
-        hbm$spanningTesrs.clear();
-    }
-
-    @Dynamic
-    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/BlockPos$MutableBlockPos;setPos(III)Lnet/minecraft/util/math/BlockPos$MutableBlockPos;"), remap = true, require = 1)
-    private BlockPos.MutableBlockPos hbm$captureBlockPos(BlockPos.MutableBlockPos pos, int x, int y, int z) {
-        hbm$currentWorldX = x;
-        hbm$currentWorldY = y;
-        hbm$currentWorldZ = z;
-        return pos.setPos(x, y, z);
-    }
+    private int hbm$spanningTesrCount;
+    @Unique
+    private int hbm$originX, hbm$originY, hbm$originZ;
 
     @Dynamic
     @SuppressWarnings("UnreachableCode")
-    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;hasTileEntity(Lnet/minecraft/block/state/IBlockState;)Z"), require = 1)
-    private boolean hbm$trackBlockExtents(Block block, IBlockState state) {
+    @Inject(method = "execute", at = @At("HEAD"), require = 1)
+    private void hbm$cacheOrigin(ChunkBuildContext context, CancellationToken cancellationToken,
+                                 CallbackInfoReturnable<ChunkBuildOutput> cir) {
+        hbm$originX = render.getOriginX();
+        hbm$originY = render.getOriginY();
+        hbm$originZ = render.getOriginZ();
+    }
+
+    @Dynamic
+    @WrapOperation(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/Block;hasTileEntity(Lnet/minecraft/block/state/IBlockState;)Z"), require = 1)
+    private boolean hbm$trackBlockExtents(Block block, IBlockState state, Operation<Boolean> original,
+                                          @Local BlockPos.MutableBlockPos blockPos) {
         int[] extents = StaticTesrBakedModels.getManagedRenderExtents(state);
         if (extents != null) {
-            int localX = hbm$currentWorldX - render.getOriginX();
-            int localY = hbm$currentWorldY - render.getOriginY();
-            int localZ = hbm$currentWorldZ - render.getOriginZ();
+            int localX = blockPos.getX() - hbm$originX;
+            int localY = blockPos.getY() - hbm$originY;
+            int localZ = blockPos.getZ() - hbm$originZ;
 
             hbm$negX = Math.max(hbm$negX, extents[4] - localX);
             hbm$posX = Math.max(hbm$posX, localX + extents[5] - 15);
@@ -74,40 +65,55 @@ public abstract class MixinChunkBuilderMeshingTask {
             hbm$negZ = Math.max(hbm$negZ, extents[2] - localZ);
             hbm$posZ = Math.max(hbm$posZ, localZ + extents[3] - 15);
         }
-        return block.hasTileEntity(state);
+        return original.call(block, state);
     }
 
     @Dynamic
-    @SuppressWarnings("UnreachableCode")
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;isGlobalRenderer(Lnet/minecraft/tileentity/TileEntity;)Z"), remap = true, require = 1)
     private boolean hbm$trackOversizedTesr(TileEntitySpecialRenderer<TileEntity> renderer, TileEntity te) {
         boolean isGlobal = renderer.isGlobalRenderer(te);
         if (!isGlobal) {
             AxisAlignedBB bb = te.getRenderBoundingBox();
             if (bb != TileEntity.INFINITE_EXTENT_AABB) {
-                int sx = render.getOriginX();
-                int sy = render.getOriginY();
-                int sz = render.getOriginZ();
+                int sx = hbm$originX;
+                int sy = hbm$originY;
+                int sz = hbm$originZ;
                 int negX = (int) Math.ceil(Math.max(0.0D, sx - bb.minX));
                 int posX = (int) Math.ceil(Math.max(0.0D, bb.maxX - (sx + 16.0D)));
                 int negY = (int) Math.ceil(Math.max(0.0D, sy - bb.minY));
                 int posY = (int) Math.ceil(Math.max(0.0D, bb.maxY - (sy + 16.0D)));
                 int negZ = (int) Math.ceil(Math.max(0.0D, sz - bb.minZ));
                 int posZ = (int) Math.ceil(Math.max(0.0D, bb.maxZ - (sz + 16.0D)));
-                hbm$negX = Math.max(hbm$negX, negX);
-                hbm$posX = Math.max(hbm$posX, posX);
-                hbm$negY = Math.max(hbm$negY, negY);
-                hbm$posY = Math.max(hbm$posY, posY);
-                hbm$negZ = Math.max(hbm$negZ, negZ);
-                hbm$posZ = Math.max(hbm$posZ, posZ);
                 if ((negX | posX | negY | posY | negZ | posZ) != 0) {
-                    hbm$spanningTesrs.add(te);
+                    hbm$negX = Math.max(hbm$negX, negX);
+                    hbm$posX = Math.max(hbm$posX, posX);
+                    hbm$negY = Math.max(hbm$negY, negY);
+                    hbm$posY = Math.max(hbm$posY, posY);
+                    hbm$negZ = Math.max(hbm$negZ, negZ);
+                    hbm$posZ = Math.max(hbm$posZ, posZ);
+                    hbm$addSpanningTesr(te);
                 }
             }
         }
         return isGlobal;
     }
 
+    @Unique
+    private void hbm$addSpanningTesr(TileEntity te) {
+        TileEntity[] arr = hbm$spanningTesrs;
+        int count = hbm$spanningTesrCount;
+        if (arr == null) {
+            arr = new TileEntity[4];
+            hbm$spanningTesrs = arr;
+        } else if (count == arr.length) {
+            TileEntity[] grown = new TileEntity[count << 1];
+            System.arraycopy(arr, 0, grown, 0, count);
+            arr = grown;
+            hbm$spanningTesrs = arr;
+        }
+        arr[count] = te;
+        hbm$spanningTesrCount = count + 1;
+    }
 
     @Dynamic
     @SuppressWarnings({"ConstantValue", "UnreachableCode"})
@@ -120,8 +126,16 @@ public abstract class MixinChunkBuilderMeshingTask {
         }
         IExtraExtentsHolder holder = (IExtraExtentsHolder) output.info;
         holder.hbm$setOversizedModelExtents(hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ);
-        if (!hbm$spanningTesrs.isEmpty()) {
-            holder.hbm$setChunkSpanningTesrs(hbm$spanningTesrs.toArray(new TileEntity[0]));
+        int count = hbm$spanningTesrCount;
+        if (count != 0) {
+            TileEntity[] compact;
+            if (count == hbm$spanningTesrs.length) {
+                compact = hbm$spanningTesrs;
+            } else {
+                compact = new TileEntity[count];
+                System.arraycopy(hbm$spanningTesrs, 0, compact, 0, count);
+            }
+            holder.hbm$setChunkSpanningTesrs(compact);
         }
     }
 }

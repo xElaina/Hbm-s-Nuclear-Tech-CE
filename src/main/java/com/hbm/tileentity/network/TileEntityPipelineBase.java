@@ -2,13 +2,12 @@ package com.hbm.tileentity.network;
 
 import com.hbm.api.fluidmk2.FluidNode;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.uninos.UniNodespace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -39,9 +38,18 @@ public abstract class TileEntityPipelineBase extends TileEntityPipeBaseNT {
         connected.add(new int[] {x, y, z});
         this.bb = null;
 
-        FluidNode node = UniNodespace.getNode(world, pos, this.type.getNetworkProvider());
-        node.recentlyChanged = true;
-        node.addConnection(new DirPos(x, y, z, ForgeDirection.UNKNOWN));
+        if(this.node == null || this.node.expired) {
+            if(this.shouldCreateNode()) {
+                this.node = UniNodespace.getNode(world, pos, type.getNetworkProvider());
+                if(this.node == null || this.node.expired) {
+                    this.node = this.createNode(type);
+                    UniNodespace.createNode(world, this.node);
+                }
+            }
+        }
+
+        this.node.recentlyChanged = true;
+        this.node.addConnection(new DirPos(x, y, z, ForgeDirection.UNKNOWN));
 
         this.markDirty();
 
@@ -96,13 +104,18 @@ public abstract class TileEntityPipelineBase extends TileEntityPipeBaseNT {
      * 0: Connected<br>
      * 1: Connections are incompatible<br>
      * 2: Both parties are the same block<br>
-     * 3: Connection length exceeds maximum
+     * 3: Connection length exceeds maximum<br>
      * 4: Pipeline fluid types do not match
      */
     public static int canConnect(TileEntityPipelineBase first, TileEntityPipelineBase second) {
 
         if(first.getConnectionType() != second.getConnectionType()) return 1;
         if(first == second) return 2;
+
+        // connect with NONE type anchors
+        if(first.type == Fluids.NONE && second.type != first.type) first.setType(second.type);
+        if(second.type == Fluids.NONE && first.type != second.type) second.setType(first.type);
+
         if(first.type != second.type) return 4;
 
         double len = Math.min(first.getMaxPipeLength(), second.getMaxPipeLength());
@@ -154,22 +167,6 @@ public abstract class TileEntityPipelineBase extends TileEntityPipeBaseNT {
         for(int i = 0; i < count; i++) {
             connected.add(nbt.getIntArray("con" + i));
         }
-    }
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        writeToNBT(nbt);
-        return new SPacketUpdateTileEntity(pos, 0, nbt);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.getNbtCompound());
-        if (world != null) {
-            world.markBlockRangeForRenderUpdate(pos, pos);
-        }
-        this.lastType = this.type;
     }
 
     public enum ConnectionType {

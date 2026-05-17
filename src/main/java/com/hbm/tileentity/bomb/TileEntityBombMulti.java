@@ -87,7 +87,7 @@ public class TileEntityBombMulti extends TileEntity implements IGUIProvider {
 	
 	public int return2type() {
 
-		if(inventory.getStackInSlot(2) != null)
+		if(!inventory.getStackInSlot(2).isEmpty())
 		{
 		if(inventory.getStackInSlot(2).getItem() == Items.GUNPOWDER)
 		{
@@ -124,7 +124,7 @@ public class TileEntityBombMulti extends TileEntity implements IGUIProvider {
 	
 	public int return5type() {
 		
-		if(inventory.getStackInSlot(5) != null)
+		if(!inventory.getStackInSlot(5).isEmpty())
 		{
 		if(inventory.getStackInSlot(5).getItem() == Items.GUNPOWDER)
 		{

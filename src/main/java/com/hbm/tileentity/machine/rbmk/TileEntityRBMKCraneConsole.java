@@ -7,6 +7,8 @@ import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.*;
+import com.hbm.inventory.control_panel.types.DataValue;
+import com.hbm.inventory.control_panel.types.DataValueFloat;
 import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -23,7 +25,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -209,6 +210,10 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
         posLeft = MathHelper.clamp(posLeft, -spanR, spanL);
 
         if(!world.isRemote) {
+            TileEntityRBMKBase base = this.getBaseAtPos();
+            if(base != null) {
+                base.craneIndicator = 10;
+            }
 
             if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
                 this.loadedHeat = ItemRBMKRod.getHullHeat(inventory.getStackInSlot(0));
@@ -286,7 +291,7 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
         }
     }
 
-    public IRBMKLoadable getColumnAtPos() {
+    public TileEntityRBMKBase getBaseAtPos() {
 
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
         ForgeDirection left = dir.getRotation(ForgeDirection.DOWN);
@@ -301,13 +306,18 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
 
             int[] pos = ((BlockDummyable)b).findCore(world, x, y, z);
             if(pos != null) {
-                TileEntityRBMKBase column = (TileEntityRBMKBase)world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
-                if(column instanceof IRBMKLoadable) {
-                    return (IRBMKLoadable) column;
-                }
+                return (TileEntityRBMKBase) world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
             }
         }
 
+        return null;
+    }
+
+    public IRBMKLoadable getColumnAtPos() {
+        TileEntityRBMKBase base = getBaseAtPos();
+        if(base instanceof IRBMKLoadable loadable) {
+            return loadable;
+        }
         return null;
     }
 
@@ -649,7 +659,7 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
 
     // control panel
     @Override
-    public Map<String, DataValue> getQueryData() {
+    public Map<String,DataValue> getQueryData() {
         Map<String, DataValue> data = new HashMap<>();
         if (setUpCrane) {
             data.put("posX", new DataValueFloat((float) -posLeft));

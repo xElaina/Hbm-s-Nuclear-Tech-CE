@@ -20,7 +20,6 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -59,8 +58,8 @@ public class TileEntityChungus extends TileEntityTurbineBase implements SimpleCo
 	public TileEntityChungus() {
 		super();
 		tanks = new FluidTankNTM[2];
-		tanks[0] = new FluidTankNTM(Fluids.STEAM, inputTankSize);
-		tanks[1] = new FluidTankNTM(Fluids.SPENTSTEAM, outputTankSize);
+		tanks[0] = new FluidTankNTM(Fluids.STEAM, inputTankSize).withOwner(this);
+		tanks[1] = new FluidTankNTM(Fluids.SPENTSTEAM, outputTankSize).withOwner(this);
 
 		Random rand = new Random();
 		audioDesync = rand.nextFloat() * 0.05F;
@@ -162,6 +161,12 @@ public class TileEntityChungus extends TileEntityTurbineBase implements SimpleCo
 				}
 			}
 		}
+	}
+
+	@Override
+	public void serializeInitial(ByteBuf buf) {
+		super.serializeInitial(buf);
+		buf.writeInt(this.turnTimer);
 	}
 
 	@Override
@@ -274,6 +279,19 @@ public class TileEntityChungus extends TileEntityTurbineBase implements SimpleCo
             default -> throw new NoSuchMethodException();
         };
     }
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "output"
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if ((PREFIX_VALUE + "output").equals(name)) return "" + (int) this.powerBuffer;
+		return null;
+	}
 
 	@Override
 	public boolean hasCapability(@NotNull Capability<?> capability, @Nullable EnumFacing facing) {
